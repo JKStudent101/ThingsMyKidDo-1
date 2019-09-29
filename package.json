@@ -1,0 +1,27 @@
+{
+  "name": "thingsmykiddo",
+  "version": "1.0.0",
+  "description": "Things My Kid Do",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aiibaby/ThingsMyKidDo.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aiibaby/ThingsMyKidDo/issues"
+  },
+  "homepage": "https://github.com/aiibaby/ThingsMyKidDo#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "client-sessions": "^0.8.0",
+    "express": "^4.17.1",
+    "hbs": "^4.0.5",
+    "request": "^2.88.0"
+  }
+}

@@ -1,0 +1,67 @@
+body {
+    background-color: white;
+    font-family: arial;
+    font-size: 12pt;
+}
+
+
+#logoDiv {
+   
+    width: 60px;
+    height: 60px;
+    float: left;
+    border-style: solid;
+    border-width: 1px;
+    border-color: white;
+}
+
+#firstRow {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#headerDiv{
+    text-align: center;
+    font-size: 48pt;
+    font-family: arial;
+    padding: 20px;
+    margin: 20px 0px 20px 0px;
+    color: white;
+    text-shadow: 2px 2px #000000;
+}
+
+#headerRow {
+    padding: 0px 20px 0px 20px;
+}
+
+/* Form */
+.form {
+    background-color: rgba(173,172,181,0.8);
+    border-radius: 7px;
+    padding: 10px;
+    font-family: arial;
+    font-size: 12pt;
+}
+
+#resultsTable_length{
+    color: white;
+}
+
+#resultsTable_info{
+    color: white;
+}
+
+#menuNav{
+    background-color: rgba(0,0,0,0.7);
+    border-style: none;
+    float: left;
+    width: 100vw;
+    padding: 10px 0px 10px 0px;
+}
+
+#menuItems{
+    padding: 5px 30px 0px 0px;
+    font-family: arial;
+    font-size: 14pt;
+    
+}
