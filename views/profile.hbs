@@ -3,17 +3,102 @@
     <head>
          <!-- Bootstrap CSS -->
         <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-        <!--<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>-->
+
         
         <link href="/css/menu.css" type="text/css" rel="stylesheet" />
+        <link href="/css/Profile.css" type="text/css" rel="stylesheet" />
 
     </head>
 
     <body>
         {{> menu}}
         <div>
-            Profile Page
+
+        <div class="container">
+            <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    Profiles
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li><a href="#">Profile 1</a></li>
+                    <li><a href="#">Profile 2</a></li>
+                    <li><a href="#">Profile 3</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="#">Create a Profile</a></li>
+                </ul>
+            </div>
+            <div class="row">
+                <div class="container col-md-6">
+                    <div class="container">
+                        Profile Page
+                        <div class="container col-md-6">
+                            <div class="box">
+                                <div class="inline-block">
+                                    <img class="profile-pic" src="sample.jpg" alt="pic" style="max-width: 300px; max-height: 300px">
+                                    <div class="btn-group-vertical" role="group" aria-label="...">
+                                        <button type="button" class="btn btn-default">Edit a profile</button>
+                                        <button type="button" class="btn btn-default">Delete a profile</button>
+                                    </div>
+                                </div>
+                                <div class="pf">
+                                    <p>Name: Jay</p>
+                                    <p>Age: 7</p>
+                                    <p>Interests: Soccer, Drawing</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="container" style="width: 100%; background-color: lightgray";>
+                        <h2>Favorites</h2>
+                    </div>
+                    <div class="list-group">
+                        <a href="#" class="list-group-item">
+                            <button type="button" class="btn btn-default btn-sm" style="position:absolute; right: 5px;">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            </button>
+                            <h4 >Children's Art Contest</h4>
+                            <p>Join us at the Central Art Gallery</p>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <button type="button" class="btn btn-default btn-sm remove-event">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            </button>
+                            <h4>Summer Soccer camp</h4>
+                            <p>sponsored by the Victoria Soccer Community</p>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <button type="button" class="btn btn-default btn-sm remove-event">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            </button>
+                            <h4>Event 3</h4>
+                            <p>info 3</p>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <button type="button" class="btn btn-default btn-sm remove-event">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            </button>
+                            <h4>Event 4</h4>
+                            <p>info 4</p>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <button type="button" class="btn btn-default btn-sm remove-event">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            </button>
+                            <h5>Event 5</h5>
+                            <p>info 5</p>
+                        </a>
+                    </div>
+
+
+                </div>
+            </div>
+
         </div>
     </body>
 

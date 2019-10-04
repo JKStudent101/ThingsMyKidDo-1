@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const app = express();
 const session = require('client-sessions');
 const mysql = require('mysql');
+const webpush = require('web-push');
 
 var db = require('./config/database').init();
 
@@ -79,6 +80,41 @@ app.get('/logout', (request, response) => {
     
     response.redirect('/login');
 });
+
+
+const dummyDB = {subscription: null} //dummy db, for test purposes
+
+const saveToDatabase = async (subscription) => {
+    dummyDB.subscription = subscription
+}
+
+app.post('/saveSubscription', async (req, res) => {
+    const subscription = req.body
+    await saveToDatabase(subscription) 
+    res.json({message: 'success'})
+})
+
+const vapidKeys = {
+    publicKey: 'BI01Zbibo97CgCD60S9MO6HhlAbcTtfGOIayxUKG3o5QJbfU3eVMT3v_T-i2r7rK6QH8Zbv1So2VrPsT4FTjaes',
+    privateKey: 'MlG2jt47B8g9TXDao9AvxKslCn2zwi9Vhe6qDPByzDg'
+}
+
+webpush.setVapidDetails(
+    'mailto:myuserid@email.com',
+    vapidKeys.publicKey,
+    vapidKeys.privateKey
+)
+
+app.post('/text-me', (req, res) => {
+    webpush.sendNotification(dummyDB.subscription, req.body.message);
+    res.json({message: req.body.message});
+})
+
+app.get('/send-notification', (req, res) => {
+    res.render('notification.hbs', {
+
+    });
+})
 
 server.listen(10000, function(err){
     if(err){
