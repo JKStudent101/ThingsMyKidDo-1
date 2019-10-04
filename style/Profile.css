@@ -1,0 +1,15 @@
+img.profile-pic {
+    max-width: 100px;
+    max-height: 100px
+}
+
+.pf {
+    padding: 15px;
+    width: 100%;
+    border: 5px solid blue;
+}
+
+button.remove-event {
+    position:absolute;
+    right: 5px;
+}
