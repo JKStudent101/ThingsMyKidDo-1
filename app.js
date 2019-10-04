@@ -6,7 +6,7 @@ const app = express();
 const session = require('client-sessions');
 const mysql = require('mysql');
 
-var db = require('./config/database');
+var db = require('./config/database').init();
 
 app.set('view engine', 'hbs');
 app.use(express.static(__dirname + '/public'));
@@ -50,8 +50,20 @@ app.get('/profile', (request, response) => {
 
 
 app.get('/admin', (request, response) => {
-    response.render('admin.hbs', {
-
+    var sql = 'SHOW COLUMNS FROM Events';
+    db.query(sql, (err, result)=>{
+        if (err){
+            throw err;
+        }else{
+            var text = "";
+            for (var i =0; i<result.length; i++){
+                text += result[i].Field + " ";
+            }
+            // response.send(result[0]);
+            response.render('admin.hbs', {
+                result: text
+            });
+        }
 
     });
 });
@@ -66,7 +78,7 @@ app.get('/editor', (request, response) => {
 app.get('/logout', (request, response) => {
     
     response.redirect('/login');
-})
+});
 
 server.listen(10000, function(err){
     if(err){
@@ -75,5 +87,5 @@ server.listen(10000, function(err){
     }
     
     console.log(port+" is running");
-    db.init();
+    db;
 });
