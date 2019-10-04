@@ -4,11 +4,14 @@ const hbs = require('hbs');
 const bodyParser = require("body-parser");
 const app = express();
 const session = require('client-sessions');
+const mysql = require('mysql');
+
+var db = require('./config/database');
 
 app.set('view engine', 'hbs');
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/style'));
-app.use(express.static(__dirname + '/views'))
+app.use(express.static(__dirname + '/views'));
 app.use("/scripts", express.static("build"));
 app.use("/css", express.static("style"));
 app.use(express.json());
@@ -72,4 +75,5 @@ server.listen(10000, function(err){
     }
     
     console.log(port+" is running");
+    db.init();
 });
