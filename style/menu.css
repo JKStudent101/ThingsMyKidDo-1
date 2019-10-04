@@ -6,13 +6,13 @@ body {
 
 
 #logoDiv {
-   
+    background-image: url(src/thingsmyKidsdo.jpg);
+    background-size: cover; 
+    background-position: center center; 
     width: 60px;
     height: 60px;
     float: left;
-    border-style: solid;
-    border-width: 1px;
-    border-color: white;
+    
 }
 
 #firstRow {
@@ -43,11 +43,7 @@ body {
     font-size: 12pt;
 }
 
-.center {
-    position: relative;
-    top: 200px;
-    left: 40%;
-}
+
 
 #resultsTable_length{
     color: white;

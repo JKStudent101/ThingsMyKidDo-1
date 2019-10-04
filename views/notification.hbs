@@ -2,21 +2,25 @@
 <html>
     <head>
          <!-- Bootstrap CSS -->
+        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
         <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-        <!--<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>-->
+        <script src="/scripts/notifications.js"></script>
         
         <link href="/css/menu.css" type="text/css" rel="stylesheet" />
 
     </head>
 
     <body>
+        <script>
+            main()
+        </script>
         {{> menu}}
         <div>
-            Admin Page
-            <p>{{result}}</p>
+            <h1>Notification Test</h1>
+            <input id="txt" type="text" placeholder="Type notification text here">
+            <button id="permission-btn" onclick="send()">Send Message</button>
         </div>
     </body>
 
 </html>
-   

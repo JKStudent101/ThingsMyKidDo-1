@@ -1,0 +1,35 @@
+body {
+    background-color: white;
+    font-family: arial;
+    font-size: 12pt;
+}
+
+#bg {
+    position: absolute; 
+    top: 0px; 
+    width: 100%; 
+    opacity: 1; 
+    background-size: cover; 
+    background-position: center center; 
+    background-repeat: no-repeat; 
+    height: 100%; 
+    background-image: url("https://static.wixstatic.com/media/11062b_d1a646e8c3d54d97bc4f11fea4de5f78f000.jpg/v1/fill/w_1920,h_1080,al_c,q_85/11062b_d1a646e8c3d54d97bc4f11fea4de5f78f000.webp");
+    z-index: -100;
+}
+
+
+img {
+    top:20vh;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    
+    width: 25vh;
+    height: 25vh;
+  }
+
+.center {
+    position: relative;
+    top: 200px;
+    
+}
