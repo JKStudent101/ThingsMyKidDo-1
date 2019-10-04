@@ -17,10 +17,7 @@ body {
     z-index: -100;
 }
 
-#indexlogodiv {
-    position: relative;
-    top: 20%;
-}
+
 img {
     top:20vh;
     display: block;
@@ -30,3 +27,9 @@ img {
     width: 25vh;
     height: 25vh;
   }
+
+.center {
+    position: relative;
+    top: 200px;
+    
+}

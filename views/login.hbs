@@ -13,8 +13,30 @@
     <body>
         <div id="bg"></div> 
         {{> menu}}
-        <div id="indexlogodiv">
-            <img src="/css/src/thingsmyKidsdo.jpg">
+        
+        <img src="/css/src/thingsmyKidsdo.jpg">
+        
+<!--        <div class="container position=relative width="> -->
+        <div class="center">
+            Login Page
+            <div>Welcome</div>
+            <div>
+                <form class="position=absolute ">
+                    <div class="form-group">
+                        <label for="User">Username</label>
+                        <input type="text" id="User" placeholder="Username">
+                    </div>
+                    <div class="form-group">
+                        <label for="PW">Password</label>
+                        <input class="form-control" type="text" id="PW" placeholder="Password">
+                    </div>
+                    <div class="inline justify-content=center" >
+                        <button type="submit" class="btn btn-default">Sign in</button>
+                        <button type="submit" class="btn btn-default">Join</button>
+                    </div>
+                </form>
+            </div>
+
         </div>
         
         
