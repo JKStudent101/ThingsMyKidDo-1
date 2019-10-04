@@ -14,7 +14,6 @@
 
     <body>
         {{> menu}}
-        <div>
 
         <div class="container">
             <div class="dropdown">
@@ -39,15 +38,35 @@
                                 <div class="inline-block">
                                     <img class="profile-pic" src="sample.jpg" alt="pic" style="max-width: 300px; max-height: 300px">
                                     <div class="btn-group-vertical" role="group" aria-label="...">
-                                        <button type="button" class="btn btn-default">Edit a profile</button>
-                                        <button type="button" class="btn btn-default">Delete a profile</button>
+                                        <button type="button" class="btn btn-default">Edit profile</button>
+                                        <button type="button" class="btn btn-default">Delete profile</button>
                                     </div>
                                 </div>
-                                <div class="pf">
+                                <form class="form-horizontal">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">Name</label>
+                                        <div class="col-sm-10">
+                                            <p class="form-control-static">Jay</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">Age</label>
+                                        <div class="col-sm-10">
+                                            <p class="form-control-static">7</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">Hobbies</label>
+                                        <div class="col-sm-10">
+                                            <p class="form-control-static">Soccer, Drawing</p>
+                                        </div>
+                                    </div>
+                                </form>
+<!--                                <div class="pf">
                                     <p>Name: Jay</p>
                                     <p>Age: 7</p>
                                     <p>Interests: Soccer, Drawing</p>
-                                </div>
+                                </div>  -->
                             </div>
                         </div>
                     </div>
