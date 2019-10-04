@@ -43,6 +43,12 @@ body {
     font-size: 12pt;
 }
 
+.center {
+    position: relative;
+    top: 200px;
+    left: 40%;
+}
+
 #resultsTable_length{
     color: white;
 }
