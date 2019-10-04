@@ -46,6 +46,20 @@ app.get('/profile', (request, response) => {
 });
 
 
+app.get('/admin', (request, response) => {
+    response.render('admin.hbs', {
+
+
+    });
+});
+
+app.get('/editor', (request, response) => {
+    response.render('editor.hbs', {
+
+
+    });
+});
+
 app.get('/logout', (request, response) => {
     
     response.redirect('/login');
