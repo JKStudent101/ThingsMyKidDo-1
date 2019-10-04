@@ -1,19 +1,176 @@
 function initMap() {
 	// Map options
 	var options = {
-		zoom: 8,
-		center: { lat: 42.3601, lng: -71.0589 }
+		zoom: 9,
+		center: { lat: 49.4928, lng: -117.2948 },
+
+		mapTypeControlOptions: {
+			mapTypeIds: [ 'styled_map' ]
+		}
 	};
+
+	var styledMapType = new google.maps.StyledMapType([
+		{ elementType: 'geometry', stylers: [ { color: '#ebe3cd' } ] },
+		{ elementType: 'labels.text.fill', stylers: [ { color: '#523735' } ] },
+		{ elementType: 'labels.text.stroke', stylers: [ { color: '#f5f1e6' } ] },
+		{
+			featureType: 'administrative',
+			elementType: 'geometry.stroke',
+			stylers: [ { color: '#c9b2a6' } ]
+		},
+		{
+			featureType: 'administrative.land_parcel',
+			elementType: 'geometry.stroke',
+			stylers: [ { color: '#dcd2be' } ]
+		},
+		{
+			featureType: 'administrative.land_parcel',
+			elementType: 'labels.text.fill',
+			stylers: [ { color: '#ae9e90' } ]
+		},
+		{
+			featureType: 'landscape.natural',
+			elementType: 'geometry',
+			stylers: [ { color: '#dfd2ae' } ]
+		},
+		{
+			featureType: 'poi',
+			elementType: 'geometry',
+			stylers: [ { color: '#dfd2ae' } ]
+		},
+		{
+			featureType: 'poi',
+			elementType: 'labels.text.fill',
+			stylers: [ { color: '#93817c' } ]
+		},
+		{
+			featureType: 'poi.park',
+			elementType: 'geometry.fill',
+			stylers: [ { color: '#a5b076' } ]
+		},
+		{
+			featureType: 'poi.park',
+			elementType: 'labels.text.fill',
+			stylers: [ { color: '#447530' } ]
+		},
+		{
+			featureType: 'road',
+			elementType: 'geometry',
+			stylers: [ { color: '#f5f1e6' } ]
+		},
+		{
+			featureType: 'road.arterial',
+			elementType: 'geometry',
+			stylers: [ { color: '#fdfcf8' } ]
+		},
+		{
+			featureType: 'road.highway',
+			elementType: 'geometry',
+			stylers: [ { color: '#f8c967' } ]
+		},
+		{
+			featureType: 'road.highway',
+			elementType: 'geometry.stroke',
+			stylers: [ { color: '#e9bc62' } ]
+		},
+		{
+			featureType: 'road.highway.controlled_access',
+			elementType: 'geometry',
+			stylers: [ { color: '#e98d58' } ]
+		},
+		{
+			featureType: 'road.highway.controlled_access',
+			elementType: 'geometry.stroke',
+			stylers: [ { color: '#db8555' } ]
+		},
+		{
+			featureType: 'road.local',
+			elementType: 'labels.text.fill',
+			stylers: [ { color: '#806b63' } ]
+		},
+		{
+			featureType: 'transit.line',
+			elementType: 'geometry',
+			stylers: [ { color: '#dfd2ae' } ]
+		},
+		{
+			featureType: 'transit.line',
+			elementType: 'labels.text.fill',
+			stylers: [ { color: '#8f7d77' } ]
+		},
+		{
+			featureType: 'transit.line',
+			elementType: 'labels.text.stroke',
+			stylers: [ { color: '#ebe3cd' } ]
+		},
+		{
+			featureType: 'transit.station',
+			elementType: 'geometry',
+			stylers: [ { color: '#dfd2ae' } ]
+		},
+		{
+			featureType: 'water',
+			elementType: 'geometry.fill',
+			stylers: [ { color: '#b9d3c2' } ]
+		},
+		{
+			featureType: 'water',
+			elementType: 'labels.text.fill',
+			stylers: [ { color: '#92998d' } ]
+		}
+	]);
 
 	// New map
 	var map = new google.maps.Map(document.getElementById('map'), options);
 	// Array of markers
 	var markers = [
 		{
-			coords: { lat: 42.4668, lng: -70.9495 },
+			coords: { lat: 49.49656, lng: -117.29391 },
 			iconImage:
 				'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
-			content: '<h1>Lynn MA</h1>'
+			content:
+				'<div id="content">' +
+				'<div id="siteNotice">' +
+				'</div>' +
+				'<h1 id="firstHeading" class="firstHeading">Thermography </h1>' +
+				'<div id="bodyContent">' +
+				'<p><b>Uluru</b>, Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>' +
+				'<p>Attribution: Uluru, <br/> <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">' +
+				'https://en.wikipedia.org/w/index.php?title=Uluru</a> ' +
+				'</div>' +
+				'</div>'
+		},
+		{
+			coords: { lat: 49.296871, lng: -117.636192 },
+			iconImage:
+				'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+			content:
+				'<div id="content">' +
+				'<div id="siteNotice">' +
+				'</div>' +
+				'<h1 id="firstHeading" class="firstHeading">Uluru</h1>' +
+				'<div id="bodyContent">' +
+				'Event Details' +
+				'<p><b>Doukhobor Discovery Centre</b>, Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>' +
+				'<p>Attribution: Doukhobor Discovery Centre, <br/> <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">' +
+				'https://en.wikipedia.org/w/index.php?title=Uluru</a> ' +
+				'</div>' +
+				'</div>'
+		},
+		{
+			coords: { lat: 49.29687, lng: -117.63619 },
+			content:
+				'<div id="content">' +
+				'<div id="siteNotice">' +
+				'</div>' +
+				'<h1 id="firstHeading" class="firstHeading">Ferment and Feast</h1>' +
+				'<div id="bodyContent">' +
+				'Event Details' +
+				'<p><b>Ferment and Feast</b>, Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>' +
+				'<p>Attribution: Doukhobor Discovery Centre, <br/> <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">' +
+				'https://en.wikipedia.org/w/index.php?title=Uluru</a> ' +
+				'</div>' +
+				'</div>'
 		}
 	];
 
@@ -27,8 +184,7 @@ function initMap() {
 	function addMarker(props) {
 		var marker = new google.maps.Marker({
 			position: props.coords,
-			map: map
-			//icon:props.iconImage
+			map: map //icon:props.iconImage
 		});
 
 		// Check for customicon
@@ -48,4 +204,16 @@ function initMap() {
 			});
 		}
 	}
+	if (navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(function(position) {
+			initialLocation = new google.maps.LatLng(
+				position.coords.latitude,
+				position.coords.longitude
+			);
+			map.setCenter(initialLocation);
+		});
+	}
+
+	map.mapTypes.set('styled_map', styledMapType);
+	map.setMapTypeId('styled_map');
 }
