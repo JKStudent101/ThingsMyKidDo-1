@@ -42,6 +42,12 @@ app.get('/login', (request, response) => {
     });
 });
 
+app.get('/register', (request, response) => {
+    response.render('register.hbs', {
+
+    });
+})
+
 app.get('/profile', (request, response) => {
     response.render('profile.hbs', {
         
