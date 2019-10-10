@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Bootstrap CSS -->
+        <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+
+
+        <link href="/css/menu.css" type="text/css" rel="stylesheet" />
+        <link href="/css/login.css" type="text/css" rel="stylesheet" />
+        <link href="/css/register.css" type="text/css" rel="stylesheet" />
+    </head>
+
+    <body>
+        <div id="bg"></div>
+        {{> menu}}
+
+        <img src="/css/src/thingsmyKidsdo.jpg" style="max-width: 500px; max-height: 500px">
+
+        <!--        <div class="container position=relative width="> -->
+        <div class="center">
+            Register Page
+
+            <div class="container">
+                <h1 style="text-align-all: center">Need activities for kids?</h1>
+                <form>
+                    <div class="container" style="max-width: 600px">
+                        <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#Parent">Get Notified</button>
+                        <button type="button" class="btn btn-default btn-block" data-toggle="modal" data-target="#Business">Share YOUR event</button>
+                    </div>
+
+                    <div class="modal fade" id="Parent" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Create Account</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="tab">Name:
+                                        <p><input placeholder="Username/Email address" oninput="this.className = ''" name="fname"></p>
+                                        <p><input placeholder="Phone number" oninput="this.className = ''" name="phone"></p>
+                                        <p><input placeholder="Password" oninput="this.className = ''" name="pw"></p>
+                                        <p><input placeholder="Comfirm Password" oninput="this.className = ''" name="confirm_pw"></p>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Continue</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="Business" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Create Account</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="tab">Name:
+                                        <p><input placeholder="First Name" oninput="this.className = ''" name="fname"></p>
+                                        <p><input placeholder="Last name" oninput="this.className = ''" name="lname"></p>
+                                        <p><input placeholder="Organization name" oninput="this.className = ''" name="org_name"></p>
+                                        <p><input placeholder="Phone number" oninput="this.className = ''" name="phone"></p>
+                                        <p><input placeholder="Email address" oninput="this.className = ''" name="email"></p>
+                                        <p><input placeholder="Password" oninput="this.className = ''" name="pw"></p>
+                                        <p><input placeholder="Comfirm Password" oninput="this.className = ''" name="confirm_pw"></p>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Continue</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+
+
+
+            </div>
+
+        </div>
+
+
+
+
+    </body>
+
+
+</html>
