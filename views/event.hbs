@@ -2,9 +2,10 @@
 <html>
     <head>
         <!-- Bootstrap CSS -->
+        <!--<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>-->
         <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-        <!--<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>-->
+
         
         <link href="/css/menu.css" type="text/css" rel="stylesheet" />
         <link href="/css/event.css" type="text/css" rel="stylesheet" />
@@ -12,13 +13,14 @@
 
     <body>
         {{> menu}}
+
+
         <div>
             Event Page
             <div class="row">
                 <div class="container col-lg-6">
                     <div class="jumbotron">
                         <div>
-                            Login Page
                             <form class="form-inline">
                                 <div class="form-group">
                                     <!--                    <label for="exampleInputName2">Name</label>-->
@@ -30,11 +32,13 @@
                     </div>
                 </div>
                 <div class="col-lg-6">
-                    Map View
-                    <div id="map"></div>
-                    <script src="/scripts/maps.js"></script>
-                    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAN6q6jOWczlbNgBPd_ljm857YUqpyIoVU&callback=initMap">
-                    </script>
+                    <div class="container">
+                        Map View
+                        <div id="map"></div>
+                        <script src="/scripts/maps.js"></script>
+                        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAN6q6jOWczlbNgBPd_ljm857YUqpyIoVU&callback=initMap">
+                        </script>
+                    </div>
                 </div>
             </div>
         </div>
