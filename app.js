@@ -15,6 +15,7 @@ app.use(express.static(__dirname + '/style'));
 app.use(express.static(__dirname + '/views'));
 app.use('/scripts', express.static('build'));
 app.use('/css', express.static('style'));
+
 app.use(express.json());
 app.use(
 	bodyParser.urlencoded({
@@ -78,6 +79,7 @@ app.get('/register', (request, response) => {
 	response.render('register.hbs', {});
 });
 
+
 app.get('/profile', (request, response) => {
 	response.render('profile.hbs', {});
 });
@@ -102,6 +104,32 @@ app.get('/admin', (request, response) => {
 
 app.get('/editor', (request, response) => {
 	response.render('editor.hbs', {});
+});
+
+app.get('/admin', (request, response) => {
+    var sql = 'SHOW COLUMNS FROM Events';
+    db.query(sql, (err, result)=>{
+        if (err){
+            throw err;
+        }else{
+            var text = "";
+            for (var i =0; i<result.length; i++){
+                text += result[i].Field + " ";
+            }
+            // response.send(result[0]);
+            response.render('admin.hbs', {
+                result: text
+            });
+        }
+
+    });
+});
+
+app.get('/editor', (request, response) => {
+    response.render('editor.hbs', {
+
+
+    });
 });
 
 app.get('/logout', (request, response) => {
@@ -146,3 +174,4 @@ server.listen(10000, function(err) {
 	console.log(port + ' is running');
 	db;
 });
+

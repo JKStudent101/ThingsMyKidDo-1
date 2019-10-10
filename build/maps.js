@@ -56,11 +56,13 @@ $(document).ready(() => {
 	});
 });
 
+
 function initMap() {
 	// Map options
 	var options = {
 		zoom: 9,
 		// center: { lat: 49.4928, lng: -117.2948 },
+
 
 		mapTypeControlOptions: {
 			mapTypeIds: [ 'styled_map' ]
@@ -194,13 +196,16 @@ function initMap() {
 				'<div id="bodyContent">' +
 				'<p><b>Event 1 </b>, Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>' +
 				'<p>Attribution: Event 1 , <br/> <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">' +
+
 				'https://en.wikipedia.org/w/index.php?title=Uluru</a> ' +
 				'</div>' +
 				'</div>'
 		},
 		{
+
 			coords: { lat: 49.512343, lng: -117.263926 },
 			// 49.512343, -117.263926
+
 			iconImage:
 				'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
 			content:
@@ -264,6 +269,7 @@ function initMap() {
 		}
 	}
 	// get current location
+
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(function(position) {
 			initialLocation = new google.maps.LatLng(
@@ -276,4 +282,6 @@ function initMap() {
 
 	map.mapTypes.set('styled_map', styledMapType);
 	map.setMapTypeId('styled_map');
+
 }
+
