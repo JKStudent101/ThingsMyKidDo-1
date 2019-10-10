@@ -34,13 +34,13 @@ app.get('/event', (request, response) => {
     response.render('event.hbs', {
         
     });
-})
+});
 
 app.get('/login', (request, response) => {
     response.render('login.hbs', {
         
     });
-})
+});
 
 app.get('/register', (request, response) => {
     response.render('register.hbs', {
