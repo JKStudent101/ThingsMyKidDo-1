@@ -86,22 +86,22 @@ app.get('/addevent', (request, response) => {
 	response.render('addevent.hbs');
 });
 app.get('/admin', (request, response) => {
-	var sql = 'SHOW COLUMNS FROM Events';
-	db.query(sql, (err, result) => {
-		if (err) {
-			throw err;
-		} else {
-			var text = '';
-			for (var i = 0; i < result.length; i++) {
-				text += result[i].Field + ' ';
-			}
-			// response.send(result[0]);
-			response.render('admin.hbs', {
-				result: text
-			});
-		}
-	});
+    var sql = 'SELECT a.event_id, a.vendor_id, a.description, a.name, c.name as tag_name \n' +
+        'FROM event a\n' +
+        'LEFT JOIN event_tags b ON a.event_id = b.event_id\n' +
+        'LEFT JOIN tags c ON b.tag_id = c.tag_id ';
+    db.query(sql, (err, result) => {
+        if (err) {
+            throw err;
+        } else {
+            // console.log(result[0].event_id);
+            response.render('admin.hbs', {
+                data: result
+            });
+        }
+    });
 });
+
 
 app.get('/editor', (request, response) => {
 	response.render('editor.hbs', {});
