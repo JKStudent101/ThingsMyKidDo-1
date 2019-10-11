@@ -5,7 +5,7 @@ module.exports.init = ()=>{
         host: 'thingmykidsdo.ckcstihnhz8i.us-west-2.rds.amazonaws.com',
         user: 'admin',
         password: 'Password',
-        database: 'thingsKidsDo'
+        database: 'thingsKidsDoModified'
     });
 
     db.connect((err)=>{
