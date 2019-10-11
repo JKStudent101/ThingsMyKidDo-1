@@ -33,7 +33,6 @@ app.get('/', (request, response) => {
 app.get('/event', (request, response) => {
 	response.render('event.hbs', {});
 });
-
 app.get('/event/getall', (request, response) => {
 	let sql = 'SELECT * FROM event';
 	db.query(sql, (err, result) => {
@@ -50,7 +49,7 @@ app.get('/event/getall', (request, response) => {
 });
 
 app.get('/event/:eventid', (req, res) => {
-	let sql = 'select * from Events where eventId = ?';
+	let sql = 'select * from event where event_id = ?';
 
 	let event_id = req.params.eventid;
 
@@ -79,11 +78,13 @@ app.get('/register', (request, response) => {
 	response.render('register.hbs', {});
 });
 
-
 app.get('/profile', (request, response) => {
 	response.render('profile.hbs', {});
 });
 
+app.get('/addevent', (request, response) => {
+	response.render('addevent.hbs');
+});
 app.get('/admin', (request, response) => {
     var sql = 'SELECT a.event_id, a.vendor_id, a.description, a.name, c.name as tag_name \n' +
         'FROM event a\n' +
@@ -107,29 +108,25 @@ app.get('/editor', (request, response) => {
 });
 
 app.get('/admin', (request, response) => {
-    var sql = 'SHOW COLUMNS FROM Events';
-    db.query(sql, (err, result)=>{
-        if (err){
-            throw err;
-        }else{
-            var text = "";
-            for (var i =0; i<result.length; i++){
-                text += result[i].Field + " ";
-            }
-            // response.send(result[0]);
-            response.render('admin.hbs', {
-                result: text
-            });
-        }
-
-    });
+	var sql = 'SHOW COLUMNS FROM Events';
+	db.query(sql, (err, result) => {
+		if (err) {
+			throw err;
+		} else {
+			var text = '';
+			for (var i = 0; i < result.length; i++) {
+				text += result[i].Field + ' ';
+			}
+			// response.send(result[0]);
+			response.render('admin.hbs', {
+				result: text
+			});
+		}
+	});
 });
 
 app.get('/editor', (request, response) => {
-    response.render('editor.hbs', {
-
-
-    });
+	response.render('editor.hbs', {});
 });
 
 app.get('/logout', (request, response) => {
@@ -174,4 +171,3 @@ server.listen(10000, function(err) {
 	console.log(port + ' is running');
 	db;
 });
-

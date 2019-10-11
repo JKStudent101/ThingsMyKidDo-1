@@ -1,4 +1,4 @@
-const mysql = require("mysql");
+const mysql = require('mysql');
 
 module.exports.init = ()=>{
     var db = mysql.createConnection({
@@ -8,12 +8,13 @@ module.exports.init = ()=>{
         database: 'thingsKidsDoModified'
     });
 
-    db.connect((err)=>{
-        if(err){
-            throw err;
-        }
-        console.log('Successfully connected to MySQL')
-    });
 
-    return db;
+	db.connect((err) => {
+		if (err) {
+			throw err;
+		}
+		console.log('Successfully connected to MySQL');
+	});
+
+	return db;
 };
