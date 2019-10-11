@@ -82,6 +82,9 @@ app.get('/profile', (request, response) => {
 	response.render('profile.hbs', {});
 });
 
+app.get('/addevent', (request, response) => {
+	response.render('addevent.hbs');
+});
 app.get('/admin', (request, response) => {
 	var sql = 'SHOW COLUMNS FROM Events';
 	db.query(sql, (err, result) => {
