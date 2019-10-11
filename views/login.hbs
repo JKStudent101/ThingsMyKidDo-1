@@ -4,38 +4,26 @@
         <!-- Bootstrap CSS -->
         <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-        <!--<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>-->
+        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
         
         <link href="/css/menu.css" type="text/css" rel="stylesheet" />
         <link href="/css/login.css" type="text/css" rel="stylesheet" />
     </head>
 
     <body>
-        <div id="bg"></div> 
-        {{> menu}}
-        
-        <img src="/css/src/thingsmyKidsdo.jpg">
-        
-<!--        <div class="container position=relative width="> -->
-        <div class="center">
-            Login Page
-            <div>Welcome</div>
-            <div>
-                <form class="position=absolute ">
-                    <div class="form-group">
-                        <label for="User">Username</label>
-                        <input type="text" id="User" placeholder="Username">
-                    </div>
-                    <div class="form-group">
-                        <label for="PW">Password</label>
-                        <input type="text" id="PW" placeholder="Password"><!--class="form-control"-->
-                    </div>
-                    <div class="inline justify-content=center" >
-                        <button type="submit" class="btn btn-default">Sign in</button>
-                        <button type="submit" class="btn btn-default">Join</button>
-                    </div>
-                </form>
-            </div>
+        <div id="bg">{{> menu}}</div>
+
+
+        <div class="main">
+            <p class="sign" align="center">Sign in</p>
+            <form class="form1">
+                <input class="un " type="text" align="center" placeholder="Username">
+                <input class="pass" type="password" align="center" placeholder="Password">
+                <a class="submit" align="center">Sign in</a>
+                <a class="submit" align="center" href="/register">Register</a>  
+                <p class="forgot" align="center"><a href="#">Forgot Password?</p>
+
 
         </div>
         
