@@ -2,67 +2,43 @@ $(document).ready(() => {
 	// to get events filter,
 	// const soething = '/events/id' + $(inputid).val();
 	let data1 = [];
-
-	// $('#getallevents').click(() => {
-	// 	// const requestOne = 'event/' + $('#SearchBar').val();
-	// 	// console.log(requestURL);
-	// 	$.ajax({
-	// 		url: requestURL,
-	// 		type: 'GET',
-	// 		dataType: 'json',
-	// 		success: (data) => {
-	// 			$.each(data, function(k, v) {
-	// 				$('#events').append(
-	// 					'<span>' +
-	// 						'<h3>' +
-	// 						v.eventName +
-	// 						'</h3>' +
-	// 						'<p>' +
-	// 						v.eventDescription +
-	// 						'</p>' +
-	// 						'</span>'
-	// 				);
-	// 			});
-	// 		}
-	// 	});
-	// });
-	$('#getallevents').click((e) => {
+	$('#getData').click((e) => {
+		console.log('clicked');
 		// get user input
-		const requestOne = 'event/' + $('#SearchBar').val();
-		const requestAll = 'event/getall';
+		const requestOne = '/event/' + $('#SearchBar').val();
+		const requestAll = '/event/getall';
 		e.preventDefault();
 		$.ajax({
 			// url: requestAll
 			url: $('#SearchBar').val().length > 0 ? requestOne : requestAll,
+			// url: '/event/getall',
 			type: 'GET',
 			dataType: 'json',
 			success: (data) => {
 				$.each(data, function(k, v) {
 					data1.push(v);
+					console.log(v);
 					$('#events').append(
 						'<span>' +
 							'<h3>' +
-							v.eventName +
+							v.name +
 							'</h3>' +
 							'<p>' +
-							v.eventDescription +
+							v.description +
 							'</p>' +
 							'</span>'
 					);
 				});
-				location.reload();
 			}
 		});
 	});
 });
-
 
 function initMap() {
 	// Map options
 	var options = {
 		zoom: 9,
 		// center: { lat: 49.4928, lng: -117.2948 },
-
 
 		mapTypeControlOptions: {
 			mapTypeIds: [ 'styled_map' ]
@@ -196,13 +172,11 @@ function initMap() {
 				'<div id="bodyContent">' +
 				'<p><b>Event 1 </b>, Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>' +
 				'<p>Attribution: Event 1 , <br/> <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">' +
-
 				'https://en.wikipedia.org/w/index.php?title=Uluru</a> ' +
 				'</div>' +
 				'</div>'
 		},
 		{
-
 			coords: { lat: 49.512343, lng: -117.263926 },
 			// 49.512343, -117.263926
 
@@ -282,6 +256,4 @@ function initMap() {
 
 	map.mapTypes.set('styled_map', styledMapType);
 	map.setMapTypeId('styled_map');
-
 }
-
