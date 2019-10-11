@@ -1,8 +1,68 @@
+$(document).ready(() => {
+	// to get events filter,
+	// const soething = '/events/id' + $(inputid).val();
+	let data1 = [];
+
+	// $('#getallevents').click(() => {
+	// 	// const requestOne = 'event/' + $('#SearchBar').val();
+	// 	// console.log(requestURL);
+	// 	$.ajax({
+	// 		url: requestURL,
+	// 		type: 'GET',
+	// 		dataType: 'json',
+	// 		success: (data) => {
+	// 			$.each(data, function(k, v) {
+	// 				$('#events').append(
+	// 					'<span>' +
+	// 						'<h3>' +
+	// 						v.eventName +
+	// 						'</h3>' +
+	// 						'<p>' +
+	// 						v.eventDescription +
+	// 						'</p>' +
+	// 						'</span>'
+	// 				);
+	// 			});
+	// 		}
+	// 	});
+	// });
+	$('#getallevents').click((e) => {
+		// get user input
+		const requestOne = 'event/' + $('#SearchBar').val();
+		const requestAll = 'event/getall';
+		e.preventDefault();
+		$.ajax({
+			// url: requestAll
+			url: $('#SearchBar').val().length > 0 ? requestOne : requestAll,
+			type: 'GET',
+			dataType: 'json',
+			success: (data) => {
+				$.each(data, function(k, v) {
+					data1.push(v);
+					$('#events').append(
+						'<span>' +
+							'<h3>' +
+							v.eventName +
+							'</h3>' +
+							'<p>' +
+							v.eventDescription +
+							'</p>' +
+							'</span>'
+					);
+				});
+				location.reload();
+			}
+		});
+	});
+});
+
+
 function initMap() {
 	// Map options
 	var options = {
 		zoom: 9,
-		center: { lat: 49.4928, lng: -117.2948 },
+		// center: { lat: 49.4928, lng: -117.2948 },
+
 
 		mapTypeControlOptions: {
 			mapTypeIds: [ 'styled_map' ]
@@ -134,14 +194,18 @@ function initMap() {
 				'</div>' +
 				'<h1 id="firstHeading" class="firstHeading">Thermography </h1>' +
 				'<div id="bodyContent">' +
-				'<p><b>Uluru</b>, Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>' +
-				'<p>Attribution: Uluru, <br/> <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">' +
+				'<p><b>Event 1 </b>, Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>' +
+				'<p>Attribution: Event 1 , <br/> <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">' +
+
 				'https://en.wikipedia.org/w/index.php?title=Uluru</a> ' +
 				'</div>' +
 				'</div>'
 		},
 		{
-			coords: { lat: 49.296871, lng: -117.636192 },
+
+			coords: { lat: 49.512343, lng: -117.263926 },
+			// 49.512343, -117.263926
+
 			iconImage:
 				'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
 			content:
@@ -204,6 +268,8 @@ function initMap() {
 			});
 		}
 	}
+	// get current location
+
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(function(position) {
 			initialLocation = new google.maps.LatLng(
@@ -216,4 +282,6 @@ function initMap() {
 
 	map.mapTypes.set('styled_map', styledMapType);
 	map.setMapTypeId('styled_map');
+
 }
+
