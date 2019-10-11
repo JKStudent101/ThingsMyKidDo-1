@@ -13,10 +13,20 @@
     </head>
 
     <body>
-        <div id="bg"></div>
-        {{> menu}}
+        <div id="bg">
+            {{> menu}}
+        </div>
 
-        <img src="/css/src/thingsmyKidsdo.jpg" style="max-width: 500px; max-height: 500px">
+        <!--<img src="/css/src/thingsmyKidsdo.jpg" style="max-width: 500px; max-height: 500px">-->
+
+        <div class="i-logo">
+            <div></div>
+            <div></div>
+            <img src="/css/src/thingsmyKidsdo.jpg" style="max-width: 500px; max-height: 500px">
+            <div></div>
+            <div></div>
+        </div>
+
 
         <!--        <div class="container position=relative width="> -->
         <div class="center">
@@ -40,15 +50,15 @@
                                     <h4 class="modal-title">Create Account</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <div class="tab">Name:
-                                        <p><input placeholder="Username/Email address" oninput="this.className = ''" name="fname"></p>
-                                        <p><input placeholder="Phone number" oninput="this.className = ''" name="phone"></p>
-                                        <p><input placeholder="Password" oninput="this.className = ''" name="pw"></p>
-                                        <p><input placeholder="Comfirm Password" oninput="this.className = ''" name="confirm_pw"></p>
+                                    <div class="tab">
+                                        <p><input class="register" placeholder="Username/Email address" name="fname"></p>
+                                        <p><input class="register" placeholder="Phone number" oninput="this.className = ''" name="phone"></p>
+                                        <p><input class="register" placeholder="Password" oninput="this.className = ''" name="pw"></p>
+                                        <p><input class="register" placeholder="Comfirm Password" oninput="this.className = ''" name="confirm_pw"></p>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Continue</button>
+                                    <button type="button" class="submit" data-dismiss="modal">Continue</button>
                                 </div>
                             </div>
                         </div>
@@ -56,26 +66,76 @@
 
                     <div class="modal fade" id="Business" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
-
                             <!-- Modal content-->
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     <h4 class="modal-title">Create Account</h4>
                                 </div>
-                                <div class="modal-body">
-                                    <div class="tab">Name:
-                                        <p><input placeholder="First Name" oninput="this.className = ''" name="fname"></p>
-                                        <p><input placeholder="Last name" oninput="this.className = ''" name="lname"></p>
-                                        <p><input placeholder="Organization name" oninput="this.className = ''" name="org_name"></p>
-                                        <p><input placeholder="Phone number" oninput="this.className = ''" name="phone"></p>
-                                        <p><input placeholder="Email address" oninput="this.className = ''" name="email"></p>
-                                        <p><input placeholder="Password" oninput="this.className = ''" name="pw"></p>
-                                        <p><input placeholder="Comfirm Password" oninput="this.className = ''" name="confirm_pw"></p>
+                                <div class="modal-body" id="B-1">
+                                    <div class="tab">
+                                        <p><input class="register" placeholder="First Name" oninput="this.className = ''" name="fname"></p>
+                                        <p><input class="register" placeholder="Last name" oninput="this.className = ''" name="lname"></p>
+                                        <p><input class="register" placeholder="Organization name" oninput="this.className = ''" name="org_name"></p>
+                                        <p><input class="register" placeholder="Phone number" oninput="this.className = ''" name="phone"></p>
+                                        <p><input class="register" placeholder="Email address" oninput="this.className = ''" name="email"></p>
+                                        <p><input class="register" placeholder="Password" oninput="this.className = ''" name="pw"></p>
+                                        <p><input class="register" placeholder="Comfirm Password" oninput="this.className = ''" name="confirm_pw"></p>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Continue</button>
+                                    <button type="button" class="submit" data-dismiss="modal"><a href="#Business-2">Continue</a></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal Page 2 -->
+                    <div class="modal fade" id="Business-2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Create Account</h4>
+                                </div>
+                                <div class="modal-body" id="B-2">
+                                    <form class="form-horizontal pf">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">First Name</label>
+                                            <div class="col-sm-10">
+                                                <p class="form-control-static">Alexander</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">Last Name</label>
+                                            <div class="col-sm-10">
+                                                <p class="form-control-static">Fong</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">Organization</label>
+                                            <div class="col-sm-10">
+                                                <p class="form-control-static">BC Soccer Community</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">Phone Number</label>
+                                            <div class="col-sm-10">
+                                                <p class="form-control-static">###-###-####</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">Email Address</label>
+                                            <div class="col-sm-10">
+                                                <p class="form-control-static">AlexFong@bcsoccer.ca</p>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="submit" data-dismiss="modal"><a href="#B-1">Back</a></button>
+                                    <button type="button" class="submit" data-dismiss="modal">Register</button>
                                 </div>
                             </div>
                         </div>
