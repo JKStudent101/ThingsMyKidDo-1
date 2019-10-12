@@ -7,6 +7,10 @@ const session = require('client-sessions');
 const mysql = require('mysql');
 const webpush = require('web-push');
 
+// import event routes
+const event = require('./routes/event');
+app.use('/event', event);
+
 var db = require('./config/database').init();
 
 app.set('view engine', 'hbs');
@@ -28,46 +32,6 @@ hbs.registerPartials(__dirname + '/views/partials');
 
 app.get('/', (request, response) => {
 	response.redirect('/login');
-});
-
-app.get('/event', (request, response) => {
-	response.render('event.hbs', {});
-});
-app.get('/event/getall', (request, response) => {
-	let sql = 'SELECT * FROM event';
-	db.query(sql, (err, result) => {
-		if (err) {
-			throw err;
-		} else {
-			var data = [];
-			for (var i = 0; i < result.length; i++) {
-				data.push(result[i]);
-			}
-			response.send(data);
-		}
-	});
-});
-
-app.get('/event/:eventid', (req, res) => {
-	let sql = 'select * from event where event_id = ?';
-
-	let event_id = req.params.eventid;
-
-	db.query(sql, event_id, (err, result) => {
-		if (err) {
-			throw err;
-		} else {
-			var data = [];
-			for (var i = 0; i < result.length; i++) {
-				data.push(result[i]);
-			}
-			if (data) {
-				res.send(data);
-			} else {
-				res.send({});
-			}
-		}
-	});
 });
 
 app.get('/login', (request, response) => {
