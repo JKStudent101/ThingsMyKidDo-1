@@ -37,8 +37,16 @@
                 <form>
                     <div class="container" style="max-width: 600px">
                         <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#Parent">Get Notified</button>
-                        <button type="button" class="btn btn-default btn-block" data-toggle="modal" data-target="#Business">Share YOUR event</button>
+                        <button type="button" class="btn btn-default btn-block" data-toggle="modal" data-target="#Business1">Share YOUR event</button>
                     </div>
+
+                    <!--
+                    Multiple methods for multi-page
+                        #1: Multiple Modals: "https://codepen.io/kabirsingh/pen/yFJEd"
+                        #2: Multiple pages in one Modal: "https://github.com/ngzhian/multi-step-modal"
+
+                        !- Source sites
+                    -->
 
                     <div class="modal fade" id="Parent" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
@@ -64,9 +72,10 @@
                         </div>
                     </div>
 
-                    <div class="modal fade" id="Business" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+                    <!-- Modal Method #2 -->
+                    <div class="modal fade" id="Business1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
-                            <!-- Modal content-->
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -84,58 +93,77 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="submit" data-dismiss="modal"><a href="#Business-2">Continue</a></button>
+                                    <button type="button" class="submit" id="Register-info">Continue</button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Modal Page 2 -->
-                    <div class="modal fade" id="Business-2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="Business2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <!-- Modal content-->
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title">Create Account</h4>
+                                    <h4 class="modal-title">Confirm Account Info</h4>
                                 </div>
                                 <div class="modal-body" id="B-2">
-                                    <form class="form-horizontal pf">
+                                    <form class="form-horizontal pf"><!---->
                                         <div class="form-group">
-                                            <label class="col-sm-2 control-label">First Name</label>
-                                            <div class="col-sm-10">
+                                            <label class="control-label">First Name</label>
+                                            <div>
                                                 <p class="form-control-static">Alexander</p>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-2 control-label">Last Name</label>
-                                            <div class="col-sm-10">
+                                            <label class=" control-label">Last Name</label>
+                                            <div class="">
                                                 <p class="form-control-static">Fong</p>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-2 control-label">Organization</label>
-                                            <div class="col-sm-10">
+                                            <label class="control-label">Organization</label>
+                                            <div class="">
                                                 <p class="form-control-static">BC Soccer Community</p>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-2 control-label">Phone Number</label>
-                                            <div class="col-sm-10">
+                                            <label class="control-label">Phone Number</label>
+                                            <div class="">
                                                 <p class="form-control-static">###-###-####</p>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-2 control-label">Email Address</label>
-                                            <div class="col-sm-10">
+                                            <label class="control-label">Email Address</label>
+                                            <div class="">
                                                 <p class="form-control-static">AlexFong@bcsoccer.ca</p>
                                             </div>
                                         </div>
                                     </form>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="submit" data-dismiss="modal"><a href="#B-1">Back</a></button>
-                                    <button type="button" class="submit" data-dismiss="modal">Register</button>
+                                    <button type="button" class="submit" id="Redo-info">Back</button>
+                                    <button type="button" class="submit" id="Confirm-info">Register</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="Business3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Registration Complete!</h4>
+                                </div>
+                                <div class="modal-body" id="B-3">
+                                    <h1>All done!!!</h1>
+                                    <p></p>
+                                    <p>please log in to your account.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="submit" data-dismiss="modal">Close</button>
                                 </div>
                             </div>
                         </div>
@@ -148,6 +176,24 @@
             </div>
 
         </div>
+
+    <script>
+        //set "Continue" button id on click to hide first modal and trigger next modal
+        $("#Register-info").on( "click", function() {
+            $('#Business1').modal('hide');
+            $('#Business2').modal('show');
+        });
+        //set "Back" button id on click to hide first modal and trigger next modal
+        $("#Redo-info").on( "click", function() {
+            $('#Business2').modal('hide');
+            $('#Business1').modal('show');
+        });
+        //set "Register" button id on click to hide first modal and trigger next modal
+        $("#Confirm-info").on( "click", function() {
+            $('#Business2').modal('hide');
+            $('#Business3').modal('show');
+        });
+    </script>
 
 
 
