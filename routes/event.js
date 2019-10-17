@@ -9,6 +9,8 @@ var db = require('../config/database').init();
 router.get('/', (request, response) => {
 	response.render('event.hbs', {});
 });
+
+// get all events
 router.get('/getall', (request, response) => {
 	let sql = 'SELECT * FROM event';
 	db.query(sql, (err, result) => {
@@ -24,12 +26,13 @@ router.get('/getall', (request, response) => {
 	});
 });
 
-router.get('/:eventid', (req, res) => {
-	let sql = 'select * from event where event_id = ?';
+// find all event tags
+router.get('/search/:tags', (req, res) => {
+	let sql = 'select * from event where catalog = ?';
 
-	let event_id = req.params.eventid;
+	let event_tag = req.params.tags;
 
-	db.query(sql, event_id, (err, result) => {
+	db.query(sql, event_tag, (err, result) => {
 		if (err) {
 			throw err;
 		} else {
@@ -39,8 +42,27 @@ router.get('/:eventid', (req, res) => {
 			}
 			if (data) {
 				res.send(data);
-			} else {
-				res.send({});
+			}
+		}
+	});
+});
+
+// find all events with tags based on event names
+router.get('/search/tags/:name', (req, res) => {
+	let sql = 'select * from event where event = ?';
+
+	let event_tag = req.params.name;
+
+	db.query(sql, event_tag, (err, result) => {
+		if (err) {
+			throw err;
+		} else {
+			var data = [];
+			for (var i = 0; i < result.length; i++) {
+				data.push(result[i]);
+			}
+			if (data) {
+				res.send(data);
 			}
 		}
 	});
