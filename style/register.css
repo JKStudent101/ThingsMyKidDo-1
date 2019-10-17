@@ -3,3 +3,83 @@
 .page {
     display: none;
 }
+
+.i-logo {
+    display: flex;
+    flex-direction: row;
+    /*justify-content: center;*/
+    /*align-items: center;*/
+    margin-top: 5%;
+}
+
+.i-logo>div {
+    display: flex;
+    width: 250px;
+    height: 250px;
+    margin: 10px;
+    /*border: black solid 2px;*/
+    justify-content: center;
+}
+
+
+.i-logo>img {
+    display: flex;
+    width: 400px;
+    height: 400px;
+    margin: 10px;
+}
+
+.sign_t {
+    padding-top: 40px;
+    color: #8C55AA;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: bold;
+    font-size: 23px;
+}
+
+
+.register{
+    width: 90%;
+    color: rgb(38, 50, 56);
+    font-weight: 700;
+    font-size: 14px;
+    /*letter-spacing: 0.3px;*/
+    background: rgba(136, 126, 126, 0.04);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    outline: none;
+    box-sizing: border-box;
+    border: 2px solid rgba(0, 0, 0, 0.02);
+    /*margin-bottom: 50px;*/
+    margin-left: 20px;
+    text-align: left;
+    margin-bottom: 10px;
+    font-family: 'Ubuntu', sans-serif;
+}
+
+.register-kid{
+    width: 20%;
+    color: rgb(38, 50, 56);
+    font-weight: 700;
+    font-size: 14px;
+    /*letter-spacing: 0.3px;*/
+    background: rgba(136, 126, 126, 0.04);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    outline: none;
+    box-sizing: border-box;
+    border: 2px solid rgba(0, 0, 0, 0.02);
+    /*margin-bottom: 50px;*/
+    margin-left: 5px;
+    margin-right: 5px;
+    text-align: left;
+    margin-bottom: 10px;
+    font-family: 'Ubuntu', sans-serif;
+}
+
+.register:focus {
+    border: 2px solid rgba(0, 0, 0, 0.18) !important;
+
+}
