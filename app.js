@@ -6,6 +6,8 @@ const app = express();
 const session = require('client-sessions');
 const mysql = require('mysql');
 const webpush = require('web-push');
+const session = require('express-session');
+const bcrypt = require('bcrypt-nodejs');
 
 var db = require('./config/database').init();
 
@@ -22,6 +24,13 @@ app.use(
 		extended: true
 	})
 );
+
+app.use(session({
+    secret: 'secret',
+    name: 'mySession',
+    resave: false,
+    saveUninitialized: true,
+}));
 
 const server = require('http').createServer(app);
 hbs.registerPartials(__dirname + '/views/partials');
@@ -73,6 +82,20 @@ app.get('/event/:eventid', (req, res) => {
 app.get('/login', (request, response) => {
 	response.render('login.hbs', {});
 });
+
+app.get('/login-form', (req, res) => {
+	var username = req.body.username;
+	var password = req.body.password;
+
+	var sql = '';
+    db.query(sql, (err, result) => {
+        if (err) {
+            throw err;
+        } else {
+			ff
+		}
+		})
+	})
 
 app.get('/register', (request, response) => {
 	response.render('register.hbs', {});
@@ -151,7 +174,7 @@ const vapidKeys = {
 	privateKey: 'MlG2jt47B8g9TXDao9AvxKslCn2zwi9Vhe6qDPByzDg'
 };
 
-webpush.setVapidDetails('mailto:myuserid@email.com', vapidKeys.publicKey, vapidKeys.privateKey);
+webpush.setVapidDetails('mailto:thingsmykidsdo.bcit@gmail.com', vapidKeys.publicKey, vapidKeys.privateKey);
 
 app.post('/text-me', (req, res) => {
 	webpush.sendNotification(dummyDB.subscription, req.body.message);
