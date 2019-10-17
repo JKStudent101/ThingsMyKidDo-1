@@ -26,10 +26,9 @@ router.get('/getall', (request, response) => {
 	});
 });
 
-// find all event tags
+// find all catalogs
 router.get('/search/:tags', (req, res) => {
-	let sql = 'select * from event where catalog = ?';
-
+	let sql = 'select * from event where category = ?';
 	let event_tag = req.params.tags;
 
 	db.query(sql, event_tag, (err, result) => {
@@ -42,6 +41,7 @@ router.get('/search/:tags', (req, res) => {
 			}
 			if (data) {
 				res.send(data);
+				req;
 			}
 		}
 	});
@@ -49,7 +49,7 @@ router.get('/search/:tags', (req, res) => {
 
 // find all events with tags based on event names
 router.get('/search/tags/:name', (req, res) => {
-	let sql = 'select * from event where event = ?';
+	let sql = 'select * from event where category = ?';
 
 	let event_tag = req.params.name;
 
