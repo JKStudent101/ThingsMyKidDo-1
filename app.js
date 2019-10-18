@@ -138,6 +138,8 @@ app.get('/admin', (req, res) => {
 app.get('/vendor/:vendor_id', (req, res) => {
 	if (!req.session.vendor) {
 		res.redirect('/logout')
+	} else if (req.params.vendor_id != req.session.vendor.user_id){
+		res.redirect('/logout')
 	} else {
 		var vendor_id = req.params.vendor_id;
 		var sql = 'SELECT a.event_id, d.name as vendor_name, a.description, a.name as event, \n' +
