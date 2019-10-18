@@ -11,7 +11,7 @@ const webpush = require('web-push');
 const event = require('./routes/event');
 app.use('/event', event);
 
-var db = require('./config/database').init();
+var db = require('./routes/database').init();
 
 app.set('view engine', 'hbs');
 app.use(express.static(__dirname + '/public'));
