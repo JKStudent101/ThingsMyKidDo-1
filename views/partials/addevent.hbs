@@ -1,5 +1,5 @@
-<h2><p class="text-center">Event Form</p></h2>
-<form class="form-horizontal">
+<p class="text-center">Event Form</p>
+<form class="form-horizontal" method="POST" action="/addevent">
   <div class="form-group">
     <label class="col-xs-3 control-label"><b>Event Name</b></label>
     <div class="col-xs-7">
@@ -28,6 +28,12 @@
     <label class="col-xs-3 control-label"><b>End Time</b></label>
     <div class="col-xs-7">
       <input class="form-control" name="endtime" type="time" id="endtime">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-xs-3 control-label"><b>Category</b></label>
+    <div class="col-xs-7">
+      <input class="form-control" name="category" type="text">
     </div>
   </div>
   <div class="form-group">
