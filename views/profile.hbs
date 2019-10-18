@@ -1,157 +1,157 @@
 <!DOCTYPE html>
 <html>
-    <head>
-         <!-- Bootstrap CSS -->
-        <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 
-        
-        <link href="/css/menu.css" type="text/css" rel="stylesheet" />
-        <link href="/css/Profile.css" type="text/css" rel="stylesheet" />
+<head>
+    <!-- Bootstrap CSS -->
+    {{> bootstrap}}
 
-    </head>
+    <link href="/css/menu.css" type="text/css" rel="stylesheet" />
+    <link href="/css/Profile.css" type="text/css" rel="stylesheet" />
 
-    <body>
-        {{> menu}}
+</head>
 
-        <div class="container">
-            <div class="dropdown">
-                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    Select Profile
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    <li><a href="#">Profile 1</a></li>
-                    <li><a href="#">Profile 2</a></li>
-                    <li><a href="#">Profile 3</a></li>
-                    <li role="separator" class="divider"></li>
-                    <li>
-                        <a href="#">
-                            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">Create a Profile</button>
-                        </a>
-                    </li>
-                </ul>
-                <!-- Modal -->
-                <div id="myModal" class="modal fade" role="dialog">
-                    <div class="modal-dialog">
+<body>
+    {{> menu}}
 
-                        <!-- Modal content-->
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                <h4 class="modal-title">Edit Profile</h4>
-                            </div>
-                            <div class="modal-body">
-                                <p>Editing profile.</p>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-default" data-dismiss="modal">Submit</button>
-                            </div>
+    <div class="container">
+        <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="true">
+                Select Profile
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li><a href="#">Profile 1</a></li>
+                <li><a href="#">Profile 2</a></li>
+                <li><a href="#">Profile 3</a></li>
+                <li role="separator" class="divider"></li>
+                <li>
+                    <a href="#">
+                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">Create
+                            a Profile</button>
+                    </a>
+                </li>
+            </ul>
+            <!-- Modal -->
+            <div id="myModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Edit Profile</h4>
                         </div>
-
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="container col-md-6">
-                    <div class="container">
-                        Profile Page
-                        <div class="container col-md-6">
-                            <div class="box">
-                                <div class="inline-block">
-
-                                    <div class="container">
-                                        <ul class="list-inline">
-                                            <li>
-                                                <a href="#">
-                                                    <button type="button" class="btn btn-default">Edit profile</button>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#">
-                                                    <button type="button" class="btn btn-default">Delete profile</button>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-         <!--                       <div class="btn-group-vertical" role="group" aria-label="..."></div>-->
-                                </div>
-
-                                <form class="form-horizontal pf">
-                                    <img class="profile-pic" src="sample.jpg" alt="pic" style="max-width: 300px; max-height: 300px">
-                                    <div class="form-group">
-                                        <label class="col-sm-2 control-label">Name</label>
-                                        <div class="col-sm-10">
-                                            <p class="form-control-static">Jay</p>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-2 control-label">Age</label>
-                                        <div class="col-sm-10">
-                                            <p class="form-control-static">7</p>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-2 control-label">Hobbies</label>
-                                        <div class="col-sm-10">
-                                            <p class="form-control-static">Soccer, Drawing</p>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
+                        <div class="modal-body">
+                            <p>Editing profile.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-default" data-dismiss="modal">Submit</button>
                         </div>
                     </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="container" style="width: 100%; background-color: lightgray";>
-                        <h2>Favorites</h2>
-                    </div>
-                    <div class="list-group">
-                        <a href="#" class="list-group-item">
-                            <button type="button" class="btn btn-default btn-sm" style="position:absolute; right: 5px;">
-                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                            </button>
-                            <h4 >Children's Art Contest</h4>
-                            <p>Join us at the Central Art Gallery</p>
-                        </a>
-                        <a href="#" class="list-group-item">
-                            <button type="button" class="btn btn-default btn-sm remove-event">
-                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                            </button>
-                            <h4>Summer Soccer camp</h4>
-                            <p>sponsored by the Victoria Soccer Community</p>
-                        </a>
-                        <a href="#" class="list-group-item">
-                            <button type="button" class="btn btn-default btn-sm remove-event">
-                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                            </button>
-                            <h4>Event 3</h4>
-                            <p>info 3</p>
-                        </a>
-                        <a href="#" class="list-group-item">
-                            <button type="button" class="btn btn-default btn-sm remove-event">
-                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                            </button>
-                            <h4>Event 4</h4>
-                            <p>info 4</p>
-                        </a>
-                        <a href="#" class="list-group-item">
-                            <button type="button" class="btn btn-default btn-sm remove-event">
-                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                            </button>
-                            <h5>Event 5</h5>
-                            <p>info 5</p>
-                        </a>
-                    </div>
-
 
                 </div>
             </div>
-
         </div>
-    </body>
+        <div class="row">
+            <div class="container col-md-6">
+                <div class="container">
+                    Profile Page
+                    <div class="container col-md-6">
+                        <div class="box">
+                            <div class="inline-block">
+
+                                <div class="container">
+                                    <ul class="list-inline">
+                                        <li>
+                                            <a href="#">
+                                                <button type="button" class="btn btn-default">Edit profile</button>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <button type="button" class="btn btn-default">Delete profile</button>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!--                       <div class="btn-group-vertical" role="group" aria-label="..."></div>-->
+                            </div>
+
+                            <form class="form-horizontal pf">
+                                <img class="profile-pic" src="sample.jpg" alt="pic"
+                                    style="max-width: 300px; max-height: 300px">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Name</label>
+                                    <div class="col-sm-10">
+                                        <p class="form-control-static">Jay</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Age</label>
+                                    <div class="col-sm-10">
+                                        <p class="form-control-static">7</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Hobbies</label>
+                                    <div class="col-sm-10">
+                                        <p class="form-control-static">Soccer, Drawing</p>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="container" style="width: 100%; background-color: lightgray" ;>
+                    <h2>Favorites</h2>
+                </div>
+                <div class="list-group">
+                    <a href="#" class="list-group-item">
+                        <button type="button" class="btn btn-default btn-sm" style="position:absolute; right: 5px;">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </button>
+                        <h4>Children's Art Contest</h4>
+                        <p>Join us at the Central Art Gallery</p>
+                    </a>
+                    <a href="#" class="list-group-item">
+                        <button type="button" class="btn btn-default btn-sm remove-event">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </button>
+                        <h4>Summer Soccer camp</h4>
+                        <p>sponsored by the Victoria Soccer Community</p>
+                    </a>
+                    <a href="#" class="list-group-item">
+                        <button type="button" class="btn btn-default btn-sm remove-event">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </button>
+                        <h4>Event 3</h4>
+                        <p>info 3</p>
+                    </a>
+                    <a href="#" class="list-group-item">
+                        <button type="button" class="btn btn-default btn-sm remove-event">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </button>
+                        <h4>Event 4</h4>
+                        <p>info 4</p>
+                    </a>
+                    <a href="#" class="list-group-item">
+                        <button type="button" class="btn btn-default btn-sm remove-event">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </button>
+                        <h5>Event 5</h5>
+                        <p>info 5</p>
+                    </a>
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+</body>
 
 </html>
-   
