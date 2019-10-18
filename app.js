@@ -118,10 +118,6 @@ app.get('/admin', (req, res) => {
 });
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 04c57dd25a7df10a17ceca81ed1ae715863209d6
 
 app.get('/logout', (request, response) => {
 	response.redirect('/login');
