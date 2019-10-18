@@ -233,7 +233,7 @@ app.get('/send-notification', (req, res) => {
 });
 
 app.get('/logout', (req, res) => {
-	req.session.vendor.des
+	req.session.destroy();
 	res.cookie('i', true, { expires: new Date() });
 	res.redirect('/login');
 });
