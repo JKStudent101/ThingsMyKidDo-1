@@ -1,0 +1,18 @@
+.add_event > .btn-info{
+    background-color: #1ACF51;
+    font-size: 25px;
+    margin-bottom: 30px;
+}
+
+.container{
+    margin-left: 30px;
+}
+
+table.table{
+    table-layout: fixed;
+    width: 800px;
+}
+
+/*.col-md-5{*/
+    /*float: right;*/
+/*}*/
