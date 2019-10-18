@@ -9,7 +9,7 @@ const webpush = require('web-push');
 
 // import event routes
 const event = require('./routes/event');
-app.use('/event', event);
+const addevent = require('./routes/addevent')
 
 var db = require('./routes/database').init();
 
@@ -26,7 +26,8 @@ app.use(
 		extended: true
 	})
 );
-
+app.use('/event', event);
+app.use('/addevent', addevent)
 const server = require('http').createServer(app);
 hbs.registerPartials(__dirname + '/views/partials');
 
@@ -76,28 +77,7 @@ app.get('/admin', (req, res) => {
 });
 
 
-// app.get('/admin', (request, response) => {
-// 	var sql = 'SHOW COLUMNS FROM Events';
-// 	db.query(sql, (err, result) => {
-// 		if (err) {
-// 			throw err;
-// 		} else {
-// 			var text = '';
-// 			for (var i = 0; i < result.length; i++) {
-// 				text += result[i].Field + ' ';
-// 			}
-// 			// response.send(result[0]);
-// 			response.render('admin.hbs', {
-				
-// 				result: text
-// 			});
-// 		}
-// 	});
-// });
 
-// app.get('/editor', (request, response) => {
-// 	response.render('editor.hbs', {});
-// });
 
 app.get('/logout', (request, response) => {
 	response.redirect('/login');
