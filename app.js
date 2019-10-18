@@ -270,7 +270,7 @@ app.get('/logout', (req, res) => {
 });
 
 
-server.listen(10000, function (err) {
+server.listen(port, function (err) {
 	if (err) {
 		console.log(err);
 		return false;
