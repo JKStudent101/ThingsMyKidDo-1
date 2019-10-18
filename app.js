@@ -72,12 +72,56 @@ app.get('/vendor/:vendor_id', (req, res) => {
 });
 
 
-app.get('/admin', (req, res) => {
-	res.render('admin.hbs', {});
+app.get('/delete/:event_id', (req, res)=>{
+	var event_id = req.params.event_id;
+
+	var sql_query = 'select vendor_id from event where event_id =?';
+	db.query(sql_query,event_id, (err,result)=>{
+        if (err) {
+            throw err;
+        } else {
+        	console.log(result);
+            var vendor_id = result[0].vendor_id;
+            var sql_delete = 'delete from event where event_id = ?';
+            db.query(sql_delete, event_id,(err, result) => {
+                if (err) {
+                    throw err;
+                } else {
+                	//once cookies is finish, change vendor_id to cookies' vendor_id
+					//if cookies' user is admin, add another if statement to redirect to 'admin'
+                    res.redirect('/vendor/' + vendor_id);
+                }
+            });
+        }
+	});
+
 });
 
 
+app.get('/admin', (req, res) => {
+    var sql = 'SELECT a.event_id, d.name as vendor_name, a.description, a.name as event, \n' +
+        'c.name as tag_name, date_format(a.start_date, "%Y/%m/%d") as start_date, date_format(a.end_date, "%Y/%m/%d") as end_date, \n'+
+        'a.status, a.isApproved\n'+
+        'FROM event a\n' +
+        'LEFT JOIN event_tags b ON a.event_id = b.event_id\n' +
+        'LEFT JOIN tags c ON b.tag_id = c.tag_id\n'+
+        'LEFT JOIN vendor d ON a.vendor_id = d.user_id';
+    db.query(sql, (err, result) => {
+        if (err) {
+            throw err;
+        } else {
+            res.render('admin.hbs', {
+                data: result,
+            });
+        }
+    });
+});
 
+
+<<<<<<< HEAD
+
+=======
+>>>>>>> 04c57dd25a7df10a17ceca81ed1ae715863209d6
 
 app.get('/logout', (request, response) => {
 	response.redirect('/login');
