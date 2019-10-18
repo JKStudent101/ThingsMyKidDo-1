@@ -25,6 +25,10 @@
                             <td>Vendor</td>
                             <td>Event</td>
                             <td>Event Description</td>
+                            <td>Start Date</td>
+                            <td>End Date</td>
+                            <td>Status</td>
+                            <td>Approval status</td>
                             <td>Tag name</td>
                             <td>Actions</td>
                         </tr>
@@ -33,14 +37,18 @@
                         {{#each data}}
                         <tr>
                             <td>{{event_id}} </td>
-                            <td>{{vendor_id}}</td>
-                            <td>{{name}}</td>
+                            <td>{{vendor_name}}</td>
+                            <td>{{event}}</td>
                             <td>{{description}}</td>
+                            <td>{{start_date}}</td>
+                            <td>{{end_date}}</td>
+                            <td>{{status}}</td>
+                            <td>{{isApproved}}</td>
                             <td>{{tag_name}}</td>
                             <td>
                                 <!--<a href="/update/<%= data[i].id %>" class="btn btn-info">Edit</a>-->
                                 <!--<a href="/delete/<%= data[i].id %>" class="btn btn-danger">Delete</a>-->
-                                <a href="#" class="btn btn-info">Edit</a>
+                                <a href="#" class="btn btn-info">Approve</a>
                                 <a href="#" class="btn btn-danger">Delete</a>
                             </td>
                         </tr>
@@ -49,11 +57,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="col-md-6">
-                    <div class="card-body">
-                        {{> addevent}}
-                    </div>
-                </div>
+
             </div>
         </div>
 
