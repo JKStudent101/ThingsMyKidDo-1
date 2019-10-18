@@ -1,13 +1,11 @@
 const express = require('express');
 
 const router = express.Router();
-
-var db = require('../config/database').init();
-
+const db = require('./database').init();
 // to /event
 
 router.get('/', (request, response) => {
-	response.render('event.hbs', {});
+	response.render('event.hbs');
 });
 
 // get all events
@@ -29,6 +27,7 @@ router.get('/getall', (request, response) => {
 // find all catalogs
 router.get('/search/:tags', (req, res) => {
 	let sql = 'select * from event where category = ?';
+
 	let event_tag = req.params.tags;
 
 	db.query(sql, event_tag, (err, result) => {
@@ -48,9 +47,9 @@ router.get('/search/:tags', (req, res) => {
 });
 
 // find all events with tags based on event names
-router.get('/search/tags/:name', (req, res) => {
-	let sql = 'select * from event where category = ?';
-
+router.get('/search/name/:name', (req, res) => {
+	let sql = 'select * from event';
+	let db = require('./database').init();
 	let event_tag = req.params.name;
 
 	db.query(sql, event_tag, (err, result) => {
