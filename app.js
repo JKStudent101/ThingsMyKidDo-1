@@ -17,7 +17,7 @@ const session = require('express-session');
 const event = require('./routes/event');
 app.use('/event', event);
 
-var db = require('./config/database').init();
+var db = require('./routes/database').init();
 
 app.set('view engine', 'hbs');
 app.use(express.static(__dirname + '/public'));
@@ -30,7 +30,7 @@ app.use(cookieParser());
 app.use(session({
 	secret: 'love',
 	resave: false,
-    saveUninitialized: true,
+	saveUninitialized: true,
 }))
 app.use(express.json());
 app.use(
@@ -63,9 +63,9 @@ app.post('/login-form', [
 	// console.log(req.body)
 	var username = req.body.username;
 	var password = req.body.password;
-	var sql = `SELECT user_type, username, pass_hash FROM thingsKidsDoModified.user
-	WHERE username = \"${username}\"`;
-	db.query(sql, (err, result) => {
+	var sql = 'SELECT u.user_id, u.user_type, u.username, u.pass_hash FROM thingsKidsDoModified.user as u ' +
+		'WHERE username = ?';
+	db.query(sql, username, (err, result) => {
 		if (err) {
 			throw err;
 		} else {
@@ -77,11 +77,11 @@ app.post('/login-form', [
 			} else if (bcrypt.compareSync(password, result[0].pass_hash)) {
 				let salt = bcrypt.genSaltSync(saltRounds);
 				res.cookie('i', bcrypt.hashSync(username, salt));
-				if (result[0].user_type === 'admin'){req.session.admin = result[0]; res.redirect("/admin")}
-				else if (result[0].user_type === 'vendor'){req.session.vendor = result[0]; res.redirect("/vendor")}
-				else if (result[0].user_type === 'parent'){res.redirect("/event")}
+				if (result[0].user_type === 'admin') { req.session.admin = result[0]; res.redirect("/admin") }
+				else if (result[0].user_type === 'vendor') { req.session.vendor = result[0]; res.redirect(`/vendor/${result[0].user_id}`) }
+				else if (result[0].user_type === 'parent') { res.redirect("/event") }
 				else {
-					res.cookie('i', true, {expires: new Date()});
+					res.cookie('i', true, { expires: new Date() });
 					res.send("Error: no user type")
 				}
 			} else {
@@ -111,7 +111,7 @@ app.get('/profile', (req, res) => {
 });
 
 app.get('/admin', (req, res) => {
-	console.log(req.cookies);
+	// console.log(req.cookies);
 	if (!req.cookies.i || !req.session.admin) {
 		res.redirect('/logout')
 	} else {
@@ -131,12 +131,36 @@ app.get('/admin', (req, res) => {
 	}
 });
 
-//not finished
-app.get('/vendor', (req, res) => {
-	if (!req.session.vendor){
+app.get('/vendor/:vendor_id', (req, res) => {
+	if (!req.session.vendor) {
 		res.redirect('/logout')
 	} else {
-		res.redirect('/send-notification')
+		var vendor_id = req.params.vendor_id;
+		var sql = 'SELECT a.event_id, d.name as vendor_name, a.description, a.name as event, \n' +
+			'c.name as tag_name, date_format(a.start_date, "%Y/%m/%d") as start_date, date_format(a.end_date, "%Y/%m/%d") as end_date, \n' +
+			'a.status, a.isApproved\n' +
+			'FROM event a\n' +
+			'LEFT JOIN event_tags b ON a.event_id = b.event_id\n' +
+			'LEFT JOIN tags c ON b.tag_id = c.tag_id\n' +
+			'LEFT JOIN vendor d ON a.vendor_id = d.user_id\n' +
+			'WHERE vendor_id = ?';
+		db.query(sql, vendor_id, (err, result) => {
+			if (err) {
+				throw err;
+			} else {
+				// console.log(req.session.vendor)
+				// console.log(result[0])
+				// console.log(result[0].vendor_name);
+				let vendorName = "";
+				if (result.length !== 0) {
+					let vendorName = result[0].vendor_name;
+				}
+				res.render('vendor.hbs', {
+					data: result,
+					vendor: vendorName
+				});
+			}
+		});
 	}
 });
 
@@ -209,7 +233,8 @@ app.get('/send-notification', (req, res) => {
 });
 
 app.get('/logout', (req, res) => {
-	res.cookie('i', true, {expires: new Date()});
+	req.session.vendor.des
+	res.cookie('i', true, { expires: new Date() });
 	res.redirect('/login');
 });
 

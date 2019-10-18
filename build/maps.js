@@ -1,7 +1,5 @@
-let markers = [];
-let eventMarkers = [];
-let coords;
 
+let coords;
 function initMap() {
 	// Map options
 	var options = {
@@ -130,30 +128,26 @@ function initMap() {
 	// load events on search click event
 	$('#getData').click((e) => {
 		// get user input event or all event
+		let tagOption = $('#searchOption').val().toLowerCase(); // hockey
+		let userInput = $('#SearchBar').val().toLowerCase(); // event
 
-		let tagOption = $('#searchOption').val(); // hockey
-		let userInput = $('#SearchBar').val(); // event
-
-		const requestOne = '/event/' + $('#SearchBar').val();
+		const requestOne = '/event/search/name/' + $('#SearchBar').val();
 		const requestAll = '/event/getall';
 
 		const requestAllTags = '/event/search/' + tagOption;
-
+		let markers= [];
+		
 		e.preventDefault();
 		function a1() {
+			
 			$.ajax({
-				// url: $('#SearchBar').val().length > 0 ? requestOne : requestAll,
+				// url: $('#SearchBar').val()= "getallevents"? requestAll : requestOne,
 				url: '/event/getall',
 				type: 'GET',
 				async: false,
 				dataType: 'json',
 				success: (data) => {
-					$('#events').empty();
-
-					// console.log(data);
-					// console.log(tagOption); // getAllEvents
-					// console.log(userInput.length);
-					if (tagOption == 'getAllEvents' && userInput.length == 0) {
+					if (tagOption == 'getallevents' && userInput.length == 0) {
 						$.map(data, function(value, i) {
 							// console.log(value);
 							$('#events').append(
@@ -162,6 +156,9 @@ function initMap() {
 									// v.name
 									value.name +
 									'</h3>' +
+									'<p>' +
+									value.category +
+									'</p>' +
 									'<p>' +
 									value.description +
 									'</p>' +
@@ -184,23 +181,26 @@ function initMap() {
 							addMarker(markers[i]);
 						}
 					}
+					else if(userInput.length != 0){
+						a3();
+					}
+					else {
+						a2();
+					}
 					$('#getData').attr('disabled', false);
-
-					a2();
 				}
 			});
 		}
 
 		function a2() {
+			$('#events').empty()
 			$.ajax({
 				url: requestAllTags,
 				type: 'GET',
 				dataType: 'json',
 				success: (tagEvent) => {
-					$('#events').empty();
-
 					$.map(tagEvent, function(value, i) {
-						if (tagOption == value.tags) {
+						if (tagOption == value.category.toLowerCase()) {
 							$('#events').append(
 								'<span>' +
 									'<h3>' +
@@ -208,11 +208,15 @@ function initMap() {
 									value.name +
 									'</h3>' +
 									'<p>' +
+									value.category +
+									'</p>' +
+									'<p>' +
 									value.description +
 									'</p>' +
 									'</span>'
 							);
-							eventMarkers.push({
+							
+							markers.push({
 								content: value.description,
 								coords: {
 									lat: parseFloat(value.lat),
@@ -222,30 +226,73 @@ function initMap() {
 						}
 					});
 
-					for (var i = 0; i < eventMarkers.length; i++) {
+					for (var i = 0; i < markers.length; i++) {
 						// Add markers
-						addMarker(eventMarkers[i]);
+						addMarker(markers[i]);
+					}
+				}
+			});
+		}
+		function a3() {
+			$('#events').empty()
+			$.ajax({
+				url: requestOne,
+				type: 'GET',
+				dataType: 'json',
+				success: (nameEvent) => {
+					$.map(nameEvent, function(value, i) {
+						if (value.name.toLowerCase().includes(userInput)) {
+							$('#events').append(
+								'<span>' +
+									'<h3>' +
+									// v.name
+									value.name +
+									'</h3>' +
+									'<p>' +
+									value.category +
+									'</p>' +
+									'<p>' +
+									value.description +
+									'</p>' +
+									'</span>'
+							);
+							
+							markers.push({
+								content: value.description,
+								coords: {
+									lat: parseFloat(value.lat),
+									lng: parseFloat(value.lng)
+								}
+							});
+						}
+					});
+
+					for (var i = 0; i < markers.length; i++) {
+						// Add markers
+						addMarker(markers[i]);
 					}
 				}
 			});
 		}
 		a1();
-		$.when(a1, a2).done(function(r1, r2) {});
+		// $.when(a1, a2).done(function(r1, r2) {});
 
 		// Add Marker Function
 		function addMarker(props) {
-			// console.log(props);
+			
 			var marker = new google.maps.Marker({
 				position: props.coords,
 				map: map //icon:props.iconImage
 			});
-
+			
 			// Check for customicon
 			if (props.iconImage) {
 				// Set icon image
 				marker.setIcon(props.iconImage);
 			}
+			
 			marker.setMap(map);
+			
 
 			// Check content
 			if (props.content) {
@@ -258,6 +305,7 @@ function initMap() {
 				});
 			}
 		}
+		
 	});
 
 	if (navigator.geolocation) {

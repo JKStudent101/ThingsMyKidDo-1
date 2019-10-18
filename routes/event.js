@@ -3,7 +3,7 @@ const cookieParser = require('cookie-parser');
 
 const router = express.Router();
 
-var db = require('../config/database').init();
+const db = require('../config/database').init();
 router.use(cookieParser());
 // to /event
 
@@ -32,9 +32,9 @@ router.get('/getall', (request, response) => {
 	});
 });
 
-// find all event tags
+// find all catalogs
 router.get('/search/:tags', (req, res) => {
-	let sql = 'select * from event where catalog = ?';
+	let sql = 'select * from event where category = ?';
 
 	let event_tag = req.params.tags;
 
@@ -48,15 +48,16 @@ router.get('/search/:tags', (req, res) => {
 			}
 			if (data) {
 				res.send(data);
+				req;
 			}
 		}
 	});
 });
 
 // find all events with tags based on event names
-router.get('/search/tags/:name', (req, res) => {
-	let sql = 'select * from event where event = ?';
-
+router.get('/search/name/:name', (req, res) => {
+	let sql = 'select * from event';
+	let db = require('./database').init();
 	let event_tag = req.params.name;
 
 	db.query(sql, event_tag, (err, result) => {
