@@ -1,5 +1,6 @@
 const express = require('express');
 const port = process.env.PORT || 10000;
+const host = '0.0.0.0';
 const hbs = require('hbs');
 const bodyParser = require('body-parser');
 const app = express();
@@ -267,7 +268,7 @@ app.get('/logout', (req, res) => {
 });
 
 
-server.listen(10000, function (err) {
+server.listen(port, function (err) {
 	if (err) {
 		console.log(err);
 		return false;
