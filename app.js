@@ -38,6 +38,10 @@ app.get('/login', (req, res) => {
 	res.render('login.hbs', {});
 });
 
+app.get('/home', (req, res) => {
+	res.render('home.hbs', {});
+});
+
 app.get('/register', (req, res) => {
 	res.render('register.hbs', {});
 });
