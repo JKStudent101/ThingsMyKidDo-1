@@ -83,7 +83,6 @@ app.get('/admin', (req, res) => {
         if (err) {
             throw err;
         } else {
-            // console.log(result[0].vendor_name);
             res.render('admin.hbs', {
                 data: result,
             });
