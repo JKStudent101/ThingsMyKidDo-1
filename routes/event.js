@@ -10,7 +10,6 @@ router.get('/', (request, response) => {
 
 // get all events
 router.get('/getall', (request, response) => {
-	
 	let sql = 'SELECT * FROM event';
 	db.query(sql, (err, result) => {
 		if (err) {
@@ -25,10 +24,10 @@ router.get('/getall', (request, response) => {
 	});
 });
 
-// find all event tags
+// find all catalogs
 router.get('/search/:tags', (req, res) => {
 	let sql = 'select * from event where category = ?';
-	
+
 	let event_tag = req.params.tags;
 
 	db.query(sql, event_tag, (err, result) => {
@@ -41,6 +40,7 @@ router.get('/search/:tags', (req, res) => {
 			}
 			if (data) {
 				res.send(data);
+				req;
 			}
 		}
 	});
