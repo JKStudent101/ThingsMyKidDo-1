@@ -1,27 +1,28 @@
-<h2><p class="text-center">Event Form</p></h2>
-<form class="form-horizontal">
+
+<p class="text-center">Event Form</p>
+<form class="form-horizontal" method="POST" action="/addevent">
   <div class="form-group">
     <label class="col-xs-3 control-label"><b>Event Name</b></label>
     <div class="col-xs-7">
-      <input class="form-control" name="eventname" type="text">
+      <input class="form-control" name="name" type="text">
     </div>
   </div>      
   <div class="form-group">         
     <label class="col-xs-3 control-label"><b>Start Date</b></label>
      <div class="col-xs-7">
-       <input class="form-control" name="startdate" type="date" id="startdate">
+       <input class="form-control" name="start_date" type="date" id="startdate">
      </div>    
   </div>
   <div class="form-group">
     <label class="col-xs-3 control-label"><b>End Date</b></label>
     <div class="col-xs-7">
-      <input class="form-control" name="enddate" type="date" id="enddate">
+      <input class="form-control" name="end_date" type="date" id="enddate">
     </div>
   </div>
   <div class="form-group">
     <label class="col-xs-3 control-label"><b>Start Time</b></label>
     <div class="col-xs-7">
-      <input class="form-control" name="starttime" type="time" id="starttime">
+      <input class="form-control" name="start_time" type="time" id="starttime">
     </div>
   </div>
   <div class="form-group">
@@ -31,11 +32,23 @@
     </div>
   </div>
   <div class="form-group">
+    <label class="col-xs-3 control-label"><b>Category</b></label>
+    <div class="col-xs-7">
+      <input class="form-control" name="category" type="text">
+    </div>
+  </div>
+  <div class="form-group">
     <label class="col-xs-3 control-label"><b>City</b></label>
     <div class="col-xs-7">
       <input class="form-control" name="city" type="text">
     </div>
   </div>
+  <!--<div class="form-group">-->
+    <!--<label class="col-xs-3 control-label"><b>City</b></label>-->
+    <!--<div class="col-xs-7">-->
+      <!--<input class="form-control" name="city" type="text">-->
+    <!--</div>-->
+  <!--</div>-->
   <div class="form-group">
     <label class="col-xs-3 control-label"><b>Description</b></label>
     <div class="col-xs-7">
