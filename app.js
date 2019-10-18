@@ -91,7 +91,7 @@ app.post('/login-form', [
 
 		}
 	})
-})
+});
 
 app.post('/sign-up-form', (req, res) => {
 	let salt = bcrypt.genSaltSync(saltRounds);
@@ -166,6 +166,7 @@ app.get('/vendor/:vendor_id', (req, res) => {
 			}
 		});
 	}
+});
 
 app.get('/delete/:event_id', (req, res)=>{
 	var event_id = req.params.event_id;
