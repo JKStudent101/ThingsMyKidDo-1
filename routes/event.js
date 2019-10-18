@@ -1,13 +1,19 @@
 const express = require('express');
+const cookieParser = require('cookie-parser');
 
 const router = express.Router();
 
 var db = require('../config/database').init();
-
+router.use(cookieParser());
 // to /event
 
-router.get('/', (request, response) => {
-	response.render('event.hbs', {});
+router.get('/', (req, res) => {
+	// console.log(req.cookies)
+	if (!req.cookies.i) {
+		res.redirect('/login')
+	} else {
+		res.render('event.hbs', {});
+	}
 });
 
 // get all events
