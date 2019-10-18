@@ -28,7 +28,7 @@ router.get('/getall', (request, response) => {
 
 // find all event tags
 router.get('/search/:tags', (req, res) => {
-	let sql = 'select * from event where catalog = ?';
+	let sql = 'select * from event where category = ?';
 
 	let event_tag = req.params.tags;
 
