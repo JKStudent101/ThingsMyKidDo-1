@@ -170,6 +170,20 @@ app.get('/vendor/:vendor_id', (req, res) => {
 	}
 });
 
+app.post('/add_event', (req, res)=>{
+	var sql_add = 'insert into event set ?';
+
+	var data = req.body;
+	console.log(data);
+    db.query(sql_add,data, (err, result) => {
+        if (err) {
+            throw err;
+        } else {
+            res.redirect('/');
+        }
+    });
+});
+
 app.get('/delete/:event_id', (req, res)=>{
 	var event_id = req.params.event_id;
 
@@ -178,7 +192,6 @@ app.get('/delete/:event_id', (req, res)=>{
         if (err) {
             throw err;
         } else {
-        	console.log(result);
             var vendor_id = result[0].vendor_id;
             var sql_delete = 'delete from event where event_id = ?';
             db.query(sql_delete, event_id,(err, result) => {
