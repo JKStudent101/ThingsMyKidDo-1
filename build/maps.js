@@ -1,43 +1,9 @@
-$(document).ready(() => {
-	// to get events filter,
-	// const soething = '/events/id' + $(inputid).val();
-	let data1 = [];
-	$('#getData').click((e) => {
-		console.log('clicked');
-		// get user input
-		const requestOne = '/event/' + $('#SearchBar').val();
-		const requestAll = '/event/getall';
-		e.preventDefault();
-		$.ajax({
-			// url: requestAll
-			url: $('#SearchBar').val().length > 0 ? requestOne : requestAll,
-			// url: '/event/getall',
-			type: 'GET',
-			dataType: 'json',
-			success: (data) => {
-				$.each(data, function(k, v) {
-					data1.push(v);
-					console.log(v);
-					$('#events').append(
-						'<span>' +
-							'<h3>' +
-							v.name +
-							'</h3>' +
-							'<p>' +
-							v.description +
-							'</p>' +
-							'</span>'
-					);
-				});
-			}
-		});
-	});
-});
 
+let coords;
 function initMap() {
 	// Map options
 	var options = {
-		zoom: 9,
+		zoom: 6,
 		// center: { lat: 49.4928, lng: -117.2948 },
 
 		mapTypeControlOptions: {
@@ -158,91 +124,189 @@ function initMap() {
 
 	// New map
 	var map = new google.maps.Map(document.getElementById('map'), options);
-	// Array of markers
-	var markers = [
-		{
-			coords: { lat: 49.49656, lng: -117.29391 },
-			iconImage:
-				'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
-			content:
-				'<div id="content">' +
-				'<div id="siteNotice">' +
-				'</div>' +
-				'<h1 id="firstHeading" class="firstHeading">Thermography </h1>' +
-				'<div id="bodyContent">' +
-				'<p><b>Event 1 </b>, Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>' +
-				'<p>Attribution: Event 1 , <br/> <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">' +
-				'https://en.wikipedia.org/w/index.php?title=Uluru</a> ' +
-				'</div>' +
-				'</div>'
-		},
-		{
-			coords: { lat: 49.512343, lng: -117.263926 },
-			// 49.512343, -117.263926
 
-			iconImage:
-				'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
-			content:
-				'<div id="content">' +
-				'<div id="siteNotice">' +
-				'</div>' +
-				'<h1 id="firstHeading" class="firstHeading">Uluru</h1>' +
-				'<div id="bodyContent">' +
-				'Event Details' +
-				'<p><b>Doukhobor Discovery Centre</b>, Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>' +
-				'<p>Attribution: Doukhobor Discovery Centre, <br/> <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">' +
-				'https://en.wikipedia.org/w/index.php?title=Uluru</a> ' +
-				'</div>' +
-				'</div>'
-		},
-		{
-			coords: { lat: 49.29687, lng: -117.63619 },
-			content:
-				'<div id="content">' +
-				'<div id="siteNotice">' +
-				'</div>' +
-				'<h1 id="firstHeading" class="firstHeading">Ferment and Feast</h1>' +
-				'<div id="bodyContent">' +
-				'Event Details' +
-				'<p><b>Ferment and Feast</b>, Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>' +
-				'<p>Attribution: Doukhobor Discovery Centre, <br/> <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">' +
-				'https://en.wikipedia.org/w/index.php?title=Uluru</a> ' +
-				'</div>' +
-				'</div>'
-		}
-	];
+	// load events on search click event
+	$('#getData').click((e) => {
+		// get user input event or all event
+		let tagOption = $('#searchOption').val().toLowerCase(); // hockey
+		let userInput = $('#SearchBar').val().toLowerCase(); // event
 
-	// Loop through markers
-	for (var i = 0; i < markers.length; i++) {
-		// Add marker
-		addMarker(markers[i]);
-	}
+		const requestOne = '/event/search/name/' + $('#SearchBar').val();
+		const requestAll = '/event/getall';
 
-	// Add Marker Function
-	function addMarker(props) {
-		var marker = new google.maps.Marker({
-			position: props.coords,
-			map: map //icon:props.iconImage
-		});
+		const requestAllTags = '/event/search/' + tagOption;
+		let markers= [];
+		
+		e.preventDefault();
+		function a1() {
+			
+			$.ajax({
+				// url: $('#SearchBar').val()= "getallevents"? requestAll : requestOne,
+				url: '/event/getall',
+				type: 'GET',
+				async: false,
+				dataType: 'json',
+				success: (data) => {
+					if (tagOption == 'getallevents' && userInput.length == 0) {
+						$.map(data, function(value, i) {
+							// console.log(value);
+							$('#events').append(
+								'<span>' +
+									'<h3>' +
+									// v.name
+									value.name +
+									'</h3>' +
+									'<p>' +
+									value.category +
+									'</p>' +
+									'<p>' +
+									value.description +
+									'</p>' +
+									'</span>'
+							);
 
-		// Check for customicon
-		if (props.iconImage) {
-			// Set icon image
-			marker.setIcon(props.iconImage);
-		}
+							// push values/events into the markers
+							markers.push({
+								content: value.description,
+								coords: {
+									lat: parseFloat(value.lat),
+									lng: parseFloat(value.lng)
+								}
+							});
+						});
 
-		// Check content
-		if (props.content) {
-			var infoWindow = new google.maps.InfoWindow({
-				content: props.content
-			});
-
-			marker.addListener('click', function() {
-				infoWindow.open(map, marker);
+						// add markers
+						for (var i = 0; i < markers.length; i++) {
+							// Add markers
+							addMarker(markers[i]);
+						}
+					}
+					else if(userInput.length != 0){
+						a3();
+					}
+					else {
+						a2();
+					}
+					$('#getData').attr('disabled', false);
+				}
 			});
 		}
-	}
-	// get current location
+
+		function a2() {
+			$('#events').empty()
+			$.ajax({
+				url: requestAllTags,
+				type: 'GET',
+				dataType: 'json',
+				success: (tagEvent) => {
+					$.map(tagEvent, function(value, i) {
+						if (tagOption == value.category.toLowerCase()) {
+							$('#events').append(
+								'<span>' +
+									'<h3>' +
+									// v.name
+									value.name +
+									'</h3>' +
+									'<p>' +
+									value.category +
+									'</p>' +
+									'<p>' +
+									value.description +
+									'</p>' +
+									'</span>'
+							);
+							
+							markers.push({
+								content: value.description,
+								coords: {
+									lat: parseFloat(value.lat),
+									lng: parseFloat(value.lng)
+								}
+							});
+						}
+					});
+
+					for (var i = 0; i < markers.length; i++) {
+						// Add markers
+						addMarker(markers[i]);
+					}
+				}
+			});
+		}
+		function a3() {
+			$('#events').empty()
+			$.ajax({
+				url: requestOne,
+				type: 'GET',
+				dataType: 'json',
+				success: (nameEvent) => {
+					$.map(nameEvent, function(value, i) {
+						if (value.name.toLowerCase().includes(userInput)) {
+							$('#events').append(
+								'<span>' +
+									'<h3>' +
+									// v.name
+									value.name +
+									'</h3>' +
+									'<p>' +
+									value.category +
+									'</p>' +
+									'<p>' +
+									value.description +
+									'</p>' +
+									'</span>'
+							);
+							
+							markers.push({
+								content: value.description,
+								coords: {
+									lat: parseFloat(value.lat),
+									lng: parseFloat(value.lng)
+								}
+							});
+						}
+					});
+
+					for (var i = 0; i < markers.length; i++) {
+						// Add markers
+						addMarker(markers[i]);
+					}
+				}
+			});
+		}
+		a1();
+		// $.when(a1, a2).done(function(r1, r2) {});
+
+		// Add Marker Function
+		function addMarker(props) {
+			
+			var marker = new google.maps.Marker({
+				position: props.coords,
+				map: map //icon:props.iconImage
+			});
+			
+			// Check for customicon
+			if (props.iconImage) {
+				// Set icon image
+				marker.setIcon(props.iconImage);
+			}
+			
+			marker.setMap(map);
+			
+
+			// Check content
+			if (props.content) {
+				var infoWindow = new google.maps.InfoWindow({
+					content: props.content
+				});
+
+				marker.addListener('click', function() {
+					infoWindow.open(map, marker);
+				});
+			}
+		}
+		
+	});
 
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(function(position) {

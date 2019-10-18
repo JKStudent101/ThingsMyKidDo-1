@@ -23,6 +23,14 @@
                     <div class="jumbotron">
                         <div>
                             <form class="form-inline">
+                                <label for="">Search events</label>
+                                <select id="searchOption">
+                                    <option value="getAllEvents">All Events</option>
+                                    <option value="soccer">Soccer</option>
+                                    <option value="hockey">Hockey</option>
+                                    <option value="dance">Dance</option>
+                                    <option value="volleyball">Volleyball</option>
+                                </select>
                                 <div class="form-group">
                                     <!--                    <label for="exampleInputName2">Name</label>-->
                                     <input type="text" id="SearchBar" placeholder="Enter Event/Activity">
@@ -31,7 +39,7 @@
                            </form>
                         </div>
                     </div>
-		<div class="col-lg-6">
+		            <div class="col-lg-6">
                     <div class="card" style="width: 50rem;">
                     <div class="card-body" id="events">
 
@@ -40,7 +48,7 @@
                     
                 </div>
 
-                </div>
+            </div>
                 <div class="col-lg-6">
                     <div class="container">
                         Map View

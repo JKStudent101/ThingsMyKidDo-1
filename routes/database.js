@@ -1,0 +1,20 @@
+const mysql = require('mysql');
+
+module.exports.init = ()=>{
+    var db = mysql.createConnection({
+        host: 'thingmykidsdo.ckcstihnhz8i.us-west-2.rds.amazonaws.com',
+        user: 'admin',
+        password: 'Password',
+        database: 'thingsKidsDoModified'
+    });
+
+
+	db.connect((err) => {
+		if (err) {
+			throw err;
+		}
+		console.log('Successfully connected to MySQL');
+	});
+
+	return db;
+};

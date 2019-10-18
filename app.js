@@ -7,7 +7,11 @@ const session = require('client-sessions');
 const mysql = require('mysql');
 const webpush = require('web-push');
 
-var db = require('./config/database').init();
+// import event routes
+const event = require('./routes/event');
+app.use('/event', event);
+
+var db = require('./routes/database').init();
 
 app.set('view engine', 'hbs');
 app.use(express.static(__dirname + '/public'));
@@ -26,108 +30,93 @@ app.use(
 const server = require('http').createServer(app);
 hbs.registerPartials(__dirname + '/views/partials');
 
-app.get('/', (request, response) => {
-	response.redirect('/login');
+app.get('/', (req, res) => {
+	res.redirect('/login');
 });
 
-app.get('/event', (request, response) => {
-	response.render('event.hbs', {});
-});
-app.get('/event/getall', (request, response) => {
-	let sql = 'SELECT * FROM event';
-	db.query(sql, (err, result) => {
-		if (err) {
-			throw err;
-		} else {
-			var data = [];
-			for (var i = 0; i < result.length; i++) {
-				data.push(result[i]);
-			}
-			response.send(data);
-		}
-	});
+app.get('/login', (req, res) => {
+	res.render('login.hbs', {});
 });
 
-app.get('/event/:eventid', (req, res) => {
-	let sql = 'select * from event where event_id = ?';
-
-	let event_id = req.params.eventid;
-
-	db.query(sql, event_id, (err, result) => {
-		if (err) {
-			throw err;
-		} else {
-			var data = [];
-			for (var i = 0; i < result.length; i++) {
-				data.push(result[i]);
-			}
-			if (data) {
-				res.send(data);
-			} else {
-				res.send({});
-			}
-		}
-	});
+app.get('/register', (req, res) => {
+	res.render('register.hbs', {});
 });
 
-app.get('/login', (request, response) => {
-	response.render('login.hbs', {});
+app.get('/profile', (req, res) => {
+	res.render('profile.hbs', {});
 });
 
-app.get('/register', (request, response) => {
-	response.render('register.hbs', {});
-});
+app.get('/vendor/:vendor_id', (req, res) => {
+    var vendor_id = req.params.vendor_id;
 
-app.get('/profile', (request, response) => {
-	response.render('profile.hbs', {});
-});
-
-app.get('/addevent', (request, response) => {
-	response.render('addevent.hbs');
-});
-app.get('/admin', (request, response) => {
-    var sql = 'SELECT a.event_id, a.vendor_id, a.description, a.name, c.name as tag_name \n' +
-        'FROM event a\n' +
+	var sql = 'SELECT a.event_id, d.name as vendor_name, a.description, a.name as event, \n' +
+		'c.name as tag_name, date_format(a.start_date, "%Y/%m/%d") as start_date, date_format(a.end_date, "%Y/%m/%d") as end_date, \n'+
+        'a.status, a.isApproved\n'+
+		'FROM event a\n' +
         'LEFT JOIN event_tags b ON a.event_id = b.event_id\n' +
-        'LEFT JOIN tags c ON b.tag_id = c.tag_id ';
-    db.query(sql, (err, result) => {
+        'LEFT JOIN tags c ON b.tag_id = c.tag_id\n'+
+        'LEFT JOIN vendor d ON a.vendor_id = d.user_id\n'+
+		'WHERE vendor_id = ?';
+    db.query(sql, vendor_id,(err, result) => {
         if (err) {
             throw err;
         } else {
-            // console.log(result[0].event_id);
-            response.render('admin.hbs', {
-                data: result
+        	// console.log(result[0].vendor_name);
+            res.render('vendor.hbs', {
+                data: result,
+				vendor: result[0].vendor_name
             });
         }
     });
 });
 
 
-app.get('/editor', (request, response) => {
-	response.render('editor.hbs', {});
-});
+app.get('/delete/:event_id', (req, res)=>{
+	var event_id = req.params.event_id;
 
-app.get('/admin', (request, response) => {
-	var sql = 'SHOW COLUMNS FROM Events';
-	db.query(sql, (err, result) => {
-		if (err) {
-			throw err;
-		} else {
-			var text = '';
-			for (var i = 0; i < result.length; i++) {
-				text += result[i].Field + ' ';
-			}
-			// response.send(result[0]);
-			response.render('admin.hbs', {
-				result: text
-			});
-		}
+	var sql_query = 'select vendor_id from event where event_id =?';
+	db.query(sql_query,event_id, (err,result)=>{
+        if (err) {
+            throw err;
+        } else {
+        	console.log(result);
+            var vendor_id = result[0].vendor_id;
+            var sql_delete = 'delete from event where event_id = ?';
+            db.query(sql_delete, event_id,(err, result) => {
+                if (err) {
+                    throw err;
+                } else {
+                	//once cookies is finish, change vendor_id to cookies' vendor_id
+					//if cookies' user is admin, add another if statement to redirect to 'admin'
+                    res.redirect('/vendor/' + vendor_id);
+                }
+            });
+        }
 	});
+
 });
 
-app.get('/editor', (request, response) => {
-	response.render('editor.hbs', {});
+
+app.get('/admin', (req, res) => {
+    var sql = 'SELECT a.event_id, d.name as vendor_name, a.description, a.name as event, \n' +
+        'c.name as tag_name, date_format(a.start_date, "%Y/%m/%d") as start_date, date_format(a.end_date, "%Y/%m/%d") as end_date, \n'+
+        'a.status, a.isApproved\n'+
+        'FROM event a\n' +
+        'LEFT JOIN event_tags b ON a.event_id = b.event_id\n' +
+        'LEFT JOIN tags c ON b.tag_id = c.tag_id\n'+
+        'LEFT JOIN vendor d ON a.vendor_id = d.user_id';
+    db.query(sql, (err, result) => {
+        if (err) {
+            throw err;
+        } else {
+            res.render('admin.hbs', {
+                data: result,
+            });
+        }
+    });
 });
+
+
 
 app.get('/logout', (request, response) => {
 	response.redirect('/login');
