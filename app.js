@@ -30,42 +30,51 @@ app.use(
 const server = require('http').createServer(app);
 hbs.registerPartials(__dirname + '/views/partials');
 
-app.get('/', (request, response) => {
-	response.redirect('/login');
+app.get('/', (req, res) => {
+	res.redirect('/login');
 });
 
-app.get('/login', (request, response) => {
-	response.render('login.hbs', {});
+app.get('/login', (req, res) => {
+	res.render('login.hbs', {});
 });
 
-app.get('/register', (request, response) => {
-	response.render('register.hbs', {});
+app.get('/register', (req, res) => {
+	res.render('register.hbs', {});
 });
 
-app.get('/profile', (request, response) => {
-	response.render('profile.hbs', {});
+app.get('/profile', (req, res) => {
+	res.render('profile.hbs', {});
 });
 
-app.get('/admin', (request, response) => {
-    var sql = 'SELECT a.event_id, a.vendor_id, a.description, a.name, c.name as tag_name \n' +
-        'FROM event a\n' +
+app.get('/vendor/:vendor_id', (req, res) => {
+    var vendor_id = req.params.vendor_id;
+
+	var sql = 'SELECT a.event_id, d.name as vendor_name, a.description, a.name as event, \n' +
+		'c.name as tag_name, date_format(a.start_date, "%Y/%m/%d") as start_date, date_format(a.end_date, "%Y/%m/%d") as end_date, \n'+
+        'a.status, a.isApproved\n'+
+		'FROM event a\n' +
         'LEFT JOIN event_tags b ON a.event_id = b.event_id\n' +
-        'LEFT JOIN tags c ON b.tag_id = c.tag_id ';
-    db.query(sql, (err, result) => {
+        'LEFT JOIN tags c ON b.tag_id = c.tag_id\n'+
+        'LEFT JOIN vendor d ON a.vendor_id = d.user_id\n'+
+		'WHERE vendor_id = ?';
+    db.query(sql, vendor_id,(err, result) => {
         if (err) {
             throw err;
         } else {
-            response.render('admin.hbs', {
-                data: result
+        	// console.log(result[0].vendor_name);
+            res.render('vendor.hbs', {
+                data: result,
+				vendor: result[0].vendor_name
             });
         }
     });
 });
 
 
-app.get('/editor', (request, response) => {
-	response.render('editor.hbs', {});
+app.get('/admin', (req, res) => {
+	res.render('admin.hbs', {});
 });
+
 
 // app.get('/admin', (request, response) => {
 // 	var sql = 'SHOW COLUMNS FROM Events';
@@ -86,9 +95,9 @@ app.get('/editor', (request, response) => {
 // 	});
 // });
 
-app.get('/editor', (request, response) => {
-	response.render('editor.hbs', {});
-});
+// app.get('/editor', (request, response) => {
+// 	response.render('editor.hbs', {});
+// });
 
 app.get('/logout', (request, response) => {
 	response.redirect('/login');
