@@ -18,13 +18,17 @@
                     <div class="jumbotron">
                         <div>
                             <form class="form-inline">
+                                                                
+
                                 <label for="">Search events</label>
                                 <select id="searchOption">
                                     <option value="getAllEvents">All Events</option>
-                                    <option value="soccer">Soccer</option>
-                                    <option value="hockey">Hockey</option>
-                                    <option value="dance">Dance</option>
-                                    <option value="volleyball">Volleyball</option>
+
+                                {{#each data}}
+
+                                    <option value={{category}}>{{category}}</option>
+                                {{/each}}
+
                                 </select>
                                 <div class="form-group">
                                     <!--                    <label for="exampleInputName2">Name</label>-->

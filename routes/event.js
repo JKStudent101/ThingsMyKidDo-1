@@ -7,13 +7,22 @@ const db = require('../config/database').init();
 router.use(cookieParser());
 // to /event
 
-router.get('/', (req, res) => {
-	// console.log(req.cookies)
-	if (!req.cookies.i) {
-		res.redirect('/login')
-	} else {
-		res.render('event.hbs', {});
-	}
+router.get('/', (request, response) => {
+	let sql = 'select distinct category from event';
+	db.query(sql, (err, result) => {
+		if (err) {
+			throw err;
+		} else {
+			// var data = [];
+			// for (var i = 0; i < result.length; i++) {
+			// 	data.push(result[i]);
+			// }
+			response.render('event.hbs', {
+				data: result
+			});
+		}
+	});
+	// response.render('event.hbs', {});
 });
 
 // get all events
@@ -75,4 +84,18 @@ router.get('/search/name/:name', (req, res) => {
 	});
 });
 
+// router.get('/search', (request, response) => {
+// 	let sql = 'select distinct category from event';
+// 	db.query(sql, (err, result) => {
+// 		if (err) {
+// 			throw err;
+// 		} else {
+// 			var data = [];
+// 			for (var i = 0; i < result.length; i++) {
+// 				data.push(result[i]);
+// 			}
+// 			response.send(data);
+// 		}
+// 	});
+// });
 module.exports = router;
