@@ -47,6 +47,9 @@ app.get('/', (req, res) => {
 	res.redirect('/login');
 });
 
+app.get('/home', (req, res) => {
+	res.render('home.hbs', {});
+});
 app.get('/login', (req, res) => {
 	res.render('login.hbs', {});
 });
@@ -267,7 +270,7 @@ app.get('/logout', (req, res) => {
 });
 
 
-server.listen(10000, function (err) {
+server.listen(port, function (err) {
 	if (err) {
 		console.log(err);
 		return false;
