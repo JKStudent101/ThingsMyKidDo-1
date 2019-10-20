@@ -48,6 +48,9 @@ app.get('/', (req, res) => {
 	res.redirect('/login');
 });
 
+app.get('/home', (req, res) => {
+	res.render('home.hbs', {});
+});
 app.get('/login', (req, res) => {
 	res.render('login.hbs', {});
 });

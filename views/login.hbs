@@ -2,11 +2,7 @@
 <html>
     <head>
         <!-- Bootstrap CSS -->
-        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-        <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-
-        
+                {{> bootstrap}}      
         <link href="/css/menu.css" type="text/css" rel="stylesheet" />
         <link href="/css/login.css" type="text/css" rel="stylesheet" />
     </head>
@@ -28,8 +24,8 @@
             <form class="form1" action="/login-form" method="post">
                 <input id="username" name="username" class="un " type="text" align="center" placeholder="Username">
                 <input id="password" name="password" class="pass" type="password" align="center" placeholder="Password">
-                <button class="submit" align="center">Sign in</button>
-                <a class="submit" align="center" href="/register">Register</a>  
+                <a class="submit" align="center" href="/register">Register</a>
+                <button class="submit" align="center">Sign in</button>  
                 <p class="forgot" align="center"><a href="#">Forgot Password?</a></p>
             </form>
         </div>
