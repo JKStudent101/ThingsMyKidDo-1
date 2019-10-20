@@ -149,10 +149,6 @@ function initMap() {
 				dataType: 'json',
 				success: (data) => {
 					$('#events').empty();
-
-					// console.log(data);
-					// console.log(tagOption); // getAllEvents
-					// console.log(userInput.length);
 					if (tagOption == 'getAllEvents' && userInput.length == 0) {
 						$.map(data, function(value, i) {
 							// console.log(value);
@@ -184,7 +180,7 @@ function initMap() {
 							addMarker(markers[i]);
 						}
 					}
-					$('#getData').attr('disabled', false);
+					// $('#getData').attr('disabled', false);
 
 					a2();
 				}
@@ -197,10 +193,8 @@ function initMap() {
 				type: 'GET',
 				dataType: 'json',
 				success: (tagEvent) => {
-					$('#events').empty();
-
 					$.map(tagEvent, function(value, i) {
-						if (tagOption == value.tags) {
+						if (tagOption == value.category) {
 							$('#events').append(
 								'<span>' +
 									'<h3>' +
@@ -212,6 +206,8 @@ function initMap() {
 									'</p>' +
 									'</span>'
 							);
+							if (marker.length > 0) {
+							}
 							eventMarkers.push({
 								content: value.description,
 								coords: {

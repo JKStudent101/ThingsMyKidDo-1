@@ -9,7 +9,6 @@ const webpush = require('web-push');
 
 // import event routes
 const event = require('./routes/event');
-app.use('/event', event);
 
 var db = require('./config/database').init();
 
@@ -50,22 +49,22 @@ app.get('/addevent', (request, response) => {
 	response.render('addevent.hbs');
 });
 app.get('/admin', (request, response) => {
-    var sql = 'SELECT a.event_id, a.vendor_id, a.description, a.name, c.name as tag_name \n' +
-        'FROM event a\n' +
-        'LEFT JOIN event_tags b ON a.event_id = b.event_id\n' +
-        'LEFT JOIN tags c ON b.tag_id = c.tag_id ';
-    db.query(sql, (err, result) => {
-        if (err) {
-            throw err;
-        } else {
-            // console.log(result[0].event_id);
-            response.render('admin.hbs', {
-                data: result
-            });
-        }
-    });
+	var sql =
+		'SELECT a.event_id, a.vendor_id, a.description, a.name, c.name as tag_name \n' +
+		'FROM event a\n' +
+		'LEFT JOIN event_tags b ON a.event_id = b.event_id\n' +
+		'LEFT JOIN tags c ON b.tag_id = c.tag_id ';
+	db.query(sql, (err, result) => {
+		if (err) {
+			throw err;
+		} else {
+			// console.log(result[0].event_id);
+			response.render('admin.hbs', {
+				data: result
+			});
+		}
+	});
 });
-
 
 app.get('/editor', (request, response) => {
 	response.render('editor.hbs', {});
@@ -125,6 +124,8 @@ app.post('/text-me', (req, res) => {
 app.get('/send-notification', (req, res) => {
 	res.render('notification.hbs', {});
 });
+
+app.use('/event', event);
 
 server.listen(10000, function(err) {
 	if (err) {

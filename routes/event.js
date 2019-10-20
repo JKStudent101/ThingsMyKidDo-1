@@ -68,4 +68,18 @@ router.get('/search/tags/:name', (req, res) => {
 	});
 });
 
+router.get('/search/tags', (req, res) => {
+	let sql = 'select distinct category from event';
+	db.query(sql, (err, result) => {
+		if (err) {
+			throw err;
+		} else {
+			var data = [];
+			for (var i = 0; i < result.length; i++) {
+				data.push(result[i]);
+			}
+			response.send(data);
+		}
+	});
+});
 module.exports = router;
