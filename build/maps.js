@@ -1,11 +1,15 @@
 let markers = [];
 let eventMarkers = [];
 let coords;
+let marker;
+let map;
+let gmarkers = [];
+var infowindow;
 
 function initMap() {
 	// Map options
 	var options = {
-		zoom: 6,
+		zoom: 7,
 		// center: { lat: 49.4928, lng: -117.2948 },
 
 		mapTypeControlOptions: {
@@ -132,7 +136,7 @@ function initMap() {
 		// get user input event or all event
 
 		let tagOption = $('#searchOption').val(); // hockey
-		let userInput = $('#SearchBar').val(); // event
+		let userInput = $('#SearchBar').val(); // eventname
 
 		const requestOne = '/event/' + $('#SearchBar').val();
 		const requestAll = '/event/getall';
@@ -142,8 +146,7 @@ function initMap() {
 		e.preventDefault();
 		function a1() {
 			$.ajax({
-				// url: $('#SearchBar').val().length > 0 ? requestOne : requestAll,
-				url: '/event/getall',
+				url: requestAll,
 				type: 'GET',
 				async: false,
 				dataType: 'json',
@@ -175,17 +178,20 @@ function initMap() {
 						});
 
 						// add markers
-						for (var i = 0; i < markers.length; i++) {
-							// Add markers
-							addMarker(markers[i]);
-						}
 					}
-					// $('#getData').attr('disabled', false);
 
+					for (var i = 0; i < markers.length; i++) {
+						// Add markers
+						addMarker(markers[i]);
+					}
 					a2();
+					// console.log(markers.length);
+					if (markers.length == 0) {
+					}
 				}
 			});
 		}
+		markers = [];
 
 		function a2() {
 			$.ajax({
@@ -206,9 +212,9 @@ function initMap() {
 									'</p>' +
 									'</span>'
 							);
-							if (marker.length > 0) {
-							}
-							eventMarkers.push({
+							// markers = [];
+
+							markers.push({
 								content: value.description,
 								coords: {
 									lat: parseFloat(value.lat),
@@ -217,16 +223,39 @@ function initMap() {
 							});
 						}
 					});
-
-					for (var i = 0; i < eventMarkers.length; i++) {
+					console.log('before gmarkers length', gmarkers.length);
+					console.log('before markers length', markers.length);
+					removeMarkers();
+					console.log('after remove gmarkers length', gmarkers.length);
+					console.log('after remove markers length', markers.length);
+					for (var i = 0; i < markers.length; i++) {
 						// Add markers
-						addMarker(eventMarkers[i]);
+						// removeMarkers();
+
+						addMarker(markers[i]);
 					}
+					// showgMarkers();
+					console.log('after adding gevents', gmarkers.length);
+					console.log('after adding events', markers.length);
+
+					// console.log(eventMarkers.length);
+					// console.log('after remove markers length', markers.length);
 				}
 			});
 		}
 		a1();
-		$.when(a1, a2).done(function(r1, r2) {});
+		// remove global gmarker array
+		function removeMarkers() {
+			for (i = 0; i < gmarkers.length; i++) {
+				gmarkers[i].setMap(null);
+			}
+			gmarkers = [];
+		}
+		function showgMarkers() {
+			for (i = 0; i < gmarkers.length; i++) {
+				gmarkers[i].setMap(map);
+			}
+		}
 
 		// Add Marker Function
 		function addMarker(props) {
@@ -236,12 +265,14 @@ function initMap() {
 				map: map //icon:props.iconImage
 			});
 
+			// push marker to global gmarker array
+			gmarkers.push(marker);
+
 			// Check for customicon
 			if (props.iconImage) {
 				// Set icon image
 				marker.setIcon(props.iconImage);
 			}
-			marker.setMap(map);
 
 			// Check content
 			if (props.content) {
@@ -250,6 +281,7 @@ function initMap() {
 				});
 
 				marker.addListener('click', function() {
+					// infowindow.setContent(markers.content);
 					infoWindow.open(map, marker);
 				});
 			}
