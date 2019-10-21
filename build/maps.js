@@ -6,7 +6,6 @@ let map;
 let gmarkers = [];
 var infowindow;
 
-let coords;
 function initMap() {
 	// Map options
 	var options = {
@@ -135,8 +134,6 @@ function initMap() {
 	// load events on search click event
 	$('#getData').click((e) => {
 		// get user input event or all event
-		let tagOption = $('#searchOption').val().toLowerCase(); // hockey
-		let userInput = $('#SearchBar').val().toLowerCase(); // event
 
 		let tagOption = $('#searchOption').val(); // hockey
 		let userInput = $('#SearchBar').val(); // eventname
@@ -145,11 +142,9 @@ function initMap() {
 		const requestAll = '/event/getall';
 
 		const requestAllTags = '/event/search/' + tagOption;
-		let markers= [];
-		
+
 		e.preventDefault();
 		function a1() {
-			
 			$.ajax({
 				url: requestAll,
 				type: 'GET',
@@ -166,9 +161,6 @@ function initMap() {
 									// v.name
 									value.name +
 									'</h3>' +
-									'<p>' +
-									value.category +
-									'</p>' +
 									'<p>' +
 									value.description +
 									'</p>' +
@@ -202,7 +194,6 @@ function initMap() {
 		markers = [];
 
 		function a2() {
-			$('#events').empty()
 			$.ajax({
 				url: requestAllTags,
 				type: 'GET',
@@ -216,9 +207,6 @@ function initMap() {
 									// v.name
 									value.name +
 									'</h3>' +
-									'<p>' +
-									value.category +
-									'</p>' +
 									'<p>' +
 									value.description +
 									'</p>' +
@@ -271,7 +259,7 @@ function initMap() {
 
 		// Add Marker Function
 		function addMarker(props) {
-			
+			// console.log(props);
 			var marker = new google.maps.Marker({
 				position: props.coords,
 				map: map //icon:props.iconImage
@@ -298,7 +286,6 @@ function initMap() {
 				});
 			}
 		}
-		
 	});
 
 	if (navigator.geolocation) {
