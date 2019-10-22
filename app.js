@@ -1,5 +1,6 @@
 const express = require('express');
 const port = process.env.PORT || 10000;
+const host = '0.0.0.0';
 const hbs = require('hbs');
 const bodyParser = require('body-parser');
 const app = express();
@@ -47,6 +48,9 @@ app.get('/', (req, res) => {
 	res.redirect('/login');
 });
 
+app.get('/home', (req, res) => {
+	res.render('home.hbs', {});
+});
 app.get('/login', (req, res) => {
 	res.render('login.hbs', {});
 });
@@ -78,8 +82,9 @@ app.post('/login-form', [
 			} else if (bcrypt.compareSync(password, result[0].pass_hash)) {
 				let salt = bcrypt.genSaltSync(saltRounds);
 				res.cookie('i', bcrypt.hashSync(username, salt));
-				if (result[0].user_type === 'admin') { req.session.admin = result[0]; res.redirect("/admin") }
-				else if (result[0].user_type === 'vendor') { req.session.vendor = result[0]; res.redirect(`/vendor/${result[0].user_id}`) }
+				req.session.user = result[0];
+				if (result[0].user_type === 'admin') {  res.redirect("/admin") }
+				else if (result[0].user_type === 'vendor') {  res.redirect(`/vendor/${result[0].user_id}`) }
 				else if (result[0].user_type === 'parent') { res.redirect("/event") }
 				else {
 					res.cookie('i', true, { expires: new Date() });
@@ -113,7 +118,9 @@ app.get('/profile', (req, res) => {
 
 app.get('/admin', (req, res) => {
 	// console.log(req.cookies);
-	if (!req.cookies.i || !req.session.admin) {
+	if (!req.cookies.i || !req.session.user) {
+		res.redirect('/logout')
+	} else if ( req.session.user.user_type != 'admin'){
 		res.redirect('/logout')
 	} else {
 		var sql = 'SELECT a.event_id, d.name as vendor_name, a.description, a.name as event, \n' +
@@ -136,9 +143,9 @@ app.get('/admin', (req, res) => {
 });
 
 app.get('/vendor/:vendor_id', (req, res) => {
-	if (!req.session.vendor) {
+	if (!req.cookies.i || !req.session.user) {
 		res.redirect('/logout')
-	} else if (req.params.vendor_id != req.session.vendor.user_id){
+	} else if (req.params.vendor_id != req.session.user.user_id || req.session.user.user_type != 'vendor'){
 		res.redirect('/logout')
 	} else {
 		var vendor_id = req.params.vendor_id;
@@ -264,7 +271,7 @@ app.get('/logout', (req, res) => {
 });
 
 
-server.listen(10000, function (err) {
+server.listen(port, function (err) {
 	if (err) {
 		console.log(err);
 		return false;

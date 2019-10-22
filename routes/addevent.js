@@ -19,7 +19,7 @@ router.post('/', (req, res) => {
             if (err) {
                 throw err;
             } else {
-                console.log("Add Event Successfully");
+                // console.log("Add Event Successfully");
             }
         });
     }
