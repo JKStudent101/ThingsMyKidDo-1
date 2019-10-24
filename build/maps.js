@@ -1,9 +1,15 @@
-
+let markers = [];
+let eventMarkers = [];
 let coords;
+let marker;
+let map;
+let gmarkers = [];
+var infowindow;
+
 function initMap() {
 	// Map options
 	var options = {
-		zoom: 6,
+		zoom: 7,
 		// center: { lat: 49.4928, lng: -117.2948 },
 
 		mapTypeControlOptions: {
@@ -128,26 +134,25 @@ function initMap() {
 	// load events on search click event
 	$('#getData').click((e) => {
 		// get user input event or all event
-		let tagOption = $('#searchOption').val().toLowerCase(); // hockey
-		let userInput = $('#SearchBar').val().toLowerCase(); // event
 
-		const requestOne = '/event/search/name/' + $('#SearchBar').val();
+		let tagOption = $('#searchOption').val(); // hockey
+		let userInput = $('#SearchBar').val(); // eventname
+
+		const requestOne = '/event/' + $('#SearchBar').val();
 		const requestAll = '/event/getall';
 
 		const requestAllTags = '/event/search/' + tagOption;
-		let markers= [];
-		
+
 		e.preventDefault();
 		function a1() {
-			
 			$.ajax({
-				// url: $('#SearchBar').val()= "getallevents"? requestAll : requestOne,
-				url: '/event/getall',
+				url: requestAll,
 				type: 'GET',
 				async: false,
 				dataType: 'json',
 				success: (data) => {
-					if (tagOption == 'getallevents' && userInput.length == 0) {
+					$('#events').empty();
+					if (tagOption == 'getAllEvents' && userInput.length == 0) {
 						$.map(data, function(value, i) {
 							// console.log(value);
 							$('#events').append(
@@ -156,9 +161,6 @@ function initMap() {
 									// v.name
 									value.name +
 									'</h3>' +
-									'<p>' +
-									value.category +
-									'</p>' +
 									'<p>' +
 									value.description +
 									'</p>' +
@@ -176,31 +178,29 @@ function initMap() {
 						});
 
 						// add markers
-						for (var i = 0; i < markers.length; i++) {
-							// Add markers
-							addMarker(markers[i]);
-						}
 					}
-					else if(userInput.length != 0){
-						a3();
+
+					for (var i = 0; i < markers.length; i++) {
+						// Add markers
+						addMarker(markers[i]);
 					}
-					else {
-						a2();
+					a2();
+					// console.log(markers.length);
+					if (markers.length == 0) {
 					}
-					$('#getData').attr('disabled', false);
 				}
 			});
 		}
+		markers = [];
 
 		function a2() {
-			$('#events').empty()
 			$.ajax({
 				url: requestAllTags,
 				type: 'GET',
 				dataType: 'json',
 				success: (tagEvent) => {
 					$.map(tagEvent, function(value, i) {
-						if (tagOption == value.category.toLowerCase()) {
+						if (tagOption == value.category) {
 							$('#events').append(
 								'<span>' +
 									'<h3>' +
@@ -208,14 +208,12 @@ function initMap() {
 									value.name +
 									'</h3>' +
 									'<p>' +
-									value.category +
-									'</p>' +
-									'<p>' +
 									value.description +
 									'</p>' +
 									'</span>'
 							);
-							
+							// markers = [];
+
 							markers.push({
 								content: value.description,
 								coords: {
@@ -225,74 +223,56 @@ function initMap() {
 							});
 						}
 					});
-
+					console.log('before gmarkers length', gmarkers.length);
+					console.log('before markers length', markers.length);
+					removeMarkers();
+					console.log('after remove gmarkers length', gmarkers.length);
+					console.log('after remove markers length', markers.length);
 					for (var i = 0; i < markers.length; i++) {
 						// Add markers
-						addMarker(markers[i]);
-					}
-				}
-			});
-		}
-		function a3() {
-			$('#events').empty()
-			$.ajax({
-				url: requestOne,
-				type: 'GET',
-				dataType: 'json',
-				success: (nameEvent) => {
-					$.map(nameEvent, function(value, i) {
-						if (value.name.toLowerCase().includes(userInput)) {
-							$('#events').append(
-								'<span>' +
-									'<h3>' +
-									// v.name
-									value.name +
-									'</h3>' +
-									'<p>' +
-									value.category +
-									'</p>' +
-									'<p>' +
-									value.description +
-									'</p>' +
-									'</span>'
-							);
-							
-							markers.push({
-								content: value.description,
-								coords: {
-									lat: parseFloat(value.lat),
-									lng: parseFloat(value.lng)
-								}
-							});
-						}
-					});
+						// removeMarkers();
 
-					for (var i = 0; i < markers.length; i++) {
-						// Add markers
 						addMarker(markers[i]);
 					}
+					// showgMarkers();
+					console.log('after adding gevents', gmarkers.length);
+					console.log('after adding events', markers.length);
+
+					// console.log(eventMarkers.length);
+					// console.log('after remove markers length', markers.length);
 				}
 			});
 		}
 		a1();
-		// $.when(a1, a2).done(function(r1, r2) {});
+		// remove global gmarker array
+		function removeMarkers() {
+			for (i = 0; i < gmarkers.length; i++) {
+				gmarkers[i].setMap(null);
+			}
+			gmarkers = [];
+		}
+		function showgMarkers() {
+			for (i = 0; i < gmarkers.length; i++) {
+				gmarkers[i].setMap(map);
+			}
+		}
 
 		// Add Marker Function
 		function addMarker(props) {
-			
+			// console.log(props);
 			var marker = new google.maps.Marker({
 				position: props.coords,
 				map: map //icon:props.iconImage
 			});
-			
+
+			// push marker to global gmarker array
+			gmarkers.push(marker);
+
 			// Check for customicon
 			if (props.iconImage) {
 				// Set icon image
 				marker.setIcon(props.iconImage);
 			}
-			
-			marker.setMap(map);
-			
 
 			// Check content
 			if (props.content) {
@@ -301,11 +281,11 @@ function initMap() {
 				});
 
 				marker.addListener('click', function() {
+					// infowindow.setContent(markers.content);
 					infoWindow.open(map, marker);
 				});
 			}
 		}
-		
 	});
 
 	if (navigator.geolocation) {
