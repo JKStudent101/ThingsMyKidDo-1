@@ -4,11 +4,11 @@ let coords;
 let marker;
 let map;
 let gmarkers = [];
-var infowindow;
+let infowindow;
 
 function initMap() {
 	// Map options
-	var options = {
+	let options = {
 		zoom: 7,
 		// center: { lat: 49.4928, lng: -117.2948 },
 
@@ -17,7 +17,7 @@ function initMap() {
 		}
 	};
 
-	var styledMapType = new google.maps.StyledMapType([
+	let styledMapType = new google.maps.StyledMapType([
 		{ elementType: 'geometry', stylers: [ { color: '#ebe3cd' } ] },
 		{ elementType: 'labels.text.fill', stylers: [ { color: '#523735' } ] },
 		{ elementType: 'labels.text.stroke', stylers: [ { color: '#f5f1e6' } ] },
@@ -129,7 +129,7 @@ function initMap() {
 	]);
 
 	// New map
-	var map = new google.maps.Map(document.getElementById('map'), options);
+	let map = new google.maps.Map(document.getElementById('map'), options);
 
 	// info initialize
 	infoWindow = new google.maps.InfoWindow({});
@@ -140,12 +140,16 @@ function initMap() {
 
 		// get user input event or all event
 		let tagOption = $('#searchOption').val(); // hockey
-		let userInput = $('#SearchBar').val(); // eventname
+		let userInput = $('#SearchBar').val().toLowerCase(); // eventname
 
 		const requestOne = '/event/' + $('#SearchBar').val();
 		const requestAll = '/event/getall';
 
 		const requestAllTags = '/event/search/' + tagOption;
+
+		$('.allevent').on('change', function() {
+			$('.checkbox').prop('checked', $(this).is(':checked'));
+		});
 
 		function a1() {
 			$.ajax({
@@ -156,8 +160,18 @@ function initMap() {
 				success: (data) => {
 					// data => array of event objects
 					$('#events').empty();
+
 					if (tagOption == 'getAllEvents' && userInput.length == 0) {
 						$.map(data, function(value, i) {
+							let inputmatch = value.name.split(' ');
+
+							inputmatch = inputmatch.map((item) => {
+								return item.toLowerCase();
+							});
+							if (inputmatch.indexOf(userInput) != -1) {
+								console.log(value);
+							}
+
 							// console.log(value);
 							$('#events').append(
 								'<span>' +
@@ -185,6 +199,7 @@ function initMap() {
 					// console.log(data);
 					$.map(data, function(value, i) {
 						// console.log(value.category);
+
 						if (tagOption == value.category) {
 							$('#events').append(
 								'<span>' +
@@ -206,7 +221,7 @@ function initMap() {
 										lng: parseFloat(value.lng)
 									}
 								});
-								for (var i = 0; i < markers.length; i++) {
+								for (let i = 0; i < markers.length; i++) {
 									// Add markers
 									addMarker(markers[i]);
 								}
@@ -214,7 +229,9 @@ function initMap() {
 							}
 						}
 					});
-					for (var i = 0; i < markers.length; i++) {
+
+					// add all events to the marker
+					for (let i = 0; i < markers.length; i++) {
 						// Add markers
 						addMarker(markers[i]);
 					}
@@ -230,7 +247,7 @@ function initMap() {
 		a1();
 
 		function addEventstoMarkers(eventarray) {
-			for (var i = 0; i < eventar.length; i++) {
+			for (let i = 0; i < eventar.length; i++) {
 				// Add markers
 				addMarker(markers[i]);
 			}
@@ -251,7 +268,7 @@ function initMap() {
 		// Add Marker Function
 		function addMarker(props) {
 			// console.log(props);
-			var marker = new google.maps.Marker({
+			let marker = new google.maps.Marker({
 				position: props.coords,
 				map: map //icon:props.iconImage
 			});
