@@ -131,10 +131,14 @@ function initMap() {
 	// New map
 	var map = new google.maps.Map(document.getElementById('map'), options);
 
-	// load events on search click event
-	$('#getData').click((e) => {
-		// get user input event or all event
+	// info initialize
+	infoWindow = new google.maps.InfoWindow({});
 
+	// load events on search button click event
+	$('#getData').click((e) => {
+		e.preventDefault();
+
+		// get user input event or all event
 		let tagOption = $('#searchOption').val(); // hockey
 		let userInput = $('#SearchBar').val(); // eventname
 
@@ -143,14 +147,14 @@ function initMap() {
 
 		const requestAllTags = '/event/search/' + tagOption;
 
-		e.preventDefault();
 		function a1() {
 			$.ajax({
-				url: requestAll,
+				url: requestAll, //event/getall route
 				type: 'GET',
 				async: false,
 				dataType: 'json',
 				success: (data) => {
+					// data => array of event objects
 					$('#events').empty();
 					if (tagOption == 'getAllEvents' && userInput.length == 0) {
 						$.map(data, function(value, i) {
@@ -167,7 +171,7 @@ function initMap() {
 									'</span>'
 							);
 
-							// push values/events into the markers
+							// push event vlaues into the markers
 							markers.push({
 								content: value.description,
 								coords: {
@@ -176,30 +180,11 @@ function initMap() {
 								}
 							});
 						});
-
-						// add markers
 					}
 
-					for (var i = 0; i < markers.length; i++) {
-						// Add markers
-						addMarker(markers[i]);
-					}
-					a2();
-					// console.log(markers.length);
-					if (markers.length == 0) {
-					}
-				}
-			});
-		}
-		markers = [];
-
-		function a2() {
-			$.ajax({
-				url: requestAllTags,
-				type: 'GET',
-				dataType: 'json',
-				success: (tagEvent) => {
-					$.map(tagEvent, function(value, i) {
+					// console.log(data);
+					$.map(data, function(value, i) {
+						// console.log(value.category);
 						if (tagOption == value.category) {
 							$('#events').append(
 								'<span>' +
@@ -212,38 +197,44 @@ function initMap() {
 									'</p>' +
 									'</span>'
 							);
-							// markers = [];
-
-							markers.push({
-								content: value.description,
-								coords: {
-									lat: parseFloat(value.lat),
-									lng: parseFloat(value.lng)
+							if (gmarkers.length > 0) {
+								removeMarkers();
+								markers.push({
+									content: value.description,
+									coords: {
+										lat: parseFloat(value.lat),
+										lng: parseFloat(value.lng)
+									}
+								});
+								for (var i = 0; i < markers.length; i++) {
+									// Add markers
+									addMarker(markers[i]);
 								}
-							});
+								// showgMarkers();
+							}
 						}
 					});
-					console.log('before gmarkers length', gmarkers.length);
-					console.log('before markers length', markers.length);
-					removeMarkers();
-					console.log('after remove gmarkers length', gmarkers.length);
-					console.log('after remove markers length', markers.length);
 					for (var i = 0; i < markers.length; i++) {
 						// Add markers
-						// removeMarkers();
-
 						addMarker(markers[i]);
 					}
-					// showgMarkers();
-					console.log('after adding gevents', gmarkers.length);
-					console.log('after adding events', markers.length);
 
-					// console.log(eventMarkers.length);
-					// console.log('after remove markers length', markers.length);
+					// a2();
+					// removeMarkers();
 				}
 			});
 		}
+		markers = [];
+
+		//
 		a1();
+
+		function addEventstoMarkers(eventarray) {
+			for (var i = 0; i < eventar.length; i++) {
+				// Add markers
+				addMarker(markers[i]);
+			}
+		}
 		// remove global gmarker array
 		function removeMarkers() {
 			for (i = 0; i < gmarkers.length; i++) {
@@ -276,7 +267,7 @@ function initMap() {
 
 			// Check content
 			if (props.content) {
-				var infoWindow = new google.maps.InfoWindow({
+				infoWindow = new google.maps.InfoWindow({
 					content: props.content
 				});
 

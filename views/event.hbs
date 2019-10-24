@@ -28,8 +28,23 @@
 
                                     <option value={{name}}>{{name}}</option>
                                 {{/each}}
-
                                 </select>
+
+                                
+                                <div class="checkedbox">
+                                    <label for="">
+                                    <input type="checkbox" name="" id="allevent">all events
+                                    </label>
+                                </div>
+                                {{#each data}}
+                                    {{!-- <div class="checkedbox"> --}}
+                                        {{!-- <label for=""> --}}
+                                    <input type="checkbox" name="" value={{name}} id="" class="checkeditem">{{name}}
+                                        {{!-- </label> --}}
+                                    {{!-- </div> --}}
+                                {{/each}}
+                                <br>
+
                                 <div class="form-group">
                                     <!--                    <label for="exampleInputName2">Name</label>-->
                                     <input type="text" id="SearchBar" placeholder="Enter Event/Activity">
