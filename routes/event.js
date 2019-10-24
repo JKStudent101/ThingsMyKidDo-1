@@ -8,7 +8,13 @@ router.use(cookieParser());
 // to /event
 
 router.get('/', (req, res) => {
-	let sql = 'select distinct category from event';
+	let sql =
+		'SELECT DISTINCT t.name  \n' +
+		'FROM event e \n' +
+		'INNER JOIN event_tags et \n' +
+		'ON e.event_id = et.event_id \n' +
+		'INNER JOIN tags t\n' +
+		'ON et.event_id = t.tag_id';
 	db.query(sql, (err, result) => {
 		if (!req.cookies.i) {
 			res.redirect('/login');
@@ -16,13 +22,18 @@ router.get('/', (req, res) => {
 		if (err) {
 			throw err;
 		} else {
-			// var data = [];
-			// for (var i = 0; i < result.length; i++) {
-			// 	data.push(result[i]);
-			// }
+			var data = [];
+			for (var i = 0; i < result.length; i++) {
+				data.push(result[i]);
+				// console.log(i);
+			}
+			console.log(result);
+			console.log(data);
+
 			res.render('event.hbs', {
 				data: result
 			});
+			// res.send(data);
 		}
 	});
 	// response.render('event.hbs', {});
@@ -44,9 +55,13 @@ router.get('/getall', (req, res) => {
 	});
 });
 
-// find all catalogs
+// find all catalogs by catalog option
 router.get('/search/:tags', (req, res) => {
-	let sql = 'select * from event where category = ?';
+	let sql =
+		'select e.*, t.name as category from event as e\n' +
+		'inner join event_tags as et on e.event_id = et.event_id \n' +
+		'inner join tags as t on et.tag_id = t.tag_id \n' +
+		'where t.name = ?';
 
 	let event_tag = req.params.tags;
 
@@ -87,18 +102,4 @@ router.get('/search/name/:name', (req, res) => {
 	});
 });
 
-// router.get('/search', (request, response) => {
-// 	let sql = 'select distinct category from event';
-// 	db.query(sql, (err, result) => {
-// 		if (err) {
-// 			throw err;
-// 		} else {
-// 			var data = [];
-// 			for (var i = 0; i < result.length; i++) {
-// 				data.push(result[i]);
-// 			}
-// 			response.send(data);
-// 		}
-// 	});
-// });
 module.exports = router;
