@@ -14,12 +14,12 @@ router.post('/', (req, res) => {
             req.body.enddate,
             req.body.category,
         ]
-        let sql = "INSERT INTO thingsKidsDoModified.event(description, name, start_time, end_time, start_date, end_date, category) VALUES (?,?,?,?,?,?,?);"
+        let sql = "INSERT INTO thingsKidsDoModified.event(description, name, start_time, end_time, start_date, end_date) VALUES (?,?,?,?,?,?,?);";
             db.init().query(sql, inputs, (err, res) => {
             if (err) {
                 throw err;
             } else {
-                // console.log("Add Event Successfully");
+                res.redirect('/vendor/' + req.session.user.user_id);
             }
         });
     }
