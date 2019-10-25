@@ -4,7 +4,7 @@
   <div class="form-group">
     <label class="col-xs-3 control-label"><b>Event Name</b></label>
     <div class="col-xs-7">
-      <input class="form-control" name="name" type="text">
+      <input class="form-control" name="eventname" type="text">
     </div>
   </div>      
   <div class="form-group">         
@@ -28,13 +28,18 @@
   <div class="form-group">
     <label class="col-xs-3 control-label"><b>End Time</b></label>
     <div class="col-xs-7">
-      <input class="form-control" name="endtime" type="time" id="endtime">
+      <input class="form-control" name="end_time" type="time" id="endtime">
     </div>
   </div>
   <div class="form-group">
-    <label class="col-xs-3 control-label"><b>Category</b></label>
+    <label class="col-xs-3 control-label"><b>Tags</b><b>{{test}}</b></label>
     <div class="col-xs-7">
-      <input class="form-control" name="category" type="text">
+        <select class="form-control" name="tag">
+            <option value="" disabled selected>Select event tags</option>
+        {{#each tags}}
+            <option values="{{name}}">{{name}}</option>
+        {{/each}}
+        </select>
     </div>
   </div>
   <div class="form-group">
@@ -57,7 +62,7 @@
   </div>
   <div class="form-group">
     <div class="col-xs-offset-3 col-xs-10">
-      <button type="submit" class="btn btn-default">Add</button>
+      <button type="submit" class="btn btn-default" onclick="return confirm('Are you sure you want to add event?')">Add</button>
     </div>
   </div>
   
