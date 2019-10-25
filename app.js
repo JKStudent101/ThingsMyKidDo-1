@@ -40,7 +40,7 @@ app.use(
 	})
 );
 app.use('/event', event);
-app.use('/addevent', addevent)
+app.use('/addevent', addevent);
 const server = require('http').createServer(app);
 hbs.registerPartials(__dirname + '/views/partials');
 
@@ -164,7 +164,7 @@ app.get('/vendor/:vendor_id', (req, res) => {
 
                         var sql = 'SELECT a.event_id, d.name as vendor_name, a.description, a.name as event, \n' +
                             'GROUP_CONCAT(c.name SEPARATOR \', \') as tag_name , date_format(a.start_date, "%Y/%m/%d") as start_date, date_format(a.end_date, "%Y/%m/%d") as end_date, \n' +
-                            'a.status, a.isApproved\n' +
+                            'a.isApproved\n' +
                             'FROM event a\n' +
                             'LEFT JOIN event_tags b ON a.event_id = b.event_id\n' +
                             'LEFT JOIN tags c ON b.tag_id = c.tag_id\n' +
@@ -197,20 +197,20 @@ app.get('/vendor/:vendor_id', (req, res) => {
 
 	}
 });
-
-app.post('/add_event', (req, res)=>{
-	var sql_add = 'insert into event set ?';
-
-	var data = req.body;
-	console.log(data);
-    db.query(sql_add,data, (err, result) => {
-        if (err) {
-            throw err;
-        } else {
-            res.redirect('/');
-        }
-    });
-});
+//
+// app.post('/add_event', (req, res)=>{
+// 	var sql_add = 'insert into event set ?';
+//
+// 	var data = req.body;
+// 	console.log(data);
+//     db.query(sql_add,data, (err, result) => {
+//         if (err) {
+//             throw err;
+//         } else {
+//             res.redirect('/');
+//         }
+//     });
+// });
 
 app.get('/delete/:event_id', (req, res)=>{
 	var sql_delete_tag = 'delete from event_tags where event_id = ?';

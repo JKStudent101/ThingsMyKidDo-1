@@ -13,7 +13,7 @@
 
         {{> menu}}
 
-        <div class="container xs-12">
+        <div class="container col-xs-12">
             <p><strong>Welcome {{vendor}}!</strong> </p>
             <div class="row">
                 <div class="col-xs-7">
@@ -26,7 +26,6 @@
                             <td>Start Date</td>
                             <td>End Date</td>
                             <td>Tags</td>
-                            <td>Status</td>
                             <td>Approval status</td>
                             <td>Actions</td>
                         </tr>
@@ -39,7 +38,6 @@
                             <td>{{start_date}}</td>
                             <td>{{end_date}}</td>
                             <td>{{tag_name}}</td>
-                            <td>{{status}}</td>
                             <td>{{isApproved}}</td>
                             <td>
                                 <!--<a href="/update/<%= data[i].id %>" class="btn btn-info">Edit</a>-->
@@ -54,7 +52,7 @@
                     </table>
                 </div>
 
-                <div class="col-xs-5">
+                <div class="col-xs-6 col-md-4">
                     {{> addevent}}
                 </div>
             </div>
