@@ -2,9 +2,13 @@
 <html>
     <head>
         <!-- Bootstrap CSS -->
-                {{> bootstrap}}      
+                {{> bootstrap}}   
+
         <link href="/css/menu.css" type="text/css" rel="stylesheet" />
         <link href="/css/login.css" type="text/css" rel="stylesheet" />
+        <link href="/css/register.css" type="text/css" rel="stylesheet" />
+
+        <script></script>
     </head>
 
     <body>
@@ -20,16 +24,336 @@
 
 
         <div class="main">
-            <p class="sign" align="center">Sign in</p>
+            <p class="sign" align="center">Sign in</p>           
             <form class="form1" action="/login-form" method="post">
                 <input id="username" name="username" class="un " type="text" align="center" placeholder="Username">
                 <input id="password" name="password" class="pass" type="password" align="center" placeholder="Password">
-                <a class="submit" align="center" href="/register">Register</a>
+  <!--               <a class="submit" align="center" href="/register">Register</a>-->
+                <button type="button" class="submit" align="center" data-toggle="modal" data-target="#Register">Register</button>
                 <button class="submit" align="center">Sign in</button>  
-                <p class="forgot" align="center"><a href="#">Forgot Password?</a></p>
-            </form>
+                <p class="forgot" align="center"><a href="#">Forgot Password?</a></p>                
+            </form>           
         </div>
-        
+
+        <div>  
+                <form>
+                  <div class="modal fade" id="Register" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-lg">
+                          <div class="modal-content">
+                              <div class="modal-header">
+                                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                  <h4 class="modal-title">Register</h4>
+                              </div>
+                              <div class="modal-body">
+                                  <div class="tab">
+                                    <p>Register as a ...</p>
+                                    </div>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="submit1" align="center" data-toggle="modal" id="Family" >Parent</button>
+                                <button type="button" class="submit1" align="center" data-toggle="modal" id="Vendor" >Vendor</button>                
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="modal fade" id="Parent1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                      <h4 class="modal-title">Create Account</h4>
+                                  </div>
+                                  <div class="modal-body">
+                                      <div class="tab">
+                                          <p><input class="register" placeholder="Username/Email address" name="username"></p>
+                                          <p><input class="register" placeholder="Phone number" oninput="this.className = ''" name="phone"></p>
+                                          <p><input class="register" placeholder="Password" oninput="this.className = ''" name="pw"></p>
+                                          <p><input class="register" placeholder="Comfirm Password" oninput="this.className = ''" name="confirm_pw"></p>
+                                      </div>
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button type="button" class="submit1" id="P-Account">Continue</button>
+                                  </div>
+                              </div>
+                          </div>
+                  </div>
+
+                  <div class="modal fade" id="Parent2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                      <h4 class="modal-title">Create Account</h4>
+                                  </div>
+                                  <div class="modal-body">
+                                      <div class="tab">
+                                          <p>Hi, Tell us about you so we can keep you on the know about children's activities in your area.</p>
+                                          <p>"I'm an awesome 
+                                              <span>
+                                                    <form>
+                                                        <select id="Guardian" class="guardian">
+                                                            <option>Mom</option>
+                                                            <option>Dad</option>
+                                                            <option>Relative</option>
+                                                            <option>Caretaker</option>        
+                                                        </select>
+                                                    </form>
+                                                </span>."
+                                           </p>
+                                      </div>
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button type="button" class="submit1" id="P-Redo-Account">Back</button>  
+                                      <button type="button" class="submit1" id="P-User">Continue</button>
+                                  </div>
+                              </div>
+                          </div>
+                  </div>
+
+                  <div class="modal fade" id="Parent3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-lg">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                      <h4 class="modal-title">Children Profiles (optional)</h4>
+                                      <p>If you wish to create your children's profiles after you have created your account, you can skip this step.</p>
+                                      <button type="button" class="submit1" id="P-Skip">Skip</button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <div class="tab">
+                                          <p>My kid<input class="register-kid" placeholder="Nickname" name="nickname">is a <span>{{>gender}}</span> who is interested in {{>interests}}</p>
+                                          <p>My kid<input class="register-kid" placeholder="Nickname" name="nickname">is a <span>{{>gender}}</span> who is interested in<input class="register-kid" placeholder="Interest" name="interest"></p>
+                                          <p>My kid<input class="register-kid" placeholder="Nickname" name="nickname">is a <span>{{>gender}}</span> who is interested in<input class="register-kid" placeholder="Interest" name="interest"></p>
+                                      </div>
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button type="button" class="submit1" id="P-Redo-User">Back</button>                    
+                                      <button type="button" class="submit1" id="P-Kids">Continue</button>
+                                  </div>
+                              </div>
+                          </div>
+                  </div>
+
+                  <div class="modal fade" id="Parent4" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                      <h4 class="modal-title">Confirm Account Info</h4>
+                                  </div>
+                                  <div class="modal-body">
+                                      <div class="tab">
+                                          <p>Parent Account</p>
+                                          <p>Children list</p>
+                                      </div>
+                                      <hr class="my-2">
+                                      <div class="custom-control custom-checkbox">
+                                          <input type="checkbox" class="custom-control-input" id="customCheck1">
+                                          <label class="custom-control-label" for="customCheck1">I have read and agreed to the Terms & conditions.</label>
+                                      </div>
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button type="button" class="submit1" id="P-Redo-Kids">Back</button>
+                                      <button type="button" class="submit1" id="P-Confirm">Confirm</button>
+                                  </div>
+                              </div>
+                          </div>
+                  </div>
+
+                  <div class="modal fade" id="Parent5" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                      <h4 class="modal-title">Registration Complete!</h4>
+                                  </div>
+                                  <div class="modal-body" id="B-3">
+                                      <h1>All done!!!</h1>
+                                      <p></p>
+                                      <p>Click the button below to go to Home page</p>
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button type="button" class="submit1"><a href="/home" style="color: antiquewhite;">Home Page</a></button>
+                                  </div>
+                              </div>
+                          </div>
+                  </div>
+
+              <!-- Business Modal: Method #2 -->
+                  <div class="modal fade" id="Business1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                      <h4 class="modal-title">Create Account</h4>
+                                  </div>
+                                  <div class="modal-body" id="B-1">
+                                      <div class="tab">
+                                          <p><input class="register" id="bus_Fname" placeholder="First Name" oninput="this.className = ''" name="fname"></p>
+                                          <p><input class="register" id="bus_Lname" placeholder="Last name" oninput="this.className = ''" name="lname"></p>
+                                          <p><input class="register" id="bus_Orgname" placeholder="Organization name" oninput="this.className = ''" name="org_name"></p>
+                                          <p><input class="register" id="bus_Phone" placeholder="Phone number" oninput="this.className = ''" name="phone"></p>
+                                          <p><input class="register" id="bus_email" placeholder="Email address" oninput="this.className = ''" name="email"></p>
+                                          <p><input class="register" id="bus_PW" placeholder="Password" oninput="this.className = ''" name="pw"></p>
+                                          <p><input class="register" id="bus_PWconfirm" placeholder="Comfirm Password" oninput="this.className = ''" name="confirm_pw"></p>
+                                      </div>
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button type="button" class="submit1" id="B-Register-info">Continue</button>
+                                  </div>
+                              </div>
+                          </div>
+                  </div>
+
+                  <!-- Modal Page 2 -->
+                  <div class="modal fade" id="Business2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                              <!-- Modal content-->
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                      <h4 class="modal-title">Confirm Account Info</h4>
+                                  </div>
+                                  <div class="modal-body" id="B-2">
+                                      <form class="form-horizontal pf"><!---->
+                                          <div class="form-group">
+                                              <label class="control-label">First Name</label>
+                                              <div>
+                                                  <p class="form-control-static">Alexander</p>
+                                              </div>
+                                          </div>
+                                          <div class="form-group">
+                                              <label class=" control-label">Last Name</label>
+                                              <div class="">
+                                                  <p class="form-control-static">Fong</p>
+                                              </div>
+                                          </div>
+                                          <div class="form-group">
+                                              <label class="control-label">Organization</label>
+                                              <div class="">
+                                                  <p class="form-control-static">BC Soccer Community</p>
+                                              </div>
+                                          </div>
+                                          <div class="form-group">
+                                              <label class="control-label">Phone Number</label>
+                                              <div class="">
+                                                  <p class="form-control-static">###-###-####</p>
+                                              </div>
+                                          </div>
+                                          <div class="form-group">
+                                              <label class="control-label">Email Address</label>
+                                              <div class="">
+                                                  <p class="form-control-static">AlexFong@bcsoccer.ca</p>
+                                              </div>
+                                          </div>
+                                      </form>
+                                      <hr class="my-2">
+                                      <div class="custom-control custom-checkbox">
+                                          <input type="checkbox" class="custom-control-input" id="customCheck1">
+                                          <label class="custom-control-label" for="customCheck1">I have read and agreed to the Terms & conditions.</label>
+                                      </div>
+                                  </div>
+                                  <div class="modal-footer">
+                                      <div>
+                                          <button type="button" class="submit1" id="B-Redo-info">Back</button>
+                                          <button type="button" class="submit1" id="B-Confirm-info">Register</button>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                  </div>
+
+                  <div class="modal fade" id="Business3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                      <h4 class="modal-title">Registration Complete!</h4>
+                                  </div>
+                                  <div class="modal-body" id="B-3">
+                                      <h1>All done!!!</h1>
+                                      <p></p>
+                                      <p>please log in to your account.</p>
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button type="button" class="submit1" data-dismiss="modal">Close</button>
+                                  </div>
+                              </div>
+                          </div>
+                  </div>
+              </form>
+            </div>  
+
+        <script>
+        $("#Family").on( "click", function() {
+            $('#Register').modal('hide');
+            $('#Parent1').modal('show');
+        });
+        $("#Vendor").on( "click", function() {
+            $('#Register').modal('hide');
+            $('#Business1').modal('show');
+        });
+
+        //Parent Modal
+        //set "Continue" button id on click to hide 1st modal and trigger 2nd modal
+        $("#P-Account").on( "click", function() {
+            $('#Parent1').modal('hide');
+            $('#Parent2').modal('show');
+        });
+        //set "Register" button id on click to load input + hide 2nd modal, and trigger 3rd modal
+        $("#P-Redo-Account").on( "click", function() {
+            $('#Parent2').modal('hide');
+            $('#Parent1').modal('show');
+        });
+        //set "Back" button id on click to hide 3rd modal and trigger 2nd modal
+        $("#P-User").on( "click", function() {
+            $('#Parent2').modal('hide');
+            $('#Parent3').modal('show');
+        });
+        //set "Back" button id on click to hide 2nd modal and trigger 1st modal
+        $("#P-Redo-User").on( "click", function() {
+            $('#Parent3').modal('hide');
+            $('#Parent2').modal('show');
+        });
+        //set "Skip" button id on click to hide 2nd modal and trigger 3rd modal
+        $("#P-Skip").on( "click", function() {
+            $('#Parent3').modal('hide');
+            $('#Parent4').modal('show');
+        });
+        //set "Register" button id on click to load input + hide 2nd modal, and trigger 3rd modal
+        $("#P-Kids").on( "click", function() {
+            $('#Parent3').modal('hide');
+            $('#Parent4').modal('show');
+        });
+        //set "Back" button id on click to hide 3rd modal and trigger 2nd modal
+        $("#P-Redo-Kids").on( "click", function() {
+            $('#Parent4').modal('hide');
+            $('#Parent3').modal('show');
+        });
+        //set "Confirm" button id on click to hide 3rd modal and trigger 4th modal
+        $("#P-Confirm").on( "click", function() {
+            $('#Parent4').modal('hide');
+            $('#Parent5').modal('show');
+        });
+
+        //Register Modal
+        //set "Continue" button id on click to hide 1st modal and trigger 2nd modal
+        $("#B-Register-info").on( "click", function() {
+            $('#Business1').modal('hide');
+            $('#Business2').modal('show');
+        });
+        //set "Back" button id on click to hide 2nd modal and trigger 1st modal
+        $("#B-Redo-info").on( "click", function() {
+            $('#Business2').modal('hide');
+            $('#Business1').modal('show');
+        });
+        //set "Confirm" button id on click to hide 2nd modal and trigger 3rd modal
+        $("#B-Confirm-info").on( "click", function() {
+            $('#Business2').modal('hide');
+            $('#Business3').modal('show');
+        });
+    </script>    
         
         
         
