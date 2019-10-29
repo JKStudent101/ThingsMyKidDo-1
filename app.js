@@ -16,7 +16,7 @@ const session = require('express-session');
 
 // import event routes
 const event = require('./routes/event');
-const addevent = require('./routes/addevent')
+const addevent = require('./routes/addevent');
 
 var db = require('./routes/database').init();
 
@@ -36,7 +36,7 @@ app.use(session({
 app.use(express.json());
 app.use(
 	bodyParser.urlencoded({
-		extended: true
+		extended: false
 	})
 );
 app.use('/event', event);
@@ -185,6 +185,9 @@ app.get('/vendor/:vendor_id', (req, res) => {
                                     data: result,
                                     vendor: vendor_name,
 									 tags: tags_list
+                                    // whichpartial: ()=> {
+                                    // 	return 'addevent';
+                                    //  }
                                 });
                             }
                         });
@@ -197,20 +200,7 @@ app.get('/vendor/:vendor_id', (req, res) => {
 
 	}
 });
-//
-// app.post('/add_event', (req, res)=>{
-// 	var sql_add = 'insert into event set ?';
-//
-// 	var data = req.body;
-// 	console.log(data);
-//     db.query(sql_add,data, (err, result) => {
-//         if (err) {
-//             throw err;
-//         } else {
-//             res.redirect('/');
-//         }
-//     });
-// });
+
 
 app.get('/delete/:event_id', (req, res)=>{
 	var sql_delete_tag = 'delete from event_tags where event_id = ?';
@@ -229,6 +219,82 @@ app.get('/delete/:event_id', (req, res)=>{
             });
         }
     });
+
+});
+
+app.get('/edit/:event_id', (req, res)=>{
+    var sql_tags = 'select name from tags';
+    db.query(sql_tags, (err,result)=>{
+        if(err){
+            throw err;
+        } else{
+            var tags_list = result;
+
+            var sql_query = 'select a.event_id, a.description, a.name, a.start_time, a.end_time, a.start_date, a.end_date, c.name as event_tag\n'+
+            'from event a\n'+
+            'LEFT JOIN event_tags b ON a.event_id = b.event_id\n'+
+            'LEFT JOIN tags c ON b.tag_id = c.tag_id\n'+
+            'where a.event_id=?';
+            db.query(sql_query, req.params.event_id, (err, result)=>{
+                if(err){
+                    throw err;
+                } else{
+                    // console.log(result[0].start_time);
+                    res.render('./partials/editevent.hbs',{
+                        data: result[0],
+                        start_date: result[0].start_date.toISOString().split('T')[0],
+                        end_date: result[0].end_date.toISOString().split('T')[0],
+                        tags: tags_list
+                        // whichpartial: ()=> {
+                        //     return 'editevent';
+                        // }
+                    })
+                }
+            })
+
+        }
+	});
+});
+
+app.post('/edit/:event_id', (req, res)=>{
+    var inputs = [
+        req.body.description,
+        req.body.eventname,
+        req.body.start_time,
+        req.body.end_time,
+        req.body.start_date,
+        req.body.end_date,
+        req.params.event_id
+    ];
+	// console.log(inputs);
+    var sql_update = 'update event set description = ?, name = ?, start_time = ?, end_time = ?, start_date = ?, end_date = ? where event_id = ? ';
+    db.query(sql_update, inputs,(err, result)=>{
+        if(err){
+            throw err;
+        } else{
+        	var sql_tag_id = 'select tag_id from tags where name = ?';
+        	db.query(sql_tag_id, req.body.tag, (err, result)=>{
+                if(err){
+                    throw err;
+                } else{
+                	var tag_id = result[0].tag_id;
+                	// console.log(req.body.tag);
+                	// console.log(tag_id);
+                	// console.log(req.params.event_id);
+
+                	var sql_update_event_tag = 'update event_tags set tag_id = ? where event_id =?';
+                	db.query(sql_update_event_tag, [tag_id, req.params.event_id], (err,result)=>{
+                        if(err){
+                            throw err;
+                        } else{
+                            res.redirect('/vendor/' + req.session.user.user_id);
+                        }
+					})
+                }
+			});
+
+        }
+	})
 
 });
 
