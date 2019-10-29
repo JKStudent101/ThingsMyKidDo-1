@@ -40,7 +40,7 @@ app.use(
 	})
 );
 app.use('/event', event);
-app.use('/addevent', addevent)
+app.use('/addevent', addevent);
 const server = require('http').createServer(app);
 hbs.registerPartials(__dirname + '/views/partials');
 
@@ -148,70 +148,87 @@ app.get('/vendor/:vendor_id', (req, res) => {
 	} else if (req.params.vendor_id != req.session.user.user_id || req.session.user.user_type != 'vendor'){
 		res.redirect('/logout')
 	} else {
-		var vendor_id = req.params.vendor_id;
-		var sql = 'SELECT a.event_id, d.name as vendor_name, a.description, a.name as event, \n' +
-			'c.name as tag_name, date_format(a.start_date, "%Y/%m/%d") as start_date, date_format(a.end_date, "%Y/%m/%d") as end_date, \n' +
-			'a.status, a.isApproved\n' +
-			'FROM event a\n' +
-			'LEFT JOIN event_tags b ON a.event_id = b.event_id\n' +
-			'LEFT JOIN tags c ON b.tag_id = c.tag_id\n' +
-			'LEFT JOIN vendor d ON a.vendor_id = d.user_id\n' +
-			'WHERE vendor_id = ?';
-		db.query(sql, vendor_id, (err, result) => {
-			if (err) {
-				throw err;
-			} else {
-				// console.log(req.session.vendor)
-				// console.log(result[0])
-				// console.log(result[0].vendor_name);
-				let vendorName = "";
-				if (result.length !== 0) {
-					let vendorName = result[0].vendor_name;
-				}
-				res.render('vendor.hbs', {
-					data: result,
-					vendor: vendorName
-				});
-			}
+		var sql_vendor_name = 'select name from vendor where user_id = ?';
+		db.query(sql_vendor_name, req.session.user.user_id, (err, result)=>{
+            if (err) {
+                throw err;
+            } else {
+                var vendor_name = result[0].name;
+
+				var sql_tags = 'select name from tags';
+                db.query(sql_tags, (err, result) => {
+                    if (err) {
+                        throw err;
+                    } else {
+                        var tags_list = result;
+
+                        var sql = 'SELECT a.event_id, d.name as vendor_name, a.description, a.name as event, \n' +
+                            'GROUP_CONCAT(c.name SEPARATOR \', \') as tag_name , date_format(a.start_date, "%Y/%m/%d") as start_date, date_format(a.end_date, "%Y/%m/%d") as end_date, \n' +
+                            'a.isApproved\n' +
+                            'FROM event a\n' +
+                            'LEFT JOIN event_tags b ON a.event_id = b.event_id\n' +
+                            'LEFT JOIN tags c ON b.tag_id = c.tag_id\n' +
+                            'LEFT JOIN vendor d ON a.vendor_id = d.user_id\n' +
+                            'WHERE vendor_id = ? GROUP BY event_id ORDER BY start_date';
+                        db.query(sql, req.params.vendor_id, (err, result) => {
+                            if (err) {
+                                throw err;
+                            } else {
+                                // console.log(req.session.user)
+                                // console.log(result[0])
+                                // console.log(result[0].vendor_name);
+                                // let vendorName = "";
+                                // if (result.length !== 0) {
+                                // 	let vendorName = result[0].vendor_name;
+                                // }
+                                res.render('vendor.hbs', {
+                                    data: result,
+                                    vendor: vendor_name,
+									 tags: tags_list
+                                });
+                            }
+                        });
+                    }
+                });
+
+
+            }
 		});
+
 	}
 });
-
-app.post('/add_event', (req, res)=>{
-	var sql_add = 'insert into event set ?';
-
-	var data = req.body;
-	console.log(data);
-    db.query(sql_add,data, (err, result) => {
-        if (err) {
-            throw err;
-        } else {
-            res.redirect('/');
-        }
-    });
-});
+//
+// app.post('/add_event', (req, res)=>{
+// 	var sql_add = 'insert into event set ?';
+//
+// 	var data = req.body;
+// 	console.log(data);
+//     db.query(sql_add,data, (err, result) => {
+//         if (err) {
+//             throw err;
+//         } else {
+//             res.redirect('/');
+//         }
+//     });
+// });
 
 app.get('/delete/:event_id', (req, res)=>{
-	var event_id = req.params.event_id;
-
-	var sql_query = 'select vendor_id from event where event_id =?';
-	db.query(sql_query,event_id, (err,result)=>{
+	var sql_delete_tag = 'delete from event_tags where event_id = ?';
+    db.query(sql_delete_tag, req.params.event_id,(err, result) => {
         if (err) {
             throw err;
         } else {
-            var vendor_id = result[0].vendor_id;
-            var sql_delete = 'delete from event where event_id = ?';
-            db.query(sql_delete, event_id,(err, result) => {
+        	var sql_delete_event = 'delete from event where event_id = ?';
+            db.query(sql_delete_event, req.params.event_id,(err, result) => {
                 if (err) {
                     throw err;
                 } else {
-                	//once cookies is finish, change vendor_id to cookies' vendor_id
-					//if cookies' user is admin, add another if statement to redirect to 'admin'
-                    res.redirect('/vendor/' + vendor_id);
+                	// console.log(req.session.user.user_id);
+                    res.redirect('/vendor/' + req.session.user.user_id);
                 }
             });
         }
-	});
+    });
 
 });
 
