@@ -18,14 +18,33 @@
                     <div class="jumbotron">
                         <div>
                             <form class="form-inline">
+                                                                
+
                                 <label for="">Search events</label>
                                 <select id="searchOption">
                                     <option value="getAllEvents">All Events</option>
-                                    <option value="soccer">Soccer</option>
-                                    <option value="hockey">Hockey</option>
-                                    <option value="dance">Dance</option>
-                                    <option value="volleyball">Volleyball</option>
+
+                                {{#each data}}
+
+                                    <option value={{name}}>{{name}}</option>
+                                {{/each}}
                                 </select>
+
+                                
+                                <div class="checkedbox">
+                                    <label for="">
+                                    <input type="checkbox" name="" class="allevent">all events
+                                    </label>
+                                </div>
+                                {{#each data}}
+                                    {{!-- <div class="checkedbox"> --}}
+                                        {{!-- <label for=""> --}}
+                                    <input type="checkbox" name="" value={{name}} id="" class="checkeditem">{{name}}
+                                        {{!-- </label> --}}
+                                    {{!-- </div> --}}
+                                {{/each}}
+                                <br>
+
                                 <div class="form-group">
                                     <!--                    <label for="exampleInputName2">Name</label>-->
                                     <input type="text" id="SearchBar" placeholder="Enter Event/Activity">
