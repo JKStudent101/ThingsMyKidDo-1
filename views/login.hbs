@@ -8,7 +8,7 @@
         <link href="/css/login.css" type="text/css" rel="stylesheet" />
         <link href="/css/register.css" type="text/css" rel="stylesheet" />
 
-        <script></script>
+        <script src="register.js"></script>
     </head>
 
     <body>
@@ -194,7 +194,7 @@
                                           <p><input class="register" id="bus_Lname" placeholder="Last name" oninput="this.className = ''" name="lname"></p>
                                           <p><input class="register" id="bus_Orgname" placeholder="Organization name" oninput="this.className = ''" name="org_name"></p>
                                           <p><input class="register" id="bus_Phone" placeholder="Phone number" oninput="this.className = ''" name="phone"></p>
-                                          <p><input class="register" id="bus_email" placeholder="Email address" oninput="this.className = ''" name="email"></p>
+                                          <p><input class="register" id="bus_Email" placeholder="Email address" oninput="this.className = ''" name="email"></p>
                                           <p><input class="register" id="bus_PW" placeholder="Password" oninput="this.className = ''" name="pw"></p>
                                           <p><input class="register" id="bus_PWconfirm" placeholder="Comfirm Password" oninput="this.className = ''" name="confirm_pw"></p>
                                       </div>
@@ -220,31 +220,31 @@
                                           <div class="form-group">
                                               <label class="control-label">First Name</label>
                                               <div>
-                                                  <p class="form-control-static">Alexander</p>
+                                                  <p class="form-control-static" id="Vendor_Fname"></p>
                                               </div>
                                           </div>
                                           <div class="form-group">
                                               <label class=" control-label">Last Name</label>
                                               <div class="">
-                                                  <p class="form-control-static">Fong</p>
+                                                  <p class="form-control-static" id="Vendor_Lname"></p>
                                               </div>
                                           </div>
                                           <div class="form-group">
                                               <label class="control-label">Organization</label>
                                               <div class="">
-                                                  <p class="form-control-static">BC Soccer Community</p>
+                                                  <p class="form-control-static" id="Vendor_Org"></p>
                                               </div>
                                           </div>
                                           <div class="form-group">
                                               <label class="control-label">Phone Number</label>
                                               <div class="">
-                                                  <p class="form-control-static">###-###-####</p>
+                                                  <p class="form-control-static" id="Vendor_Phone"></p>
                                               </div>
                                           </div>
                                           <div class="form-group">
                                               <label class="control-label">Email Address</label>
                                               <div class="">
-                                                  <p class="form-control-static">AlexFong@bcsoccer.ca</p>
+                                                  <p class="form-control-static" id="Vendor_Email"></p>
                                               </div>
                                           </div>
                                       </form>
@@ -339,7 +339,9 @@
 
         //Register Modal
         //set "Continue" button id on click to hide 1st modal and trigger 2nd modal
-        $("#B-Register-info").on( "click", function() {
+        //$("#B-Register-info").on( "click",  function Summary_Bus()); 
+        $("#B-Register-info").on( "click",  function() {
+            //function Summary_Bus();
             $('#Business1').modal('hide');
             $('#Business2').modal('show');
         });
