@@ -5,6 +5,7 @@ let marker;
 let map;
 let gmarkers = [];
 let infowindow;
+let filteroption="";
 
 function initMap() {
 	// Map options
@@ -151,54 +152,58 @@ function initMap() {
 			$('.checkbox').prop('checked', $(this).is(':checked'));
 		});
 
-		function a1() {
-			$.ajax({
-				url: requestAll, //event/getall route
-				type: 'GET',
-				async: false,
-				dataType: 'json',
-				success: (data) => {
-					// data => array of event objects
-					$('#events').empty();
+		switch(userInput){
+			case "":
+				if(tagOption == "getAllEvents"){
+					filteroption = "getallE";
+				} else {
+					filteroption = "getOneTag";
+				}
+				break;
 
-					if (tagOption == 'getAllEvents' && userInput.length == 0) {
-						$.map(data, function(value, i) {
-							let inputmatch = value.name.split(' ');
+			default:
+				if(tagOption == "getAllEvents"){
+					filteroption = "getWithKeyW";
+				} else {
+					filteroption = "getWithKey&Tag";
+				}
+				
+				
+		}
 
-							inputmatch = inputmatch.map((item) => {
-								return item.toLowerCase();
-							});
-							if (inputmatch.indexOf(userInput) != -1) {
-								console.log(value);
-							}
+		$.ajax({
+			url: requestAll, //event/getall route
+			type: 'GET',
+			async: false,
+			dataType: 'json',
+			success: (data) => {
+				// data => array of event objects
+				$('#events').empty();
 
-							// console.log(value);
-							$('#events').append(
-								'<span>' +
-									'<h3>' +
-									// v.name
-									value.name +
-									'</h3>' +
-									'<p>' +
-									value.description +
-									'</p>' +
-									'</span>'
-							);
-
-							// push event vlaues into the markers
-							markers.push({
-								content: value.description,
-								coords: {
-									lat: parseFloat(value.lat),
-									lng: parseFloat(value.lng)
-								}
-							});
-						});
-					}
-
-					// console.log(data);
+				if (filteroption == "getallE") {
 					$.map(data, function(value, i) {
-						// console.log(value.category);
+						$('#events').append(
+							'<span>' +
+								'<h3>' +
+								// v.name
+								value.name +
+								'</h3>' +
+								'<p>' +
+								value.description +
+								'</p>' +
+								'</span>'
+						);						// push event vlaues into the markers
+						markers.push({
+							content: value.description,
+							coords: {
+								lat: parseFloat(value.lat),
+								lng: parseFloat(value.lng)
+							}
+						});
+					});
+				}
+				else if(filteroption== "getOneTag") {
+					$.map(data, function(value, i) {
 
 						if (tagOption == value.category) {
 							$('#events').append(
@@ -221,30 +226,77 @@ function initMap() {
 										lng: parseFloat(value.lng)
 									}
 								});
-								for (let i = 0; i < markers.length; i++) {
-									// Add markers
-									addMarker(markers[i]);
-								}
-								// showgMarkers();
 							}
 						}
 					});
 
-					// add all events to the marker
-					for (let i = 0; i < markers.length; i++) {
-						// Add markers
-						addMarker(markers[i]);
-					}
-
-					// a2();
-					// removeMarkers();
 				}
-			});
-		}
-		markers = [];
+				else if (filteroption== "getWithKeyW") {
+					$.map(data, function(value, i) {
 
-		//
-		a1();
+						if (value.name.toLowerCase().includes(userInput)) {
+							$('#events').append(
+								'<span>' +
+									'<h3>' +
+									// v.name
+									value.name +
+									'</h3>' +
+									'<p>' +
+									value.description +
+									'</p>' +
+									'</span>'
+							);
+							if (gmarkers.length > 0) {
+								removeMarkers();
+								markers.push({
+									content: value.description,
+									coords: {
+										lat: parseFloat(value.lat),
+										lng: parseFloat(value.lng)
+									}
+								});
+							}
+						}
+					});
+				} else {
+					$.map(data, function(value, i) {
+
+						if (value.name.toLowerCase().includes(userInput) && tagOption == value.category) {
+							$('#events').append(
+								'<span>' +
+									'<h3>' +
+									// v.name
+									value.name +
+									'</h3>' +
+									'<p>' +
+									value.description +
+									'</p>' +
+									'</span>'
+							);
+							if (gmarkers.length > 0) {
+								removeMarkers();
+								markers.push({
+									content: value.description,
+									coords: {
+										lat: parseFloat(value.lat),
+										lng: parseFloat(value.lng)
+									}
+								});
+							}
+						}
+					});
+				}
+
+
+				// add all events to the marker
+				for (let i = 0; i < markers.length; i++) {
+					// Add markers
+					addMarker(markers[i]);
+				}
+			}
+		});
+		
+		markers = [];
 
 		function addEventstoMarkers(eventarray) {
 			for (let i = 0; i < eventar.length; i++) {
