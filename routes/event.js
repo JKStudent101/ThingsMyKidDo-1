@@ -57,51 +57,8 @@ router.get('/getall', (req, res) => {
 	});
 });
 
-// find all catalogs by catalog option
-router.get('/search/:tags', (req, res) => {
-	let sql =
-		'select e.*, t.name as category from event as e \n' +
-		'inner join event_tags as et on e.event_id = et.event_id \n' +
-		'inner join tags as t on et.tag_id = t.tag_id \n' +
-		'where t.name = ?';
 
-	let event_tag = req.params.tags;
 
-	db.query(sql, event_tag, (err, result) => {
-		if (err) {
-			throw err;
-		} else {
-			var data = [];
-			for (var i = 0; i < result.length; i++) {
-				data.push(result[i]);
-			}
-			if (data) {
-				res.send(data);
-				req;
-			}
-		}
-	});
-});
 
-// // find all events with tags based on event names
-// router.get('/search/name/:name', (req, res) => {
-// 	let sql = 'select * from event';
-// 	let db = require('./database').init();
-// 	let event_tag = req.params.name;
-
-// 	db.query(sql, event_tag, (err, result) => {
-// 		if (err) {
-// 			throw err;
-// 		} else {
-// 			var data = [];
-// 			for (var i = 0; i < result.length; i++) {
-// 				data.push(result[i]);
-// 			}
-// 			if (data) {
-// 				res.send(data);
-// 			}
-// 		}
-// 	});
-// });
 
 module.exports = router;

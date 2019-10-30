@@ -148,10 +148,6 @@ function initMap() {
 
 		const requestAllTags = '/event/search/' + tagOption;
 
-		$('.allevent').on('change', function() {
-			$('.checkbox').prop('checked', $(this).is(':checked'));
-		});
-
 		switch(userInput){
 			case "":
 				if(tagOption == "getAllEvents"){
@@ -179,7 +175,6 @@ function initMap() {
 			success: (data) => {
 				// data => array of event objects
 				$('#events').empty();
-
 				if (filteroption == "getallE") {
 					$.map(data, function(value, i) {
 						$('#events').append(
