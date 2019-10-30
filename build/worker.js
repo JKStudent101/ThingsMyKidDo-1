@@ -35,6 +35,7 @@ self.addEventListener('activate', async () => {
         };
         // const subscription = await self.registration.pushManager.getSubscription();
         const subscription = await self.registration.pushManager.subscribe(options);
+        // console.log(subscription);
         const response = await saveSubscription(subscription);
         // console.log(response);
     

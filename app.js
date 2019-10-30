@@ -240,18 +240,45 @@ app.get('/editor', (req, res) => {
 	}
 });
 
-const dummyDB = { subscription: null }; //dummy db, for test purposes
+// const dummyDB = { subscription: null }; //dummy db, for test purposes
 
-const saveToDatabase = async (subscription) => {
-	dummyDB.subscription = subscription;
+const saveToDatabase = async (subscription, user_id) => {
+	console.log(subscription)
+	var inputs = [
+		user_id,
+		subscription.endpoint,
+		subscription.keys.p256dh,
+		subscription.keys.auth
+	]
+	console.log(inputs)
+	var sql = "INSERT INTO subscriptions (parent_id, endpoint, p256dh, auth) VALUES (?, ?, ?, ?)"
+	// test = {
+	// 	endpoint: subscription.endpoint,
+	// 	expirationTime: subscription.expirationTime,
+	// 	keys: {
+	// 		p256dh: subscription.keys.p256dh,
+	// 		auth: subscription.keys.auth
+	// 	}
+	// }
+	db.query(sql, inputs, (err, result) => {
+		if (err) {
+			console.log(err)
+			// throw err;
+		} else { 
+			console.log("1 subscription added to user " + user_id);
+		}
+	});
+	// console.log(test == subscription);
+	// dummyDB.subscription = subscription;
 };
 
 app.post('/saveSubscription', async (req, res) => {
-	if (!req.cookies.i) {
+	if (!req.cookies.i || !req.session.user) {
 		res.redirect('/login')
 	} else {
 		const subscription = req.body;
-		await saveToDatabase(subscription);
+		// console.log(subscription)
+		await saveToDatabase(subscription, req.session.user.user_id);
 		res.json({ message: 'success' });
 	}
 });
@@ -268,13 +295,14 @@ app.post('/text-me', (req, res) => {
 	if (!req.cookies.i) {
 		res.redirect('/login')
 	} else {
+		
 		webpush.sendNotification(dummyDB.subscription, req.body.message);
 		res.json({ message: req.body.message });
 	}
 });
 
 app.get('/send-notification', (req, res) => {
-	if (!req.cookies.i) {
+	if (!req.cookies.i || !req.session.user) {
 		res.redirect('/login')
 	} else {
 		res.render('notification.hbs', {});
