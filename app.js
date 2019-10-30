@@ -56,7 +56,7 @@ app.get('/login', (req, res) => {
 });
 
 app.post('/login-form', [
-	body('username')
+	body('email')
 		.isAlphanumeric()
 		.trim()
 		.not().isEmpty()
@@ -66,11 +66,11 @@ app.post('/login-form', [
 		.escape()
 ], (req, res) => {
 	// console.log(req.body)
-	var username = req.body.username;
+	var email = req.body.email;
 	var password = req.body.password;
-	var sql = 'SELECT u.user_id, u.user_type, u.username, u.pass_hash FROM thingsKidsDoModified.user as u ' +
-		'WHERE username = ?';
-	db.query(sql, username, (err, result) => {
+	var sql = 'SELECT u.user_id, u.user_type, u.email, u.pass_hash FROM thingsKidsDoModified.user as u ' +
+		'WHERE email = ?';
+	db.query(sql, email, (err, result) => {
 		if (err) {
 			throw err;
 		} else {
@@ -81,7 +81,7 @@ app.post('/login-form', [
 				res.send("User not found")
 			} else if (bcrypt.compareSync(password, result[0].pass_hash)) {
 				let salt = bcrypt.genSaltSync(saltRounds);
-				res.cookie('i', bcrypt.hashSync(username, salt));
+				res.cookie('i', bcrypt.hashSync(email, salt));
 				req.session.user = result[0];
 				if (result[0].user_type === 'admin') {  res.redirect("/admin") }
 				else if (result[0].user_type === 'vendor') {  res.redirect(`/vendor/${result[0].user_id}`) }
@@ -125,7 +125,7 @@ app.get('/admin', (req, res) => {
 	} else {
 		var sql = 'SELECT a.event_id, d.name as vendor_name, a.description, a.name as event, \n' +
         'c.name as tag_name, date_format(a.start_date, "%Y/%m/%d") as start_date, date_format(a.end_date, "%Y/%m/%d") as end_date, \n'+
-        'a.status, a.isApproved\n'+
+        'a.isApproved\n'+
         'FROM event a\n' +
         'LEFT JOIN event_tags b ON a.event_id = b.event_id\n' +
         'LEFT JOIN tags c ON b.tag_id = c.tag_id\n'+
