@@ -17,6 +17,10 @@
   }
   
   /* Hide the browser's default radio button */
+
+  .invis {
+    display: none;
+  }
  
   
 
