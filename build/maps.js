@@ -193,6 +193,9 @@ function initMap() {
 				
 				$('#events').empty();
 				if (filteroption == "getallE") {
+					if (gmarkers.length > 0) {
+						removeMarkers();
+					}
 					$.map(data, function(value, i) {
 						$('#events').append(
 							"<form action='/saveevent' action='post'><span>" +
@@ -214,13 +217,13 @@ function initMap() {
 								lng: parseFloat(value.lng)
 							}
 						});
-						for (let i = 0; i < markers.length; i++) {
-							// Add markers
-								addMarker(markers[i]);
-						}
+						
 					});
 				}
 				else if(filteroption== "getOneTag") {
+					if (gmarkers.length > 0) {
+						removeMarkers();
+					}
 					$.map(data, function(value, i) {
 						for (var i = 0; i < tagsisclicked.length; i++) {
 							if (tagsisclicked[i] == value.category) {
@@ -236,26 +239,23 @@ function initMap() {
 										'</span>' + 
 										'<button>add to wishlist </button>'
 								);
-								if (gmarkers.length > 0) {
-									removeMarkers();
-									markers.push({
-										content: value.description,
-										coords: {
-											lat: parseFloat(value.lat),
-											lng: parseFloat(value.lng)
-										}
-									});
-								}
-								for (let i = 0; i < markers.length; i++) {
-									// Add markers
-										addMarker(markers[i]);
-								}
+								markers.push({
+									content: value.description,
+									coords: {
+										lat: parseFloat(value.lat),
+										lng: parseFloat(value.lng)
+									}
+								});
+								
 							}
 						}
 					});
 
 				}
 				else if (filteroption== "getWithKeyW") {
+					if (gmarkers.length > 0) {
+						removeMarkers();
+					}
 					$.map(data, function(value, i) {
 						if (value.name.toLowerCase().includes(userInput)) {
 							$('#events').append(
@@ -273,23 +273,20 @@ function initMap() {
 									'</span>'+
 									'<button>add to wishlist </button>'
 							);
-							if (gmarkers.length > 0) {
-								removeMarkers();
-								markers.push({
-									content: value.description,
-									coords: {
-										lat: parseFloat(value.lat),
-										lng: parseFloat(value.lng)
-									}
-								});
-							}
-							for (let i = 0; i < markers.length; i++) {
-								// Add markers
-									addMarker(markers[i]);
-							}
+							markers.push({
+								content: value.description,
+								coords: {
+									lat: parseFloat(value.lat),
+									lng: parseFloat(value.lng)
+								}
+							});
+							
 						}
 					});
 				} else {
+					if (gmarkers.length > 0) {
+						removeMarkers();
+					}
 					$.map(data, function(value, i) {
 						for (var i = 0; i < tagsisclicked.length; i++) {
 							if (tagsisclicked[i] == value.category && value.name.toLowerCase().includes(userInput)) {
@@ -305,25 +302,23 @@ function initMap() {
 										'</span>'+
 										'<button>add to wishlist </button>'
 								);
-								if (gmarkers.length > 0) {
-									removeMarkers();
-									markers.push({
-										content: value.description,
-										coords: {
-											lat: parseFloat(value.lat),
-											lng: parseFloat(value.lng)
-										}
-									});
-								}
+								
+								markers.push({
+									content: value.description,
+									coords: {
+										lat: parseFloat(value.lat),
+										lng: parseFloat(value.lng)
+									}
+								});
 								// add all events to the marker
-								for (let i = 0; i < markers.length; i++) {
-								// Add markers
-									addMarker(markers[i]);
-								}
 							}
 
 						}
 					});
+				}
+				for (let i = 0; i < markers.length; i++) {
+					// Add markers
+						addMarker(markers[i]);
 				}
 			}
 		});
