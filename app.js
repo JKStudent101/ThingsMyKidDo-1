@@ -145,6 +145,8 @@ app.get('/profile/', (req, res) => {
                         });
                     }
                 });
+            }else{
+                res.render('profile.hbs',{});
             }
         })
 
