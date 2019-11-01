@@ -41,6 +41,7 @@ app.use(
 );
 app.use('/event', event);
 app.use('/addevent', addevent);
+app.use('/savewishlist', wishlist);
 const server = require('http').createServer(app);
 hbs.registerPartials(__dirname + '/views/partials');
 
@@ -105,7 +106,7 @@ app.get('/register', (req, res) => {
     res.render('register.hbs', {});
 });
 
-app.get('/profile', (req, res) => {
+app.get('/profile/:parent_id', (req, res) => {
     if (!req.cookies.i) {
         res.redirect('/login')
     } else {

@@ -8,13 +8,14 @@ let infowindow;
 let filteroption="";
 let tags = [];
 let tagsisclicked = [];
-
+let user_id = null;
 $.ajax({
 	url: '/event/gettags', 
 	type: 'GET',
 	async: false,
 	dataType: 'json',
-	success: (data) => {
+	success: (data, user_id) => {
+		console.log("user_id is " + user_id);		
 		for (var i = 0; i < data.length; i++) {
 			tags.push(data[i].name);
 		}
@@ -198,7 +199,7 @@ function initMap() {
 					}
 					$.map(data, function(value, i) {
 						$('#events').append(
-							"<form action='/saveevent' action='post'><span>" +
+							"<form action='/savewishlist' method='post'><span>" +
 								'<h3>' +
 								// v.name
 								value.name +
@@ -228,16 +229,17 @@ function initMap() {
 						for (var i = 0; i < tagsisclicked.length; i++) {
 							if (tagsisclicked[i] == value.category) {
 								$('#events').append(
-									'<span>' +
-										'<h3>' +
-										// v.name
-										value.name +
-										'</h3>' +
-										'<p>' +
-										value.description +
-										'</p>' +
-										'</span>' + 
-										'<button>add to wishlist </button>'
+									"<form action='/savewishlist' method='post'><span>" +
+									'<h3>' +
+									// v.name
+									value.name +
+									'</h3>' +
+									"<input class='invis' name='eventid' type='text' value=" + value.event_id + ">" +
+									'<p>' +
+									value.description +
+									'</p>' +
+									'</span>' +
+									"<button type='submit'>add to wishlist </button></form>"
 								);
 								markers.push({
 									content: value.description,
@@ -259,19 +261,17 @@ function initMap() {
 					$.map(data, function(value, i) {
 						if (value.name.toLowerCase().includes(userInput)) {
 							$('#events').append(
-								'<span>' +
-									'<h3>' +
-									// v.name
-									value.name + 
-									'</h3>' +
-									'<p>'+
-									value.event_id +
-                                    '</p>'+
-									'<p>' +
-									value.description +
-									'</p>' +
-									'</span>'+
-									'<button>add to wishlist </button>'
+								"<form action='/savewishlist' method='post'><span>" +
+								'<h3>' +
+								// v.name
+								value.name +
+								'</h3>' +
+								"<input class='invis' name='eventid' type='text' value=" + value.event_id + ">" +
+								'<p>' +
+								value.description +
+								'</p>' +
+								'</span>' +
+								"<button type='submit'>add to wishlist </button></form>"
 							);
 							markers.push({
 								content: value.description,
@@ -291,16 +291,17 @@ function initMap() {
 						for (var i = 0; i < tagsisclicked.length; i++) {
 							if (tagsisclicked[i] == value.category && value.name.toLowerCase().includes(userInput)) {
 								$('#events').append(
-									'<span>' +
-										'<h3>' +
-										// v.name
-										value.name + 
-										'</h3>' +
-										'<p>' +
-										value.description +
-										'</p>' +
-										'</span>'+
-										'<button>add to wishlist </button>'
+									"<form action='/savewishlist' method='post'><span>" +
+									'<h3>' +
+									// v.name
+									value.name +
+									'</h3>' +
+									"<input class='invis' name='eventid' type='text' value=" + value.event_id + ">" +
+									'<p>' +
+									value.description +
+									'</p>' +
+									'</span>' +
+									"<button type='submit'>add to wishlist </button></form>"
 								);
 								
 								markers.push({
