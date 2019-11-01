@@ -40,9 +40,11 @@
                             <td>{{tag_name}}</td>
                             <td>{{isApproved}}</td>
                             <td>
-                                <!--<a href="/update/<%= data[i].id %>" class="btn btn-info">Edit</a>-->
-                                <!--<a href="/delete/<%= data[i].id %>" class="btn btn-danger">Delete</a>-->
-                                <a href="/edit/{{event_id}}" class="btn btn-info">Edit</a>
+                                {{#ifCond isApproved "Pending"}}
+                                    <a href="/edit/{{event_id}}" class="btn btn-info">Edit</a>
+                                {{else}}
+                                    <a href="#" class="btn btn-info disabled">Edit</a>
+                                {{/ifCond}}
                                 <a href="/delete/{{event_id}}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete?');">Delete</a>
                             </td>
                         </tr>

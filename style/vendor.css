@@ -4,5 +4,18 @@
     margin-bottom: 30px;
 }
 
+a.disabled {
+    pointer-events: none;
+    cursor: default;
+    background-color: lightgrey;
+    border-color: lightgrey;
+}
 
+.form_text{
+    font-size: 20px;
+    font-weight: bold;
+}
 
+.button_{
+
+}
