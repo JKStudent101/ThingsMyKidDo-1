@@ -10,14 +10,17 @@
     </head>
 
     <body>
-        <script>
+        {{!-- <script>
             main()
-        </script>
+        </script> --}}
         {{> menu}}
         <div>
             <h1>Notification Test</h1>
             <input id="txt" type="text" placeholder="Type notification text here">
-            <button id="permission-btn" onclick="send()">Send Message</button>
+            <button id="send-btn" onclick="send()">Send Message</button>
+        </div>
+        <div>
+            <button id="permission-btn" onclick="main()">Ask</button>
         </div>
     </body>
 

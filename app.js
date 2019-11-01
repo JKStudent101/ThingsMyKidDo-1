@@ -27,7 +27,6 @@ app.use(express.static(__dirname + '/style'));
 app.use(express.static(__dirname + '/views'));
 app.use('/scripts', express.static('build'));
 app.use('/css', express.static('style'));
-
 app.use(cookieParser());
 app.use(session({
     secret: 'love',
@@ -42,6 +41,7 @@ app.use(
 );
 app.use('/event', event);
 app.use('/addevent', addevent);
+app.use('/savewishlist', wishlist);
 const server = require('http').createServer(app);
 hbs.registerPartials(__dirname + '/views/partials');
 
@@ -74,9 +74,9 @@ app.post('/login-form', [
     .escape()
 ], (req, res) => {
     // console.log(req.body)
-    var email = req.body.email;
-    var password = req.body.password;
-    var sql = 'SELECT u.user_id, u.user_type, u.email, u.pass_hash FROM thingsKidsDoModified.user as u ' +
+    let email = req.body.email;
+    let password = req.body.password;
+    let sql = 'SELECT u.user_id, u.user_type, u.email, u.pass_hash FROM thingsKidsDoModified.user as u ' +
         'WHERE email = ?';
     db.query(sql, email, (err, result) => {
         if (err) {
@@ -91,7 +91,10 @@ app.post('/login-form', [
                 let salt = bcrypt.genSaltSync(saltRounds);
                 res.cookie('i', bcrypt.hashSync(email, salt));
                 req.session.user = result[0];
-                if (result[0].user_type === 'admin') { res.redirect("/admin") } else if (result[0].user_type === 'vendor') { res.redirect(`/vendor/${result[0].user_id}`) } else if (result[0].user_type === 'parent') { res.redirect("/home") } else {
+				if (result[0].user_type === 'admin') { res.redirect("/admin") } 
+				else if (result[0].user_type === 'vendor') { res.redirect(`/vendor/${result[0].user_id}`) } 
+				else if (result[0].user_type === 'parent') { res.redirect("/home") } 
+				else {
                     res.cookie('i', true, { expires: new Date() });
                     res.send("Error: no user type")
                 }
@@ -113,11 +116,38 @@ app.get('/register', (req, res) => {
     res.render('register.hbs', {});
 });
 
-app.get('/profile', (req, res) => {
+app.get('/profile/', (req, res) => {
     if (!req.cookies.i) {
         res.redirect('/login')
     } else {
-        res.render('profile.hbs', {});
+        let user_id = req.session.user.user_id;
+        var sql_select_wishlist = 'select wishlist from child where parent_id = ?';
+        db.query(sql_select_wishlist, user_id, (err, result)=>{
+            if (result.length > 0){
+                let wishlist_array = result[0].wishlist.split(",")
+                let sql =
+                    'select e.*, t.name as category from event as e \n' +
+                    'inner join event_tags as et on e.event_id = et.event_id \n' +
+                    'inner join tags as t on et.tag_id = t.tag_id;';
+                db.query(sql, (err, result) => {
+                    if (err) {
+                        throw err;
+                    } else {
+                        var data = [];
+                        for (var i = 0; i < result.length; i++) {
+                            let event_id = result[i].event_id;
+                            if (wishlist_array.includes(String(event_id))){
+                                data.push(result[i]);
+                            }
+                        }
+                        res.render('profile.hbs', {
+                            data: data
+                        });
+                    }
+                });
+            }
+        })
+        
     }
 });
 
@@ -145,6 +175,24 @@ app.get('/admin', (req, res) => {
             }
         });
     }
+});
+
+app.post('/approve-event', (req, res) => {
+	if (!req.cookies.i || !req.session.user) {
+		res.redirect('/login')
+	} else {
+		let event_id = req.body.id
+		let sql = "UPDATE event SET isApproved = 1 WHERE event_id = ?";
+		db.query(sql, event_id, async (err, result) => {
+			if (err) {
+				throw err;
+			} else {
+				console.log(`Event ${event_id} approved`);
+				await newEventNotify(event_id);
+				res.json({ message: 'success' });
+			}
+		});
+	}
 });
 
 app.get('/vendor/:vendor_id', (req, res) => {
@@ -334,20 +382,111 @@ app.get('/editor', (req, res) => {
     }
 });
 
-const dummyDB = { subscription: null }; //dummy db, for test purposes
+const saveToDatabase = async (subscription, user_id) => {
+	// console.log(subscription)
+	let inputs = [
+		user_id,
+		subscription.endpoint,
+		subscription.keys.p256dh,
+		subscription.keys.auth
+	]
+	// console.log(inputs)
+	let sql = "INSERT INTO subscriptions (parent_id, endpoint, p256dh, auth) VALUES (?, ?, ?, ?)"
 
-const saveToDatabase = async(subscription) => {
-    dummyDB.subscription = subscription;
+	db.query(sql, inputs, (err, result) => {
+		if (err) {
+			console.log(err)
+			// throw err;
+		} else {
+			console.log("1 subscription added to user " + user_id);
+		}
+	});
 };
 
-app.post('/saveSubscription', async(req, res) => {
-    if (!req.cookies.i) {
-        res.redirect('/login')
-    } else {
-        const subscription = req.body;
-        await saveToDatabase(subscription);
-        res.json({ message: 'success' });
-    }
+const getSubscriptions = async (user_id) => {
+	let result = await new Promise((resolve, reject) => {
+		let sql = "SELECT * FROM subscriptions WHERE parent_id = ?"
+		db.query(sql, user_id, (err, result) => {
+			if (err) {
+				console.log(err)
+				reject(err)
+			} else if (result.length == 0) {
+				console.log("No subscriptions found for " + user_id);
+				resolve([])
+			} else {
+				let subscriptions = []
+				let temp = {
+					endpoint: "",
+					expirationTime: null,
+					keys: {
+						p256dh: "",
+						auth: ""
+					}
+				}
+				for (let i = 0; i < result.length; i++) {
+					temp.endpoint = result[i].endpoint;
+					temp.expirationTime = result[i].expirationTime;
+					temp.keys.p256dh = result[i].p256dh;
+					temp.keys.auth = result[i].auth;
+					subscriptions.push(temp);
+				}
+				resolve(subscriptions)
+			}
+
+		})
+
+	});
+	// console.log(result);
+	return result
+}
+
+const newEventNotify = async (event_id) => {
+	console.log("sending notification")
+	let result = await new Promise((resolve, reject) => {
+		let sql = "SELECT s.parent_id, s.endpoint, s.expirationTime, s.p256dh, s.auth FROM subscriptions as s\n "
+		"INNER JOIN parent as p ON p.user_id = s.parent_id\n "
+		"INNER JOIN child as c ON c.parent_id = p.user_id\n "
+		"INNER JOIN child_tags as ct ON ct.parent_id = c.parent_id\n "
+		"INNER JOIN tags as t ON t.tag_id = ct.tag_id\n "
+		"INNER JOIN event_tags as et ON et.tag_id = t.tag_id\n "
+		"WHERE et.event_id = ?\n "
+		"GROUP BY s.parent_id"
+		db.query(sql, event_id, (err, result) => {
+			if (err) {
+				console.log(err)
+				reject(err)
+			} else if (result.length == 0) {
+				console.log("No subscriptions found for " + user_id);
+				resolve([])
+			} else {
+				resolve(result[0])
+			}
+
+		})
+
+	});
+	let subscription = {
+		endpoint: result.endpoint,
+		expirationTime: result.expirationTime,
+		keys: {
+			p256dh: result.p256dh,
+			auth: result.auth
+		}
+	}
+	webpush.sendNotification(subscription, "New event!");
+	console.log("Sent!");
+	return result
+}
+
+app.post('/saveSubscription', async (req, res) => {
+	if (!req.cookies.i || !req.session.user) {
+		res.redirect('/login')
+	} else {
+		const subscription = req.body;
+		// console.log(subscription)
+		await saveToDatabase(subscription, req.session.user.user_id);
+		res.json({ message: 'success' });
+	}
 });
 
 const vapidKeys = {
@@ -357,21 +496,38 @@ const vapidKeys = {
 
 webpush.setVapidDetails('mailto:thingsmykidsdo.bcit@gmail.com', vapidKeys.publicKey, vapidKeys.privateKey);
 
-app.post('/text-me', (req, res) => {
-    if (!req.cookies.i) {
-        res.redirect('/login')
-    } else {
-        webpush.sendNotification(dummyDB.subscription, req.body.message);
-        res.json({ message: req.body.message });
-    }
+app.post('/text-me', async (req, res) => {
+	if (!req.cookies.i || !req.session.user) {
+		res.redirect('/login')
+	} else {
+		// console.log("trying to send...");
+		let subscriptions = await getSubscriptions(req.session.user.user_id);
+		// console.log(subscriptions)
+		if (subscriptions) {
+			// console.log("got subscription")
+			try {
+				for (let i = 0; i < subscriptions.length; i++) {
+					webpush.sendNotification(subscriptions[i], req.body.message);
+				}
+			} catch (err) {
+				console.log("BIG ERROR SENDING NOTIFICATIONS (Probably MySQL related)");
+				res.json({ message: err });
+			}
+			message = "Sent " + req.body.message + " " + subscriptions.length + " times."
+			console.log(message);
+			res.json({ message: message });
+		} else {
+			res.json({ message: "Unsuccesful" })
+		}
+	}
 });
 
 app.get('/send-notification', (req, res) => {
-    if (!req.cookies.i) {
-        res.redirect('/login')
-    } else {
-        res.render('notification.hbs', {});
-    }
+	if (!req.cookies.i || !req.session.user) {
+		res.redirect('/login')
+	} else {
+		res.render('notification.hbs', {});
+	}
 });
 
 app.get('/logout', (req, res) => {

@@ -37,7 +37,6 @@ router.post('/', (req, res) => {
                 }
             })
         });
-        let location_array =[];
         geocode.then(res=>{
             var lat = res['lat'];
             var lng = res['lng'];

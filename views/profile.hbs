@@ -209,6 +209,28 @@
                     <td>2019-10-01</td>
                     <td>A high level training camp aimed at youth looking to take their basketball game seriously and to the next level.</td>
                 </tr>
+                {{#each data}}
+                    <tr>
+                        <td><img src="/src/basketballIcon.png" alt="HTML tutorial"
+                        style="width:50px;height:50px;border:0;"> </td>
+                        <td>{{name}}</td>
+                        <td>{{category}}</td>
+                        <td>{{start_date}}</td>
+                        <td>
+                            {{description}}
+                            <div>
+                               <form action="/savewishlist/delete" method="post">
+                                   <input class='invis' name='eventid' type='text' value={{event_id}}>
+                                   <button type='submit' class="btn btn-danger" onclick="return confirm('Are you sure you want to delete?');">Delete From Wishlist</button> 
+                               </form>
+                              
+                            </div>
+                        </td>
+                        
+                    </tr>
+                {{/each}}
+
+
             </table>
         </div>
     </div>
