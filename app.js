@@ -12,6 +12,7 @@ const saltRounds = 10;
 const { body, check, validationResult } = require('express-validator');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+const request = require('request');
 
 
 // import event routes
@@ -44,6 +45,13 @@ app.use('/addevent', addevent);
 const server = require('http').createServer(app);
 hbs.registerPartials(__dirname + '/views/partials');
 
+hbs.registerHelper('ifCond', function(v1, v2, options) {
+    if(v1 === v2) {
+        return options.fn(this);
+    }
+    return options.inverse(this);
+});
+
 app.get('/', (req, res) => {
 	res.redirect('/login');
 });
@@ -56,7 +64,7 @@ app.get('/login', (req, res) => {
 });
 
 app.post('/login-form', [
-	body('username')
+	body('email')
 		.isAlphanumeric()
 		.trim()
 		.not().isEmpty()
@@ -66,11 +74,11 @@ app.post('/login-form', [
 		.escape()
 ], (req, res) => {
 	// console.log(req.body)
-	var username = req.body.username;
+	var email = req.body.email;
 	var password = req.body.password;
-	var sql = 'SELECT u.user_id, u.user_type, u.username, u.pass_hash FROM thingsKidsDoModified.user as u ' +
-		'WHERE username = ?';
-	db.query(sql, username, (err, result) => {
+	var sql = 'SELECT u.user_id, u.user_type, u.email, u.pass_hash FROM thingsKidsDoModified.user as u ' +
+		'WHERE email = ?';
+	db.query(sql, email, (err, result) => {
 		if (err) {
 			throw err;
 		} else {
@@ -81,7 +89,7 @@ app.post('/login-form', [
 				res.send("User not found")
 			} else if (bcrypt.compareSync(password, result[0].pass_hash)) {
 				let salt = bcrypt.genSaltSync(saltRounds);
-				res.cookie('i', bcrypt.hashSync(username, salt));
+				res.cookie('i', bcrypt.hashSync(email, salt));
 				req.session.user = result[0];
 				if (result[0].user_type === 'admin') {  res.redirect("/admin") }
 				else if (result[0].user_type === 'vendor') {  res.redirect(`/vendor/${result[0].user_id}`) }
@@ -125,7 +133,7 @@ app.get('/admin', (req, res) => {
 	} else {
 		var sql = 'SELECT a.event_id, d.name as vendor_name, a.description, a.name as event, \n' +
         'c.name as tag_name, date_format(a.start_date, "%Y/%m/%d") as start_date, date_format(a.end_date, "%Y/%m/%d") as end_date, \n'+
-        'a.status, a.isApproved\n'+
+        'a.isApproved\n'+
         'FROM event a\n' +
         'LEFT JOIN event_tags b ON a.event_id = b.event_id\n' +
         'LEFT JOIN tags c ON b.tag_id = c.tag_id\n'+
@@ -173,21 +181,13 @@ app.get('/vendor/:vendor_id', (req, res) => {
                         db.query(sql, req.params.vendor_id, (err, result) => {
                             if (err) {
                                 throw err;
-                            } else if (result[0].isApproved !='Pending') {
-                                res.render('vendor.hbs', {
-                                    data: result,
-                                    vendor: vendor_name,
-									 tags: tags_list,
-									 disable_edit: 'true'
-                                });
                             } else {
                                 res.render('vendor.hbs', {
                                     data: result,
                                     vendor: vendor_name,
-                                    tags: tags_list,
-                                    disable_edit: 'false'
+									 tags: tags_list
                                 });
-							}
+                            }
                         });
                     }
                 });
@@ -228,7 +228,7 @@ app.get('/edit/:event_id', (req, res)=>{
         } else{
             var tags_list = result;
 
-            var sql_query = 'select a.event_id, a.description, a.name, a.start_time, a.end_time, a.start_date, a.end_date, c.name as event_tag\n'+
+            var sql_query = 'select a.event_id, a.description, a.name, a.start_time, a.end_time, a.start_date, a.end_date, a.address, a.city, a.province, a.link, c.name as event_tag\n'+
             'from event a\n'+
             'LEFT JOIN event_tags b ON a.event_id = b.event_id\n'+
             'LEFT JOIN tags c ON b.tag_id = c.tag_id\n'+
@@ -238,14 +238,11 @@ app.get('/edit/:event_id', (req, res)=>{
                     throw err;
                 } else{
                     // console.log(result[0].start_time);
-                    res.render('./partials/editevent.hbs',{
+                    res.render('editevent.hbs',{
                         data: result[0],
                         start_date: result[0].start_date.toISOString().split('T')[0],
                         end_date: result[0].end_date.toISOString().split('T')[0],
                         tags: tags_list
-                        // whichpartial: ()=> {
-                        //     return 'editevent';
-                        // }
                     })
                 }
             })
@@ -255,45 +252,81 @@ app.get('/edit/:event_id', (req, res)=>{
 });
 
 app.post('/edit/:event_id', (req, res)=>{
-    var inputs = [
-        req.body.description,
-        req.body.eventname,
-        req.body.start_time,
-        req.body.end_time,
-        req.body.start_date,
-        req.body.end_date,
-        req.params.event_id
-    ];
-	// console.log(inputs);
-    var sql_update = 'update event set description = ?, name = ?, start_time = ?, end_time = ?, start_date = ?, end_date = ? where event_id = ? ';
-    db.query(sql_update, inputs,(err, result)=>{
-        if(err){
-            throw err;
-        } else{
-        	var sql_tag_id = 'select tag_id from tags where name = ?';
-        	db.query(sql_tag_id, req.body.tag, (err, result)=>{
-                if(err){
-                    throw err;
-                } else{
-                	var tag_id = result[0].tag_id;
-                	// console.log(req.body.tag);
-                	// console.log(tag_id);
-                	// console.log(req.params.event_id);
-
-                	var sql_update_event_tag = 'update event_tags set tag_id = ? where event_id =?';
-                	db.query(sql_update_event_tag, [tag_id, req.params.event_id], (err,result)=>{
-                        if(err){
-                            throw err;
-                        } else{
-                            res.redirect('/vendor/' + req.session.user.user_id);
-                        }
-					})
+	try {
+        let address = req.body.address.trim();
+        let city = req.body.city.trim();
+        let province = req.body.province;
+        let formed_address = address.replace(/ /g, "+");
+        let search_string = "https://maps.googleapis.com/maps/api/geocode/json?address=" + formed_address + ",+" + city + ",+" + province + "&key=AIzaSyAN6q6jOWczlbNgBPd_ljm857YUqpyIoVU";
+        let geocode = new Promise((resolve, reject) => {
+            request({
+                url: search_string,
+                json: true
+            }, (error, response, body) => {
+                if (error) {
+                    reject('Cannot connect to Google Maps');
+                } else if (body.status === 'ZERO_RESULTS') {
+                    reject('Cannot find requested address');
+                } else if (body.status === 'OK') {
+                    resolve({
+                        lat: body.results[0].geometry.location.lat,
+                        lng: body.results[0].geometry.location.lng
+                    });
                 }
-			});
+            })
+        });
+        geocode.then(res => {
+            var lat = res['lat'];
+            var lng = res['lng'];
 
-        }
-	})
+            let inputs = [
+                req.body.description,
+                req.body.eventname,
+                req.body.start_time,
+                req.body.end_time,
+                req.body.start_date,
+                req.body.end_date,
+                lng,
+                lat,
+                req.body.address,
+                req.body.city,
+                req.body.province,
+                req.body.link,
+                req.params.event_id
+            ];
+            // console.log(inputs);
+            var sql_update = 'update event set description=?, name=?, start_time=?, end_time=?, start_date=?, end_date=?, lng=?, lat=?, address=?, city=?, province=?, link=? where event_id=? ';
+            db.query(sql_update, inputs, (err, result) => {
+                if (err) {
+                    throw err;
+                } else {
+                    var sql_tag_id = 'select tag_id from tags where name = ?';
+                    db.query(sql_tag_id, req.body.tag, (err, result) => {
+                        if (err) {
+                            throw err;
+                        } else {
+                            var tag_id = result[0].tag_id;
+                            // console.log(req.body.tag);
+                            // console.log(tag_id);
+                            // console.log(req.params.event_id);
 
+                            var sql_update_event_tag = 'update event_tags set tag_id = ? where event_id =?';
+                            db.query(sql_update_event_tag, [tag_id, req.params.event_id], (err, result) => {
+                                if (err) {
+                                    throw err;
+                                }
+                            })
+                        }
+                    });
+
+                }
+            })
+        })
+        res.redirect('/vendor/' + req.session.user.user_id);
+    }
+    catch (err) {
+        console.log(err);
+    }
 });
 
 app.get('/editor', (req, res) => {
