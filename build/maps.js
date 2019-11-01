@@ -349,7 +349,8 @@ function initMap() {
 			// console.log(props);
 			let marker = new google.maps.Marker({
 				position: props.coords,
-				map: map //icon:props.iconImage
+				map: map, //icon:props.iconImage
+				content: props.content
 			});
 
 			// push marker to global gmarker array
@@ -363,16 +364,17 @@ function initMap() {
 
 			// Check content
 			if (props.content) {
-				infoWindow = new google.maps.InfoWindow({
-					content: props.content
-				});
-
+				// infoWindow = new google.maps.InfoWindow({
+				// 	content: props.content
+				// });
+				// console.log(infoWindow);
 				marker.addListener('click', function() {
-					// infowindow.setContent(markers.content);
+					infoWindow.setContent(marker.content);
 					infoWindow.open(map, marker);
 				});
 			}
 		}
+		
 	});
 
 	if (navigator.geolocation) {
