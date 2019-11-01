@@ -1,11 +1,14 @@
 let markers = [];
 let eventMarkers = [];
+
+// initializers
 let coords;
 let marker;
 let map;
-let gmarkers = [];
 let infowindow;
-let filteroption="";
+
+let gmarkers = [];
+let filteroption = '';
 let tags = [];
 let tagsisclicked = [];
 
@@ -19,7 +22,7 @@ $.ajax({
 			tags.push(data[i].name);
 		}
 	}
-})
+});
 
 function initMap() {
 	// Map options
@@ -148,40 +151,37 @@ function initMap() {
 
 	// info initialize
 	infoWindow = new google.maps.InfoWindow({});
-	
+
 	// load events on search button click event
 	$('#getData').click((e) => {
 		e.preventDefault();
-		let tagsisclicked=[]
+		let tagsisclicked = [];
 		// get user input event or all event
 		let tagOption = $('#searchOption').val(); // hockey
 		let userInput = $('#SearchBar').val().toLowerCase(); // eventname
-		
+
 		for (var i = 0; i < tags.length; i++) {
-			if($("#"+tags[i]+"").prop('checked')){
+			if ($('#' + tags[i] + '').prop('checked')) {
 				tagsisclicked.push(tags[i]);
 			}
 		}
-		
+
 		const requestAll = '/event/getall';
-		switch(userInput){
-			case "":
-				if($('#allevents').prop('checked')){
-					filteroption = "getallE";
-				} 
-				else{
-					filteroption = "getOneTag";
+		switch (userInput) {
+			case '':
+				if ($('#allevents').prop('checked')) {
+					filteroption = 'getallE';
+				} else {
+					filteroption = 'getOneTag';
 				}
 				break;
 
 			default:
-				if($('#allevents').prop('checked')){
-					filteroption = "getWithKeyW";
+				if ($('#allevents').prop('checked')) {
+					filteroption = 'getWithKeyW';
 				} else {
-					filteroption = "getWithKey&Tag";
+					filteroption = 'getWithKey&Tag';
 				}
-				
-				
 		}
 
 		$.ajax({
@@ -190,37 +190,38 @@ function initMap() {
 			async: false,
 			dataType: 'json',
 			success: (data) => {
-				
 				$('#events').empty();
-				if (filteroption == "getallE") {
+				if (filteroption == 'getallE') {
 					if (gmarkers.length > 0) {
 						removeMarkers();
 					}
 					$.map(data, function(value, i) {
+						sContent =
+							'<h1>' + value.name + '</h1>' + '<p>' + value.description + '</p>';
 						$('#events').append(
 							"<form action='/saveevent' action='post'><span>" +
 								'<h3>' +
 								// v.name
 								value.name +
 								'</h3>' +
-								"<input class='invis' name='eventid' type='text' value=" + value.event_id + ">" +
+								"<input class='invis' name='eventid' type='text' value=" +
+								value.event_id +
+								'>' +
 								'<p>' +
 								value.description +
 								'</p>' +
 								'</span>' +
 								"<button type='submit'>add to wishlist </button></form>"
-						);						// push event vlaues into the markers
+						); // push event vlaues into the markers
 						markers.push({
-							content: value.description,
+							content: sContent,
 							coords: {
 								lat: parseFloat(value.lat),
 								lng: parseFloat(value.lng)
 							}
 						});
-						
 					});
-				}
-				else if(filteroption== "getOneTag") {
+				} else if (filteroption == 'getOneTag') {
 					if (gmarkers.length > 0) {
 						removeMarkers();
 					}
@@ -236,23 +237,20 @@ function initMap() {
 										'<p>' +
 										value.description +
 										'</p>' +
-										'</span>' + 
+										'</span>' +
 										'<button>add to wishlist </button>'
 								);
 								markers.push({
-									content: value.description,
+									content: sContent,
 									coords: {
 										lat: parseFloat(value.lat),
 										lng: parseFloat(value.lng)
 									}
 								});
-								
 							}
 						}
 					});
-
-				}
-				else if (filteroption== "getWithKeyW") {
+				} else if (filteroption == 'getWithKeyW') {
 					if (gmarkers.length > 0) {
 						removeMarkers();
 					}
@@ -262,15 +260,15 @@ function initMap() {
 								'<span>' +
 									'<h3>' +
 									// v.name
-									value.name + 
+									value.name +
 									'</h3>' +
-									'<p>'+
+									'<p>' +
 									value.event_id +
-                                    '</p>'+
+									'</p>' +
 									'<p>' +
 									value.description +
 									'</p>' +
-									'</span>'+
+									'</span>' +
 									'<button>add to wishlist </button>'
 							);
 							markers.push({
@@ -280,7 +278,6 @@ function initMap() {
 									lng: parseFloat(value.lng)
 								}
 							});
-							
 						}
 					});
 				} else {
@@ -289,22 +286,25 @@ function initMap() {
 					}
 					$.map(data, function(value, i) {
 						for (var i = 0; i < tagsisclicked.length; i++) {
-							if (tagsisclicked[i] == value.category && value.name.toLowerCase().includes(userInput)) {
+							if (
+								tagsisclicked[i] == value.category &&
+								value.name.toLowerCase().includes(userInput)
+							) {
 								$('#events').append(
 									'<span>' +
 										'<h3>' +
 										// v.name
-										value.name + 
+										value.name +
 										'</h3>' +
 										'<p>' +
 										value.description +
 										'</p>' +
-										'</span>'+
+										'</span>' +
 										'<button>add to wishlist </button>'
 								);
-								
+
 								markers.push({
-									content: value.description,
+									content: sContent,
 									coords: {
 										lat: parseFloat(value.lat),
 										lng: parseFloat(value.lng)
@@ -312,17 +312,16 @@ function initMap() {
 								});
 								// add all events to the marker
 							}
-
 						}
 					});
 				}
 				for (let i = 0; i < markers.length; i++) {
 					// Add markers
-						addMarker(markers[i]);
+					addMarker(markers[i]);
 				}
 			}
 		});
-		
+
 		markers = [];
 
 		function addEventstoMarkers(eventarray) {
@@ -349,7 +348,8 @@ function initMap() {
 			// console.log(props);
 			let marker = new google.maps.Marker({
 				position: props.coords,
-				map: map //icon:props.iconImage
+				map: map, //icon:props.iconImage
+				content: props.content
 			});
 
 			// push marker to global gmarker array
@@ -363,12 +363,12 @@ function initMap() {
 
 			// Check content
 			if (props.content) {
-				infoWindow = new google.maps.InfoWindow({
-					content: props.content
-				});
-
+				// infoWindow = new google.maps.InfoWindow({
+				// 	content: props.content
+				// });
+				// console.log(infoWindow);
 				marker.addListener('click', function() {
-					// infowindow.setContent(markers.content);
+					infoWindow.setContent(marker.content);
 					infoWindow.open(map, marker);
 				});
 			}
