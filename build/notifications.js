@@ -2,6 +2,7 @@
 Sends a push notification from the test notifications endpoint texbox
 */
 const send = () => {
+    // console.log("Sending xml request");
     var request = new window.XMLHttpRequest();
     let text = document.getElementById('txt').value;
     let data = {
@@ -10,6 +11,7 @@ const send = () => {
     request.open('post', '/text-me', false);
     request.setRequestHeader('Content-Type', 'application/json');
     request.send(JSON.stringify(data));
+    // console.log("request sent");
     // let response = JSON.parse(request.response);
     // console.log(response)
 }
@@ -55,6 +57,7 @@ const requestNotificationPermission = async () => {
 }
 
 const main = async () => {
+    console.log(Notification.permission);
     check();
     const swRegistration = await registerServiceWorker();
     const permission =  await requestNotificationPermission();

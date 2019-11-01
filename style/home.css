@@ -1,17 +1,117 @@
 .ad {
     border-radius: 5em;
+    border-style: solid;
     color: #fff;
-    background: linear-gradient(to right, #9C27B0, #E040FB);
-    width: 90%;
-    height: 450px;
-    border: 0;
-    padding-left: 40px;
+    /* background: linear-gradient(to right, #9C27B0, #E040FB); */
+    border-color: black;
+    background-color: #FFE4C4;
+    /* width: 90%; */
+    height: 150px;
+    width: 60%;
+    padding-left: 130px;
     padding-right: 40px;
     padding-bottom: 10px;
-    padding-top: 10px;
+    padding-top: 30px;
     font-family: 'Ubuntu', sans-serif;
     margin-left: 5%;
     font-size: 13px;
     box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
+    color: black;
 }
 
+.blog {
+    border-radius: 5em;
+    border-style: solid;
+    color: #fff;
+    /* background: linear-gradient(to right, #9C27B0, #E040FB); */
+    border-color: black;
+    background-color: #FFE4C4;
+    /* width: 90%; */
+    height: 110px;
+    width: 80%;
+    padding-left: 250px;
+    padding-bottom: 20px;
+    padding-top: 30px;
+    font-family: 'Ubuntu', sans-serif;
+    margin-left: 5%;
+    font-size: 13px;
+    box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
+    color: black;
+}
+
+.play {
+    position: relative;
+    left: 34%;
+    font-size: 20px;
+    display: inline-block;
+    padding-top: 2%;
+    ;
+    z-index: 1;
+}
+
+.search {
+    position: relative;
+    display: inline-block;
+}
+
+.profile {
+    position: relative;
+    display: inline-block;
+    /* padding-left: 7%; */
+}
+
+.playText {
+    font-size: 56px;
+    padding-top: 5%;
+    font-family: Impact, Charcoal, sans-serif;
+    color: black;
+    padding-left: 35%;
+}
+
+.addContainer {
+    position: relative;
+    padding-top: 5%;
+    padding-left: 23%;
+}
+
+.blogContainer {
+    position: relative;
+    padding-top: 5%;
+    padding-left: 10%;
+    padding-bottom: 3%;
+}
+
+.homeContainer {
+    background-color: #fff;
+    border-radius: 5em;
+    border-style: solid;
+    height: 60%;
+    width: 70%;
+    left: 20%;
+    position: relative;
+    margin-top: 2%;
+}
+
+body {
+    background-color: rgba(173, 172, 181, 0.8);
+    z-index: -1;
+}
+
+.terms {
+    position: relative;
+    margin-left: 38%;
+    font-size: 18px;
+    margin-bottom: 5%;
+}
+
+.container {
+    padding-top: 6%;
+}
+
+
+/* .container {
+    padding-top: 40px;
+    vertical-align: bottom;
+    position: relative;
+    right: 30px;
+} *
