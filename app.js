@@ -114,11 +114,38 @@ app.get('/register', (req, res) => {
     res.render('register.hbs', {});
 });
 
-app.get('/profile/:parent_id', (req, res) => {
+app.get('/profile/', (req, res) => {
     if (!req.cookies.i) {
         res.redirect('/login')
     } else {
-        res.render('profile.hbs', {});
+        let user_id = req.session.user.user_id;
+        var sql_select_wishlist = 'select wishlist from child where parent_id = ?';
+        db.query(sql_select_wishlist, user_id, (err, result)=>{
+            if (result.length > 0){
+                let wishlist_array = result[0].wishlist.split(",")
+                let sql =
+                    'select e.*, t.name as category from event as e \n' +
+                    'inner join event_tags as et on e.event_id = et.event_id \n' +
+                    'inner join tags as t on et.tag_id = t.tag_id;';
+                db.query(sql, (err, result) => {
+                    if (err) {
+                        throw err;
+                    } else {
+                        var data = [];
+                        for (var i = 0; i < result.length; i++) {
+                            let event_id = result[i].event_id;
+                            if (wishlist_array.includes(String(event_id))){
+                                data.push(result[i]);
+                            }
+                        }
+                        res.render('profile.hbs', {
+                            data: data
+                        });
+                    }
+                });
+            }
+        })
+        
     }
 });
 

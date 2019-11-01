@@ -14,8 +14,7 @@ $.ajax({
 	type: 'GET',
 	async: false,
 	dataType: 'json',
-	success: (data, user_id) => {
-		console.log("user_id is " + user_id);		
+	success: (data) => {	
 		for (var i = 0; i < data.length; i++) {
 			tags.push(data[i].name);
 		}

@@ -81,3 +81,7 @@ th {
     color: #398B93;
     padding: 10px;
 }
+
+.invis {
+    display: none;
+}
