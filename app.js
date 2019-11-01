@@ -17,7 +17,7 @@ const session = require('express-session');
 // import event routes
 const event = require('./routes/event');
 const addevent = require('./routes/addevent');
-
+const wishlist = require('./routes/wishlist')
 var db = require('./routes/database').init();
 
 app.set('view engine', 'hbs');

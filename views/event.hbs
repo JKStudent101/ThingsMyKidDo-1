@@ -17,36 +17,27 @@
                 <div class="col-xs-6">
                     <div class="jumbotron">
                         <div>
-                            <form class="form-inline" method="POST" action="/getall" >
+                            <form class="form-inline">
                                                                 
 
                                 <label for="">Search events</label>
-                                <select id="searchOption">
-                                    <option value="getAllEvents">All Events</option>
-
-                                {{#each data}}
-
-                                    <option value={{name}}>{{name}}</option>
-                                {{/each}}
-                                </select>
 
                                 
                                 <div>
                                     <label for="" class="container1">
-                                    <input type="checkbox" name="allevent" value="getAllEvents">All event
+                                    <input type="checkbox" id="allevents" value="getAllEvents">All event
                                     
                                     </label>
                                 </div>
                                 {{#each data}}
                                     <label class="container1">
-                                        <input type="checkbox" name={{name}} value={{name}} id="" class="checkeditem">{{name}}
+                                        <input type="checkbox" value={{name}} id={{name}}>{{name}}
                                     </label>
                                         
                                 {{/each}}
                                 <br>
 
                                 <div class="form-group">
-                                    <!--                    <label for="exampleInputName2">Name</label>-->
                                     <input type="text" id="SearchBar" placeholder="Enter Event/Activity">
                                 </div>
                                 <button type="submit" class="btn btn-default" id="getData">Search</button>
@@ -82,3 +73,4 @@
     </body>
 
 </html>
+
