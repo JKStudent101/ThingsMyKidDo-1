@@ -181,19 +181,21 @@
 
               <!-- Business Modal: Method #2 -->
                   <div class="modal fade" id="Business1" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                          <div class="modal-dialog">
+                          <div class="modal-dialog" style="overflow-y: initial !important">
                               <div class="modal-content">
                                   <div class="modal-header">
                                       <button type="button" class="close" data-dismiss="modal">&times;</button>
                                       <h4 class="modal-title">Create Account</h4>
                                   </div>
-                                  <div class="modal-body" id="B-1">
+                                  <div class="modal-body" id="B-1" style="max-height: calc(100vh - 200px); overflow-y: auto;">
                                       <div class="tab">
                                           <p><input class="register" id="bus_Fname" placeholder="First Name" name="fname"></p>
                                           <p><input class="register" id="bus_Lname" placeholder="Last name" name="lname"></p>
                                           <p><input class="register" id="bus_Orgname" placeholder="Organization name" name="org_name"></p>
+                                          <p><input class="register" id="bus_Address" placeholder="Address" name="address"></p>
                                           <p><input class="register" id="bus_Phone" placeholder="Phone number" name="phone"></p>
                                           <p><input class="register" id="bus_Email" placeholder="Email address" name="email"></p>
+                                          <p><input class="register" id="bus_Website" placeholder="Organization website" name="website"></p>
                                           <p><input class="register" id="bus_PW" placeholder="Password" name="pw"></p>
                                           <p><input class="register" id="bus_PWconfirm" placeholder="Comfirm Password" name="confirm_pw"></p>
                                       </div>
@@ -207,14 +209,14 @@
 
                   <!-- Modal Page 2 -->
                   <div class="modal fade" id="Business2" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                          <div class="modal-dialog">
+                          <div class="modal-dialog" style="overflow-y: initial !important">
                               <!-- Modal content-->
                               <div class="modal-content">
                                   <div class="modal-header">
                                       <button type="button" class="close" data-dismiss="modal">&times;</button>
                                       <h4 class="modal-title">Confirm Account Info</h4>
                                   </div>
-                                  <div class="modal-body" id="B-2">
+                                  <div class="modal-body" id="B-2" style="max-height: calc(100vh - 200px); overflow-y: auto;">
                                       <form class="form-horizontal pf"><!---->
                                           <div class="form-group" style="margin-left:10px">
                                               <label class="control-label" >First Name</label>
@@ -235,6 +237,12 @@
                                               </div>
                                           </div>
                                           <div class="form-group" style="margin-left:10px">
+                                              <label class="control-label">Address</label>
+                                              <div class="">
+                                                  <p class="form-control-static" id="Vendor_Address"></p>
+                                              </div>
+                                          </div>
+                                          <div class="form-group" style="margin-left:10px">
                                               <label class="control-label">Phone Number</label>
                                               <div class="">
                                                   <p class="form-control-static" id="Vendor_Phone"></p>
@@ -244,6 +252,12 @@
                                               <label class="control-label">Email Address</label>
                                               <div class="">
                                                   <p class="form-control-static" id="Vendor_Email"></p>
+                                              </div>
+                                          </div>
+                                          <div class="form-group" style="margin-left:10px">
+                                              <label class="control-label">Organization Website</label>
+                                              <div class="">
+                                                  <p class="form-control-static" id="Vendor_Website"></p>
                                               </div>
                                           </div>
                                       </form>
@@ -344,8 +358,10 @@
             var b_Fname = $("#bus_Fname").val();
             var b_Lname = $("#bus_Lname").val();
             var b_Org = $("#bus_Orgname").val();
+            var b_Address = $("#bus_Address").val();
             var b_Phone = $("#bus_Phone").val();
             var b_Email = $("#bus_Email").val();
+            var b_Website = $("#bus_Website").val();
             var b_PW = $("#bus_PW").val();
             var b_PWconfirm = $("#bus_PWconfirm").val();            
 
@@ -358,8 +374,10 @@
                 $("#Vendor_Fname").text(b_Fname);
                 $("#Vendor_Lname").html(b_Lname);
                 $("#Vendor_Org").html(b_Org);
+                $("#Vendor_Address").html(b_Address);
                 $("#Vendor_Phone").html(b_Phone);
                 $("#Vendor_Email").html(b_Email); 
+                $("#Vendor_Website").html(b_Website);
             }
 
             
@@ -370,8 +388,10 @@
             $("#Vendor_Fname").empty();
             $("#Vendor_Lname").empty();
             $("#Vendor_Org").empty();
+            $("#Vendor_Address").empty();
             $("#Vendor_Phone").empty();
             $("#Vendor_Email").empty();
+            $("#Vendor_Website").empty();
 
             $('#Business2').modal('hide');
             $('#Business1').modal('show');
@@ -386,6 +406,7 @@
                     "Oraganization": $("#bus_Orgname").val(),
                     "Phone Number": $("#bus_Phone").val(),
                     "Email Address": $("#bus_Email").val(),
+                    "Website": $("#bus_Website").val(),
                     "Password": $("#bus_PWconfirm").val()
                 };
 
