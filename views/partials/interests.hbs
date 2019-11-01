@@ -1,11 +1,11 @@
 <style>
-/*    .interests{
+    .interests{
         width: 30%;
         color: rgb(38, 50, 56);
         font-weight: 700;
         font-size: 14px;
         /*letter-spacing: 0.3px;*/
-/*        background: rgba(136, 126, 126, 0.04);
+        background: rgba(136, 126, 126, 0.04);
         padding: 10px;
         border: none;
         border-radius: 20px;
@@ -13,13 +13,13 @@
         box-sizing: border-box;
         border: 2px solid rgba(0, 0, 0, 0.02);
         /*margin-bottom: 50px;*/
-/*        margin-left: 5px;
+        margin-left: 5px;
         margin-right: 5px;
         text-align: left;
         margin-bottom: 10px;
         font-family: 'Ubuntu', sans-serif;
     }
-*/
+
     :root{
       --text: "These activities";
     }
@@ -28,6 +28,22 @@
       height: 5px;
       width: 20%;
       padding:0;
+      color: rgb(38, 50, 56);
+        font-weight: 700;
+        font-size: 14px;
+        /*letter-spacing: 0.3px;*/
+        background: rgba(136, 126, 126, 0.04);
+        border: none;
+        border-radius: 20px;
+        outline: none;
+        box-sizing: border-box;
+        border: 2px solid rgba(0, 0, 0, 0.02);
+        /*margin-bottom: 50px;*/
+        margin-left: 5px;
+        margin-right: 5px;
+        text-align: left;
+        margin-bottom: 10px;
+        font-family: 'Ubuntu', sans-serif;
       overflow: hidden;
       -webkit-appearance: menulist;
       position: relative;
@@ -63,18 +79,19 @@
 </style>
 
 
-<select id="Kid-Interests" class="multiple_select" multiple="multiple">
-  <option value="Soccer">Soccer</option>
-  <option value="Hockey">Hockey</option>
-  <option value="Dance">Dance</option>
-  <option value="Volleyball">Volleyball</option>
-  <option value="Drawing">Drawing</option>
-  <option value="Reading">Reading</option>
-  <option value="Computer Coding">Computer Coding</option>
-  <option value="Painting">Painting</option>
-  <option value="Music">Music</option>
-</select>
-
+<span>
+  <select id="Kid-Interests" class="multiple_select" multiple="multiple">
+    <option value="Soccer">Soccer</option>
+    <option value="Hockey">Hockey</option>
+    <option value="Dance">Dance</option>
+    <option value="Volleyball">Volleyball</option>
+    <option value="Drawing">Drawing</option>
+    <option value="Reading">Reading</option>
+    <option value="Computer Coding">Computer Coding</option>
+    <option value="Painting">Painting</option>
+    <option value="Music">Music</option>
+  </select>
+</span>
 
 <script>
   $(".multiple_select").mousedown(function(e) {
