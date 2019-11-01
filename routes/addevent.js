@@ -19,6 +19,7 @@ router.post('/', (req, res) => {
         let start_date = req.body.start_date;
         let end_date = req.body.end_date;
         let tag = req.body.tag;
+        let link = req.body.link;
         let geocode = new Promise((resolve, reject) => {
             request({
                 url: search_string,
@@ -53,10 +54,13 @@ router.post('/', (req, res) => {
                 lng,
                 lat,
                 address,
+                city,
+                province,
+                link,
                 tag,
             ];
 
-            var sql_insert = "INSERT INTO event(admin_id, vendor_id, description, name, start_time, end_time, start_date, end_date, isApproved, lng, lat, address) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)" ;
+            var sql_insert = "INSERT INTO event(admin_id, vendor_id, description, name, start_time, end_time, start_date, end_date, isApproved, lng, lat, address, city, province, link) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" ;
                 db.query(sql_insert, inputs, (err, result) => {
                 if (err) {
                     throw err;
