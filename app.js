@@ -45,8 +45,8 @@ app.use('/savewishlist', wishlist);
 const server = require('http').createServer(app);
 hbs.registerPartials(__dirname + '/views/partials');
 
-hbs.registerHelper('ifCond', function(v1, v2, options) {
-    if(v1 === v2) {
+hbs.registerHelper('ifCond', function (v1, v2, options) {
+    if (v1 === v2) {
         return options.fn(this);
     }
     return options.inverse(this);
@@ -65,13 +65,13 @@ app.get('/login', (req, res) => {
 
 app.post('/login-form', [
     body('email')
-    .isAlphanumeric()
-    .trim()
-    .not().isEmpty()
-    .escape(),
+        .isAlphanumeric()
+        .trim()
+        .not().isEmpty()
+        .escape(),
     body('password')
-    .not().isEmpty()
-    .escape()
+        .not().isEmpty()
+        .escape()
 ], (req, res) => {
     // console.log(req.body)
     let email = req.body.email;
@@ -91,10 +91,10 @@ app.post('/login-form', [
                 let salt = bcrypt.genSaltSync(saltRounds);
                 res.cookie('i', bcrypt.hashSync(email, salt));
                 req.session.user = result[0];
-				if (result[0].user_type === 'admin') { res.redirect("/admin") } 
-				else if (result[0].user_type === 'vendor') { res.redirect(`/vendor/${result[0].user_id}`) } 
-				else if (result[0].user_type === 'parent') { res.redirect("/home") } 
-				else {
+                if (result[0].user_type === 'admin') { res.redirect("/admin") }
+                else if (result[0].user_type === 'vendor') { res.redirect(`/vendor/${result[0].user_id}`) }
+                else if (result[0].user_type === 'parent') { res.redirect("/home") }
+                else {
                     res.cookie('i', true, { expires: new Date() });
                     res.send("Error: no user type")
                 }
@@ -122,8 +122,8 @@ app.get('/profile/', (req, res) => {
     } else {
         let user_id = req.session.user.user_id;
         var sql_select_wishlist = 'select wishlist from child where parent_id = ?';
-        db.query(sql_select_wishlist, user_id, (err, result)=>{
-            if (result.length > 0){
+        db.query(sql_select_wishlist, user_id, (err, result) => {
+            if (result.length > 0) {
                 let wishlist_array = result[0].wishlist.split(",")
                 let sql =
                     'select e.*, t.name as category from event as e \n' +
@@ -136,7 +136,7 @@ app.get('/profile/', (req, res) => {
                         var data = [];
                         for (var i = 0; i < result.length; i++) {
                             let event_id = result[i].event_id;
-                            if (wishlist_array.includes(String(event_id))){
+                            if (wishlist_array.includes(String(event_id))) {
                                 data.push(result[i]);
                             }
                         }
@@ -147,7 +147,7 @@ app.get('/profile/', (req, res) => {
                 });
             }
         })
-        
+
     }
 });
 
@@ -178,21 +178,22 @@ app.get('/admin', (req, res) => {
 });
 
 app.post('/approve-event', (req, res) => {
-	if (!req.cookies.i || !req.session.user) {
-		res.redirect('/login')
-	} else {
-		let event_id = req.body.id
-		let sql = "UPDATE event SET isApproved = 1 WHERE event_id = ?";
-		db.query(sql, event_id, async (err, result) => {
-			if (err) {
-				throw err;
-			} else {
-				console.log(`Event ${event_id} approved`);
-				await newEventNotify(event_id);
-				res.json({ message: 'success' });
-			}
-		});
-	}
+    if (!req.cookies.i || !req.session.user) {
+        res.redirect('/login')
+    } else {
+        console.log('approving')
+        let event_id = req.body.id
+        let sql = "UPDATE event SET isApproved = 'Approved' WHERE event_id = ?";
+        db.query(sql, event_id, async (err, result) => {
+            if (err) {
+                throw err;
+            } else {
+                console.log(`Event ${event_id} approved`);
+                await newEventNotify(event_id);
+                res.json({ message: 'success' });
+            }
+        });
+    }
 });
 
 app.get('/vendor/:vendor_id', (req, res) => {
@@ -273,17 +274,17 @@ app.get('/edit/:event_id', (req, res) => {
         } else {
             var tags_list = result;
 
-            var sql_query = 'select a.event_id, a.description, a.name, a.start_time, a.end_time, a.start_date, a.end_date, a.address, a.city, a.province, a.link, c.name as event_tag\n'+
-            'from event a\n'+
-            'LEFT JOIN event_tags b ON a.event_id = b.event_id\n'+
-            'LEFT JOIN tags c ON b.tag_id = c.tag_id\n'+
-            'where a.event_id=?';
-            db.query(sql_query, req.params.event_id, (err, result)=>{
-                if(err){
+            var sql_query = 'select a.event_id, a.description, a.name, a.start_time, a.end_time, a.start_date, a.end_date, a.address, a.city, a.province, a.link, c.name as event_tag\n' +
+                'from event a\n' +
+                'LEFT JOIN event_tags b ON a.event_id = b.event_id\n' +
+                'LEFT JOIN tags c ON b.tag_id = c.tag_id\n' +
+                'where a.event_id=?';
+            db.query(sql_query, req.params.event_id, (err, result) => {
+                if (err) {
                     throw err;
                 } else {
                     // console.log(result[0].start_time);
-                    res.render('editevent.hbs',{
+                    res.render('editevent.hbs', {
                         data: result[0],
                         start_date: result[0].start_date.toISOString().split('T')[0],
                         end_date: result[0].end_date.toISOString().split('T')[0],
@@ -297,8 +298,8 @@ app.get('/edit/:event_id', (req, res) => {
 });
 
 
-app.post('/edit/:event_id', (req, res)=>{
-	try {
+app.post('/edit/:event_id', (req, res) => {
+    try {
         let address = req.body.address.trim();
         let city = req.body.city.trim();
         let province = req.body.province;
@@ -383,110 +384,120 @@ app.get('/editor', (req, res) => {
 });
 
 const saveToDatabase = async (subscription, user_id) => {
-	// console.log(subscription)
-	let inputs = [
-		user_id,
-		subscription.endpoint,
-		subscription.keys.p256dh,
-		subscription.keys.auth
-	]
-	// console.log(inputs)
-	let sql = "INSERT INTO subscriptions (parent_id, endpoint, p256dh, auth) VALUES (?, ?, ?, ?)"
+    // console.log(subscription)
+    let inputs = [
+        user_id,
+        subscription.endpoint,
+        subscription.keys.p256dh,
+        subscription.keys.auth
+    ]
+    // console.log(inputs)
+    let sql = "INSERT INTO subscriptions (parent_id, endpoint, p256dh, auth) VALUES (?, ?, ?, ?)"
 
-	db.query(sql, inputs, (err, result) => {
-		if (err) {
-			console.log(err)
-			// throw err;
-		} else {
-			console.log("1 subscription added to user " + user_id);
-		}
-	});
+    db.query(sql, inputs, (err, result) => {
+        if (err) {
+            console.log(err)
+            // throw err;
+        } else {
+            console.log("1 subscription added to user " + user_id);
+        }
+    });
 };
 
 const getSubscriptions = async (user_id) => {
-	let result = await new Promise((resolve, reject) => {
-		let sql = "SELECT * FROM subscriptions WHERE parent_id = ?"
-		db.query(sql, user_id, (err, result) => {
-			if (err) {
-				console.log(err)
-				reject(err)
-			} else if (result.length == 0) {
-				console.log("No subscriptions found for " + user_id);
-				resolve([])
-			} else {
-				let subscriptions = []
-				let temp = {
-					endpoint: "",
-					expirationTime: null,
-					keys: {
-						p256dh: "",
-						auth: ""
-					}
-				}
-				for (let i = 0; i < result.length; i++) {
-					temp.endpoint = result[i].endpoint;
-					temp.expirationTime = result[i].expirationTime;
-					temp.keys.p256dh = result[i].p256dh;
-					temp.keys.auth = result[i].auth;
-					subscriptions.push(temp);
-				}
-				resolve(subscriptions)
-			}
+    let result = await new Promise((resolve, reject) => {
+        let sql = "SELECT * FROM subscriptions WHERE parent_id = ?"
+        db.query(sql, user_id, (err, result) => {
+            if (err) {
+                console.log(err)
+                reject(err)
+            } else if (result.length == 0) {
+                console.log("No subscriptions found for " + user_id);
+                resolve([])
+            } else {
+                let subscriptions = []
+                let temp = {
+                    endpoint: "",
+                    expirationTime: null,
+                    keys: {
+                        p256dh: "",
+                        auth: ""
+                    }
+                }
+                for (let i = 0; i < result.length; i++) {
+                    temp.endpoint = result[i].endpoint;
+                    temp.expirationTime = result[i].expirationTime;
+                    temp.keys.p256dh = result[i].p256dh;
+                    temp.keys.auth = result[i].auth;
+                    subscriptions.push(temp);
+                }
+                resolve(subscriptions)
+            }
 
-		})
+        })
 
-	});
-	// console.log(result);
-	return result
+    });
+    // console.log(result);
+    return result
 }
 
 const newEventNotify = async (event_id) => {
-	console.log("sending notification")
-	let result = await new Promise((resolve, reject) => {
-		let sql = "SELECT s.parent_id, s.endpoint, s.expirationTime, s.p256dh, s.auth FROM subscriptions as s\n "
-		"INNER JOIN parent as p ON p.user_id = s.parent_id\n "
-		"INNER JOIN child as c ON c.parent_id = p.user_id\n "
-		"INNER JOIN child_tags as ct ON ct.parent_id = c.parent_id\n "
-		"INNER JOIN tags as t ON t.tag_id = ct.tag_id\n "
-		"INNER JOIN event_tags as et ON et.tag_id = t.tag_id\n "
-		"WHERE et.event_id = ?\n "
-		"GROUP BY s.parent_id"
-		db.query(sql, event_id, (err, result) => {
-			if (err) {
-				console.log(err)
-				reject(err)
-			} else if (result.length == 0) {
-				console.log("No subscriptions found for " + user_id);
-				resolve([])
-			} else {
-				resolve(result[0])
-			}
+    console.log("sending notification")
+    let results = await new Promise((resolve, reject) => {
+        let sql = "SELECT s.parent_id, s.endpoint, s.expirationTime, s.p256dh, s.auth FROM subscriptions as s\n "
+        "INNER JOIN parent as p ON p.user_id = s.parent_id\n "
+        "INNER JOIN child as c ON c.parent_id = p.user_id\n "
+        "INNER JOIN child_tags as ct ON ct.parent_id = c.parent_id\n "
+        "INNER JOIN tags as t ON t.tag_id = ct.tag_id\n "
+        "INNER JOIN event_tags as et ON et.tag_id = t.tag_id\n "
+        "WHERE et.event_id = ?\n "
+        "GROUP BY s.parent_id"
+        db.query(sql, event_id, (err, result) => {
+            if (err) {
+                console.log(err)
+                reject(err)
+            } else if (result.length == 0) {
+                console.log("No subscriptions found for " + user_id);
+                resolve([])
+            } else {
+                resolve(result)
+            }
 
-		})
+        })
 
-	});
-	let subscription = {
-		endpoint: result.endpoint,
-		expirationTime: result.expirationTime,
-		keys: {
-			p256dh: result.p256dh,
-			auth: result.auth
-		}
-	}
-	webpush.sendNotification(subscription, "New event!");
-	console.log("Sent!");
-	return result
+    });
+    // console.log(results)
+    try {
+        for (let i = 0; i < results.length; i++) {
+            let subscription = {
+                endpoint: results[i].endpoint,
+                expirationTime: results[i].expirationTime,
+                keys: {
+                    p256dh: results[i].p256dh,
+                    auth: results[i].auth
+                }
+            }
+            console.log(subscription)
+            message = `Hi ${results[i].parent_id}!\nCheck out this new event!`
+            webpush.sendNotification(subscription, message);
+            console.log("Sent!");
+        }
+    } catch (err) {
+        console.log("Error sending notifications")
+        console.log(err)
+    }
+    return results
 }
 
 app.post('/saveSubscription', async (req, res) => {
-	if (!req.cookies.i || !req.session.user) {
-		res.redirect('/login')
-	} else {
-		const subscription = req.body;
-		// console.log(subscription)
-		await saveToDatabase(subscription, req.session.user.user_id);
-		res.json({ message: 'success' });
-	}
+    if (!req.cookies.i || !req.session.user) {
+        res.redirect('/login')
+    } else {
+        const subscription = req.body;
+        // console.log(subscription)
+        await saveToDatabase(subscription, req.session.user.user_id);
+        res.json({ message: 'success' });
+    }
 });
 
 const vapidKeys = {
@@ -497,37 +508,37 @@ const vapidKeys = {
 webpush.setVapidDetails('mailto:thingsmykidsdo.bcit@gmail.com', vapidKeys.publicKey, vapidKeys.privateKey);
 
 app.post('/text-me', async (req, res) => {
-	if (!req.cookies.i || !req.session.user) {
-		res.redirect('/login')
-	} else {
-		// console.log("trying to send...");
-		let subscriptions = await getSubscriptions(req.session.user.user_id);
-		// console.log(subscriptions)
-		if (subscriptions) {
-			// console.log("got subscription")
-			try {
-				for (let i = 0; i < subscriptions.length; i++) {
-					webpush.sendNotification(subscriptions[i], req.body.message);
-				}
-			} catch (err) {
-				console.log("BIG ERROR SENDING NOTIFICATIONS (Probably MySQL related)");
-				res.json({ message: err });
-			}
-			message = "Sent " + req.body.message + " " + subscriptions.length + " times."
-			console.log(message);
-			res.json({ message: message });
-		} else {
-			res.json({ message: "Unsuccesful" })
-		}
-	}
+    if (!req.cookies.i || !req.session.user) {
+        res.redirect('/login')
+    } else {
+        // console.log("trying to send...");
+        let subscriptions = await getSubscriptions(req.session.user.user_id);
+        // console.log(subscriptions)
+        if (subscriptions) {
+            // console.log("got subscription")
+            try {
+                for (let i = 0; i < subscriptions.length; i++) {
+                    webpush.sendNotification(subscriptions[i], req.body.message);
+                }
+            } catch (err) {
+                console.log("BIG ERROR SENDING NOTIFICATIONS (Probably MySQL related)");
+                res.json({ message: err });
+            }
+            message = "Sent " + req.body.message + " " + subscriptions.length + " times."
+            console.log(message);
+            res.json({ message: message });
+        } else {
+            res.json({ message: "Unsuccesful" })
+        }
+    }
 });
 
 app.get('/send-notification', (req, res) => {
-	if (!req.cookies.i || !req.session.user) {
-		res.redirect('/login')
-	} else {
-		res.render('notification.hbs', {});
-	}
+    if (!req.cookies.i || !req.session.user) {
+        res.redirect('/login')
+    } else {
+        res.render('notification.hbs', {});
+    }
 });
 
 app.get('/logout', (req, res) => {
@@ -537,7 +548,7 @@ app.get('/logout', (req, res) => {
 });
 
 
-server.listen(port, function(err) {
+server.listen(port, function (err) {
     if (err) {
         console.log(err);
         return false;

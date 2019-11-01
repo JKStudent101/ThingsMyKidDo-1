@@ -374,6 +374,7 @@ function initMap() {
 				});
 			}
 		}
+		
 	});
 
 	if (navigator.geolocation) {
