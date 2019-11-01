@@ -4,15 +4,13 @@ body {
     font-size: 12pt;
 }
 
-
 #logoDiv {
     background-image: url(src/thingsmyKidsdo.jpg);
-    background-size: cover; 
-    background-position: center center; 
+    background-size: cover;
+    background-position: center center;
     width: 60px;
     height: 60px;
     float: left;
-    
 }
 
 #firstRow {
@@ -20,7 +18,7 @@ body {
     padding-right: 10px;
 }
 
-#headerDiv{
+#headerDiv {
     text-align: center;
     font-size: 48pt;
     font-family: arial;
@@ -34,36 +32,35 @@ body {
     padding: 0px 20px 0px 20px;
 }
 
+
 /* Form */
+
 .form {
-    background-color: rgba(173,172,181,0.8);
+    background-color: rgba(173, 172, 181, 0.8);
     border-radius: 7px;
     padding: 10px;
     font-family: arial;
     font-size: 12pt;
 }
 
-
-
-#resultsTable_length{
+#resultsTable_length {
     color: white;
 }
 
-#resultsTable_info{
+#resultsTable_info {
     color: white;
 }
 
-#menuNav{
-    background-color: rgba(0,0,0,0.7);
+#menuNav {
+    background-color: rgba(0, 0, 0, 0.7);
     border-style: none;
     float: left;
     width: 100vw;
     padding: 10px 0px 10px 0px;
 }
 
-#menuItems{
+#menuItems {
     padding: 5px 30px 0px 0px;
     font-family: arial;
     font-size: 14pt;
-    
 }
