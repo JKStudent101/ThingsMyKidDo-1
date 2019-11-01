@@ -44,7 +44,7 @@ self.addEventListener('activate', async () => {
 self.addEventListener('push', (event) => {
     if (event.data) {
         // console.log('Push event!! ', event.data.text());
-        showLocalNotification("Yolo", event.data.text(), self.registration);
+        showLocalNotification("Things My Kids Do", event.data.text(), self.registration);
     } else {
         console.log('Push event but no data');
     }
