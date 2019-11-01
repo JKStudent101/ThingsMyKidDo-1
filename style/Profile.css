@@ -10,6 +10,78 @@ img.profile-pic {
 }
 
 button.remove-event {
-    position:absolute;
+    position: absolute;
     right: 5px;
+}
+
+.card {
+    position: relative;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    max-width: 300px;
+    margin: auto;
+    text-align: center;
+    left: 100px;
+    /* border-radius: 3em; */
+    border-color: black;
+    border-style: solid;
+}
+
+.list-inline {
+    left: 240px;
+    position: relative;
+}
+
+.title {
+    color: grey;
+    font-size: 18px;
+}
+
+button {
+    border: none;
+    outline: 0;
+    display: inline-block;
+    padding: 8px;
+    color: white;
+    background-color: #000;
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+    font-size: 18px;
+}
+
+a {
+    text-decoration: none;
+    font-size: 22px;
+    color: black;
+}
+
+button:hover,
+a:hover {
+    opacity: 0.7;
+}
+
+.table-events {
+    border: 1px solid;
+    border-radius: 10px;
+    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
+    margin: 3px;
+    overflow: hidden;
+    padding: 10px;
+    right: 100px;
+    position: relative;
+    top: 20px;
+}
+
+table {
+    width: 100%;
+}
+
+td,
+th {
+    color: #398B93;
+    padding: 10px;
+}
+
+.invis {
+    display: none;
 }

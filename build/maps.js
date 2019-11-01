@@ -1,9 +1,30 @@
-
+let markers = [];
+let eventMarkers = [];
 let coords;
+let marker;
+let map;
+let gmarkers = [];
+let infowindow;
+let filteroption="";
+let tags = [];
+let tagsisclicked = [];
+let user_id = null;
+$.ajax({
+	url: '/event/gettags', 
+	type: 'GET',
+	async: false,
+	dataType: 'json',
+	success: (data) => {	
+		for (var i = 0; i < data.length; i++) {
+			tags.push(data[i].name);
+		}
+	}
+})
+
 function initMap() {
 	// Map options
-	var options = {
-		zoom: 6,
+	let options = {
+		zoom: 7,
 		// center: { lat: 49.4928, lng: -117.2948 },
 
 		mapTypeControlOptions: {
@@ -11,7 +32,7 @@ function initMap() {
 		}
 	};
 
-	var styledMapType = new google.maps.StyledMapType([
+	let styledMapType = new google.maps.StyledMapType([
 		{ elementType: 'geometry', stylers: [ { color: '#ebe3cd' } ] },
 		{ elementType: 'labels.text.fill', stylers: [ { color: '#523735' } ] },
 		{ elementType: 'labels.text.stroke', stylers: [ { color: '#f5f1e6' } ] },
@@ -123,140 +144,134 @@ function initMap() {
 	]);
 
 	// New map
-	var map = new google.maps.Map(document.getElementById('map'), options);
+	let map = new google.maps.Map(document.getElementById('map'), options);
 
-	// load events on search click event
+	// info initialize
+	infoWindow = new google.maps.InfoWindow({});
+	
+	// load events on search button click event
 	$('#getData').click((e) => {
-		// get user input event or all event
-		let tagOption = $('#searchOption').val().toLowerCase(); // hockey
-		let userInput = $('#SearchBar').val().toLowerCase(); // event
-
-		const requestOne = '/event/search/name/' + $('#SearchBar').val();
-		const requestAll = '/event/getall';
-
-		const requestAllTags = '/event/search/' + tagOption;
-		let markers= [];
-		
 		e.preventDefault();
-		function a1() {
-			
-			$.ajax({
-				// url: $('#SearchBar').val()= "getallevents"? requestAll : requestOne,
-				url: '/event/getall',
-				type: 'GET',
-				async: false,
-				dataType: 'json',
-				success: (data) => {
-					if (tagOption == 'getallevents' && userInput.length == 0) {
-						$.map(data, function(value, i) {
-							// console.log(value);
-							$('#events').append(
-								'<span>' +
-									'<h3>' +
-									// v.name
-									value.name +
-									'</h3>' +
-									'<p>' +
-									value.category +
-									'</p>' +
-									'<p>' +
-									value.description +
-									'</p>' +
-									'</span>'
-							);
-
-							// push values/events into the markers
-							markers.push({
-								content: value.description,
-								coords: {
-									lat: parseFloat(value.lat),
-									lng: parseFloat(value.lng)
-								}
-							});
-						});
-
-						// add markers
-						for (var i = 0; i < markers.length; i++) {
-							// Add markers
-							addMarker(markers[i]);
-						}
-					}
-					else if(userInput.length != 0){
-						a3();
-					}
-					else {
-						a2();
-					}
-					$('#getData').attr('disabled', false);
+		let tagsisclicked=[]
+		// get user input event or all event
+		let tagOption = $('#searchOption').val(); // hockey
+		let userInput = $('#SearchBar').val().toLowerCase(); // eventname
+		
+		for (var i = 0; i < tags.length; i++) {
+			if($("#"+tags[i]+"").prop('checked')){
+				tagsisclicked.push(tags[i]);
+			}
+		}
+		
+		const requestAll = '/event/getall';
+		switch(userInput){
+			case "":
+				if($('#allevents').prop('checked')){
+					filteroption = "getallE";
+				} 
+				else{
+					filteroption = "getOneTag";
 				}
-			});
+				break;
+
+			default:
+				if($('#allevents').prop('checked')){
+					filteroption = "getWithKeyW";
+				} else {
+					filteroption = "getWithKey&Tag";
+				}
+				
+				
 		}
 
-		function a2() {
-			$('#events').empty()
-			$.ajax({
-				url: requestAllTags,
-				type: 'GET',
-				dataType: 'json',
-				success: (tagEvent) => {
-					$.map(tagEvent, function(value, i) {
-						if (tagOption == value.category.toLowerCase()) {
-							$('#events').append(
-								'<span>' +
+		$.ajax({
+			url: requestAll, //event/getall route
+			type: 'GET',
+			async: false,
+			dataType: 'json',
+			success: (data) => {
+				
+				$('#events').empty();
+				if (filteroption == "getallE") {
+					if (gmarkers.length > 0) {
+						removeMarkers();
+					}
+					$.map(data, function(value, i) {
+						$('#events').append(
+							"<form action='/savewishlist' method='post'><span>" +
+								'<h3>' +
+								// v.name
+								value.name +
+								'</h3>' +
+								"<input class='invis' name='eventid' type='text' value=" + value.event_id + ">" +
+								'<p>' +
+								value.description +
+								'</p>' +
+								'</span>' +
+								"<button type='submit'>add to wishlist </button></form>"
+						);						// push event vlaues into the markers
+						markers.push({
+							content: value.description,
+							coords: {
+								lat: parseFloat(value.lat),
+								lng: parseFloat(value.lng)
+							}
+						});
+						
+					});
+				}
+				else if(filteroption== "getOneTag") {
+					if (gmarkers.length > 0) {
+						removeMarkers();
+					}
+					$.map(data, function(value, i) {
+						for (var i = 0; i < tagsisclicked.length; i++) {
+							if (tagsisclicked[i] == value.category) {
+								$('#events').append(
+									"<form action='/savewishlist' method='post'><span>" +
 									'<h3>' +
 									// v.name
 									value.name +
 									'</h3>' +
-									'<p>' +
-									value.category +
-									'</p>' +
+									"<input class='invis' name='eventid' type='text' value=" + value.event_id + ">" +
 									'<p>' +
 									value.description +
 									'</p>' +
-									'</span>'
-							);
-							
-							markers.push({
-								content: value.description,
-								coords: {
-									lat: parseFloat(value.lat),
-									lng: parseFloat(value.lng)
-								}
-							});
+									'</span>' +
+									"<button type='submit'>add to wishlist </button></form>"
+								);
+								markers.push({
+									content: value.description,
+									coords: {
+										lat: parseFloat(value.lat),
+										lng: parseFloat(value.lng)
+									}
+								});
+								
+							}
 						}
 					});
 
-					for (var i = 0; i < markers.length; i++) {
-						// Add markers
-						addMarker(markers[i]);
-					}
 				}
-			});
-		}
-		function a3() {
-			$('#events').empty()
-			$.ajax({
-				url: requestOne,
-				type: 'GET',
-				dataType: 'json',
-				success: (nameEvent) => {
-					$.map(nameEvent, function(value, i) {
+				else if (filteroption== "getWithKeyW") {
+					if (gmarkers.length > 0) {
+						removeMarkers();
+					}
+					$.map(data, function(value, i) {
 						if (value.name.toLowerCase().includes(userInput)) {
 							$('#events').append(
-								'<span>' +
-									'<h3>' +
-									// v.name
-									value.name +
-									'</h3>' +
-									'<p>' +
-									value.category +
-									'</p>' +
-									'<p>' +
-									value.description +
-									'</p>' +
-									'</span>'
+								"<form action='/savewishlist' method='post'><span>" +
+								'<h3>' +
+								// v.name
+								value.name +
+								'</h3>' +
+								"<input class='invis' name='eventid' type='text' value=" + value.event_id + ">" +
+								'<p>' +
+								value.description +
+								'</p>' +
+								'</span>' +
+								"<button type='submit'>add to wishlist </button></form>"
 							);
-							
 							markers.push({
 								content: value.description,
 								coords: {
@@ -264,43 +279,97 @@ function initMap() {
 									lng: parseFloat(value.lng)
 								}
 							});
+							
 						}
 					});
-
-					for (var i = 0; i < markers.length; i++) {
-						// Add markers
-						addMarker(markers[i]);
+				} else {
+					if (gmarkers.length > 0) {
+						removeMarkers();
 					}
+					$.map(data, function(value, i) {
+						for (var i = 0; i < tagsisclicked.length; i++) {
+							if (tagsisclicked[i] == value.category && value.name.toLowerCase().includes(userInput)) {
+								$('#events').append(
+									"<form action='/savewishlist' method='post'><span>" +
+									'<h3>' +
+									// v.name
+									value.name +
+									'</h3>' +
+									"<input class='invis' name='eventid' type='text' value=" + value.event_id + ">" +
+									'<p>' +
+									value.description +
+									'</p>' +
+									'</span>' +
+									"<button type='submit'>add to wishlist </button></form>"
+								);
+								
+								markers.push({
+									content: value.description,
+									coords: {
+										lat: parseFloat(value.lat),
+										lng: parseFloat(value.lng)
+									}
+								});
+								// add all events to the marker
+							}
+
+						}
+					});
 				}
-			});
+				for (let i = 0; i < markers.length; i++) {
+					// Add markers
+						addMarker(markers[i]);
+				}
+			}
+		});
+		
+		markers = [];
+
+		function addEventstoMarkers(eventarray) {
+			for (let i = 0; i < eventar.length; i++) {
+				// Add markers
+				addMarker(markers[i]);
+			}
 		}
-		a1();
-		// $.when(a1, a2).done(function(r1, r2) {});
+		// remove global gmarker array
+		function removeMarkers() {
+			for (i = 0; i < gmarkers.length; i++) {
+				gmarkers[i].setMap(null);
+			}
+			gmarkers = [];
+		}
+		function showgMarkers() {
+			for (i = 0; i < gmarkers.length; i++) {
+				gmarkers[i].setMap(map);
+			}
+		}
 
 		// Add Marker Function
 		function addMarker(props) {
-			
-			var marker = new google.maps.Marker({
+			// console.log(props);
+			let marker = new google.maps.Marker({
 				position: props.coords,
-				map: map //icon:props.iconImage
+				map: map, //icon:props.iconImage
+				content: props.content
 			});
-			
+
+			// push marker to global gmarker array
+			gmarkers.push(marker);
+
 			// Check for customicon
 			if (props.iconImage) {
 				// Set icon image
 				marker.setIcon(props.iconImage);
 			}
-			
-			marker.setMap(map);
-			
 
 			// Check content
 			if (props.content) {
-				var infoWindow = new google.maps.InfoWindow({
-					content: props.content
-				});
-
+				// infoWindow = new google.maps.InfoWindow({
+				// 	content: props.content
+				// });
+				// console.log(infoWindow);
 				marker.addListener('click', function() {
+					infoWindow.setContent(marker.content);
 					infoWindow.open(map, marker);
 				});
 			}

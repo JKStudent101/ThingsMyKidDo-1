@@ -1,0 +1,77 @@
+
+<p class="text-center">Event Form</p>
+<form class="form-horizontal" method="POST" action="/edit/{{data.event_id}}">
+    <div class="form-group">
+        <label class="col-xs-3 control-label"><b>Event id</b></label>
+        <div class="col-xs-7">
+            <input class="form-control" name="event_id" disabled type="text" value="{{data.event_id}}">
+        </div>
+    </div>
+    <div class="form-group">
+    <label class="col-xs-3 control-label"><b>Event Name</b></label>
+    <div class="col-xs-7">
+      <input class="form-control" name="eventname" type="text" value="{{data.name}}">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-xs-3 control-label"><b>Start Date</b></label>
+     <div class="col-xs-7">
+       <input class="form-control" name="start_date" type="date" id="startdate" value="{{start_date}}">
+     </div>    
+  </div>
+  <div class="form-group">
+    <label class="col-xs-3 control-label"><b>End Date</b></label>
+    <div class="col-xs-7">
+      <input class="form-control" name="end_date" type="date" id="enddate" value = "{{end_date}}">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-xs-3 control-label"><b>Start Time</b></label>
+    <div class="col-xs-7">
+      <input class="form-control" name="start_time" type="time" id="starttime" value="{{data.start_time}}">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-xs-3 control-label"><b>End Time</b></label>
+    <div class="col-xs-7">
+      <input class="form-control" name="end_time" type="time" id="endtime" value="{{data.end_time}}">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-xs-3 control-label"><b>Tags</b><b>{{test}}</b></label>
+    <div class="col-xs-7">
+        <select class="form-control" name="tag">
+            <option value="{{data.event_tag}}">{{data.event_tag}}</option>
+        {{#each tags}}
+            <option values="{{name}}">{{name}}</option>
+        {{/each}}
+        </select>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-xs-3 control-label"><b>City</b></label>
+    <div class="col-xs-7">
+      <input class="form-control" name="city" type="text">
+    </div>
+  </div>
+  <!--<div class="form-group">-->
+    <!--<label class="col-xs-3 control-label"><b>City</b></label>-->
+    <!--<div class="col-xs-7">-->
+      <!--<input class="form-control" name="city" type="text">-->
+    <!--</div>-->
+  <!--</div>-->
+  <div class="form-group">
+    <label class="col-xs-3 control-label"><b>Description</b></label>
+    <div class="col-xs-7">
+      <textarea class="form-control" name="description" rows="8">{{data.description}}</textarea>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-xs-offset-3 col-xs-10">
+      <button type="submit" class="btn btn-default" onclick="return confirm('Are you sure you want to update event?')">Save</button>
+    </div>
+  </div>
+  
+</form>
+
+
