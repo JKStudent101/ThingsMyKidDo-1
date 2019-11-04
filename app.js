@@ -145,6 +145,8 @@ app.get('/profile/', (req, res) => {
                         });
                     }
                 });
+            }else{
+                res.render('profile.hbs',{});
             }
         })
 
@@ -444,13 +446,13 @@ const getSubscriptions = async (user_id) => {
 const newEventNotify = async (event_id) => {
     console.log("sending notification")
     let results = await new Promise((resolve, reject) => {
-        let sql = "SELECT s.parent_id, s.endpoint, s.expirationTime, s.p256dh, s.auth FROM subscriptions as s\n "
-        "INNER JOIN parent as p ON p.user_id = s.parent_id\n "
-        "INNER JOIN child as c ON c.parent_id = p.user_id\n "
-        "INNER JOIN child_tags as ct ON ct.parent_id = c.parent_id\n "
-        "INNER JOIN tags as t ON t.tag_id = ct.tag_id\n "
-        "INNER JOIN event_tags as et ON et.tag_id = t.tag_id\n "
-        "WHERE et.event_id = ?\n "
+        let sql = "SELECT s.parent_id, s.endpoint, s.expirationTime, s.p256dh, s.auth FROM subscriptions as s\n " +
+        "INNER JOIN parent as p ON p.user_id = s.parent_id\n " +
+        "INNER JOIN child as c ON c.parent_id = p.user_id\n " + 
+        "INNER JOIN child_tags as ct ON ct.parent_id = c.parent_id\n " +
+        "INNER JOIN tags as t ON t.tag_id = ct.tag_id\n " +
+        "INNER JOIN event_tags as et ON et.tag_id = t.tag_id\n " +
+        "WHERE et.event_id = ?\n " +
         "GROUP BY s.parent_id"
         db.query(sql, event_id, (err, result) => {
             if (err) {
