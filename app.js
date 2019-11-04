@@ -324,9 +324,9 @@ app.post('/edit/:event_id', (req, res) => {
                 }
             })
         });
-        geocode.then(res => {
-            var lat = res['lat'];
-            var lng = res['lng'];
+        geocode.then(geores => {
+            var lat = geores['lat'];
+            var lng = geores['lng'];
 
             let inputs = [
                 req.body.description,
@@ -363,6 +363,8 @@ app.post('/edit/:event_id', (req, res) => {
                             db.query(sql_update_event_tag, [tag_id, req.params.event_id], (err, result) => {
                                 if (err) {
                                     throw err;
+                                }else{
+                                    res.redirect('/vendor/' + req.session.user.user_id);
                                 }
                             })
                         }
@@ -370,7 +372,7 @@ app.post('/edit/:event_id', (req, res) => {
                 }
             })
         })
-        res.redirect('/vendor/' + req.session.user.user_id);
+
     }
     catch (err) {
         console.log(err);

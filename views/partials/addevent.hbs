@@ -1,6 +1,6 @@
 
 <p class="text-center form_text">Event Form</p>
-<form class="form-horizontal" method="POST" action="/addevent">
+<form name = "add-form" class="form-horizontal" method="POST" action="/addevent" onsubmit="return add_validatation()">
   <div class="form-group">
     <label class="col-xs-3 control-label"><b>Event Name</b></label>
     <div class="col-xs-7">
@@ -58,7 +58,7 @@
     <label class="col-xs-3 control-label"><b>Province</b></label>
     <div class="col-xs-7">
         <select class="form-control" name="province" required>
-            <option value="" disabled selected>Select Province</option>
+            <option value="BC" selected>BC</option>
             <option value="NL">NL</option>
             <option value="PE">PE</option>
             <option value="NS">NS</option>
@@ -68,7 +68,6 @@
             <option value="MB">MB</option>
             <option value="SK">SK</option>
             <option value="AB">AB</option>
-            <option value="BC">BC</option>
             <option value="YT">YT</option>
             <option value="NT">NT</option>
             <option value="NU">NU</option>
@@ -89,10 +88,11 @@
   </div>
   <div class="form-group">
     <div class="col-xs-offset-3 col-xs-10">
-      <button type="submit" class="btn btn-primary" onclick="return confirm('Are you sure you want to add event?')">Add</button>
+      <button type="submit" class="btn btn-primary" onclick="confirm_add_msg(); ">Add</button>
     </div>
   </div>
   
 </form>
 
 
+<script src="/scripts/vendor.js"></script>

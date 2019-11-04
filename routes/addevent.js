@@ -37,9 +37,9 @@ router.post('/', (req, res) => {
                 }
             })
         });
-        geocode.then(res=>{
-            var lat = res['lat'];
-            var lng = res['lng'];
+        geocode.then(geores=>{
+            var lat = geores['lat'];
+            var lng = geores['lng'];
             let inputs = [
                 admin_id,
                 user_id,
@@ -84,6 +84,8 @@ router.post('/', (req, res) => {
                                     db.query(sql_insert_event_tag, values, (err, result)=>{
                                         if (err) {
                                             throw err;
+                                        }else{
+                                            res.redirect('/vendor/' + user_id);
                                         }
                                     })
 
@@ -99,7 +101,7 @@ router.post('/', (req, res) => {
             });
             
         })
-        res.redirect('/vendor/' + user_id);        
+
     }
         
 	catch (err) {
