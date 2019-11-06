@@ -249,54 +249,67 @@ app.get('/vendor/:vendor_id', (req, res) => {
 
 
 app.get('/delete/:event_id', (req, res) => {
-    var sql_delete_tag = 'delete from event_tags where event_id = ?';
-    db.query(sql_delete_tag, req.params.event_id, (err, result) => {
-        if (err) {
-            throw err;
-        } else {
-            var sql_delete_event = 'delete from event where event_id = ?';
-            db.query(sql_delete_event, req.params.event_id, (err, result) => {
-                if (err) {
-                    throw err;
-                } else {
-                    // console.log(req.session.user.user_id);
-                    res.redirect('/vendor/' + req.session.user.user_id);
-                }
-            });
-        }
-    });
-
+    if (!req.cookies.i || !req.session.user) {
+        res.redirect('/logout')
+    } else if (req.session.user.user_type != 'vendor') {
+        res.redirect('/logout')
+    } else {
+        var sql_delete_tag = 'delete from event_tags where event_id = ?';
+        db.query(sql_delete_tag, req.params.event_id, (err, result) => {
+            if (err) {
+                throw err;
+            } else {
+                var sql_delete_event = 'delete from event where event_id = ?';
+                db.query(sql_delete_event, req.params.event_id, (err, result) => {
+                    if (err) {
+                        throw err;
+                    } else {
+                        // console.log(req.session.user.user_id);
+                        res.redirect('/vendor/' + req.session.user.user_id);
+                    }
+                });
+            }
+        });
+    }
 });
 
 app.get('/edit/:event_id', (req, res) => {
-    var sql_tags = 'select name from tags';
-    db.query(sql_tags, (err, result) => {
-        if (err) {
-            throw err;
-        } else {
-            var tags_list = result;
+    if (!req.cookies.i || !req.session.user) {
+        res.redirect('/logout')
+    } else if (req.session.user.user_type != 'vendor') {
+        res.redirect('/logout')
+    } else {
+        var sql_tags = 'select name from tags';
+        db.query(sql_tags, (err, result) => {
+            if (err) {
+                throw err;
+            } else {
+                var tags_list = result;
 
-            var sql_query = 'select a.event_id, a.description, a.name, a.start_time, a.end_time, a.start_date, a.end_date, a.address, a.city, a.province, a.link, c.name as event_tag\n' +
-                'from event a\n' +
-                'LEFT JOIN event_tags b ON a.event_id = b.event_id\n' +
-                'LEFT JOIN tags c ON b.tag_id = c.tag_id\n' +
-                'where a.event_id=?';
-            db.query(sql_query, req.params.event_id, (err, result) => {
-                if (err) {
-                    throw err;
-                } else {
-                    // console.log(result[0].start_time);
-                    res.render('editevent.hbs', {
-                        data: result[0],
-                        start_date: result[0].start_date.toISOString().split('T')[0],
-                        end_date: result[0].end_date.toISOString().split('T')[0],
-                        tags: tags_list
-                    })
-                }
-            })
+                var sql_query = 'select a.event_id, a.description, a.name as event_name, a.start_time, a.end_time, a.start_date, a.end_date, a.address, a.city, a.province, a.link, c.name as event_tag\n' +
+                    'from event a\n' +
+                    'LEFT JOIN event_tags b ON a.event_id = b.event_id\n' +
+                    'LEFT JOIN tags c ON b.tag_id = c.tag_id\n' +
+                    'where a.event_id=?';
+                db.query(sql_query, req.params.event_id, (err, result) => {
+                    if (err) {
+                        throw err;
+                    } else {
+                        // console.log(result[0].start_time);
+                        res.render('editevent.hbs', {
+                            data: result[0],
+                            start_date: result[0].start_date.toISOString().split('T')[0],
+                            end_date: result[0].end_date.toISOString().split('T')[0],
+                            tags: tags_list,
+                            isError: 'false',
+                            error: ""
+                        })
+                    }
+                })
 
-        }
-    });
+            }
+        });
+    }
 });
 
 
@@ -371,7 +384,37 @@ app.post('/edit/:event_id', (req, res) => {
                     });
                 }
             })
-        })
+        }).catch((error)=>{
+            var form = {
+                event_id: req.params.event_id,
+                event_name : req.body.eventname,
+                start_time: req.body.start_time,
+                end_time: req.body.end_time,
+                event_tag: req.body.tag,
+                link: req.body.link,
+                address: req.body.address,
+                city: req.body.city,
+                province: req.body.province,
+                description: req.body.description
+            };
+
+            var sql_tags = 'select name from tags';
+
+            db.query(sql_tags, (err, result) => {
+                if (err) {
+                    throw err;
+                } else {
+                    res.render('editevent.hbs', {
+                        tags: result,
+                        data: form,
+                        start_date: req.body.start_date,
+                        end_date: req.body.end_date,
+                        isError: 'true',
+                        error: "Please provide correct address."
+                    })
+                }
+            })
+        });
 
     }
     catch (err) {
@@ -379,12 +422,8 @@ app.post('/edit/:event_id', (req, res) => {
     }
 });
 
-app.get('/editor', (req, res) => {
-    if (!req.cookies.i) {
-        res.redirect('/login')
-    } else {
-        res.render('editor.hbs', {});
-    }
+app.get('/test', (req, res) => {
+    res.render('vendor.hbs')
 });
 
 const saveToDatabase = async (subscription, user_id) => {
