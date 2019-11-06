@@ -1,8 +1,15 @@
-.add_event > .btn-info{
-    background-color: #1ACF51;
-    font-size: 25px;
-    margin-bottom: 30px;
+body{
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 15px;
 }
+
+.add_btn{
+    background: linear-gradient(to right, #9C27B0, #E040FB);
+    margin-bottom: 20px;
+    font-size: 15px;
+    border-color: #E040FB;
+}
+
 
 a.disabled {
     pointer-events: none;
@@ -14,8 +21,4 @@ a.disabled {
 .form_text{
     font-size: 20px;
     font-weight: bold;
-}
-
-.button_{
-
 }

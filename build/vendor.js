@@ -1,3 +1,15 @@
+$(document).ready(function () {
+    var now = new Date();
+
+    var day = ("0" + now.getDate()).slice(-2);
+    var month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+    var today = now.getFullYear() + "-" + (month) + "-" + (day);
+
+
+    $('#startdate').val(today);
+});
+
  const confirm_add_msg =()=>{
      return confirm('Are you sure you want to add event?')
  };
@@ -54,13 +66,13 @@
          return false;
      }
 
-     if (start_date.value<=today){
+     if (start_date.value<today){
          window.alert("Please enter valid event date.");
          start_date.focus();
          return false;
      }
 
-     if ((end_date.value<=today)||(end_date.value < start_date.value)){
+     if ((end_date.value<today)||(end_date.value < start_date.value)){
          window.alert("Please enter valid event date.");
          end_date.focus();
          return false;

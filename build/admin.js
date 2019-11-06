@@ -1,14 +1,4 @@
-$(document).ready(function () {
-    var now = new Date();
 
-    var day = ("0" + now.getDate()).slice(-2);
-    var month = ("0" + (now.getMonth() + 1)).slice(-2);
-
-    var today = now.getFullYear() + "-" + (month) + "-" + (day);
-
-
-    $('#startdate').val(today);
-});
 
 const approve = (event_id) => {
     let request = new window.XMLHttpRequest();

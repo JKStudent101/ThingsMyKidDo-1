@@ -14,7 +14,8 @@
         {{> menu}}
 
         <div class="col-md-12">
-            <p><strong>Welcome {{vendor}}!</strong> </p>
+            <p class="form_text">Welcome {{vendor}}! </p>
+            <a href="/addevent" class="btn btn-info add_btn">Add Event</a>
             <div class="row">
                 <div class="col-md-7">
                     <table class="table table-bordered table-hover">
@@ -52,10 +53,6 @@
 
                         </tbody>
                     </table>
-                </div>
-
-                <div class="col-md-5">
-                    {{> addevent }}
                 </div>
             </div>
         </div>
