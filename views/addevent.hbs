@@ -1,39 +1,117 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Add Events</title>
-<link href="/css/menu.css" type="text/css" rel="stylesheet" />
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-        {{> bootstrap}}
+
+    {{> bootstrap}}
+    <link href="/css/menu.css" type="text/css" rel="stylesheet" />
+    <link href="/css/vendor.css" type="text/css" rel="stylesheet" />
+
+    <script src="/scripts/vendor.js"></script>
+
 
 </head>
 
 <body>
-{{> menu}}
-<div class="w3-card-4">
-  <div class="w3-container w3-brown">
-    <h2>Events Form</h2>
-  </div>
-  <form class="w3-container" >
-    <p>      
-    <label class="w3-text-brown"><b>Event Name</b></label>
-    <input class="w3-input w3-border w3-sand" name="eventtime" type="text"></p>
-    <p>         
-    <label class="w3-text-brown"><b>Start time</b></label>
-    <input class="w3-input w3-border w3-sand" name="starttime" type="datetime-local"></p>
-    <p>
-    <label class="w3-text-brown"><b>End time</b></label>
-    <input class="w3-input w3-border w3-sand" name="endtime" type="datetime-local"></p>
-    <p>
-    <label class="w3-text-brown"><b>Location</b></label>
-    <input class="w3-input w3-border w3-sand" name="location" type="text"></p>
-    <p>
-    <label class="w3-text-brown"><b>Description</b></label>
-    <textarea class="w3-input w3-border w3-sand" name="descrition" rows="8"></textarea>
-    <p>
-    <button class="w3-btn w3-brown">Register</button></p>
-  </form>
-</div>
 
+{{> menu}}
+
+<div class="col-md-12">
+
+<p class="text-center form_text">Event Form</p>
+<form name = "add-form" class="form-horizontal" method="POST" action="/addevent" onsubmit="return add_validatation()">
+  <div class="form-group">
+    <label class="col-xs-3 control-label"><b>Event Name</b></label>
+    <div class="col-xs-7">
+      <input class="form-control" name="eventname" type="text" required>
+    </div>
+  </div>      
+  <div class="form-group">         
+    <label class="col-xs-3 control-label"><b>Start Date</b></label>
+     <div class="col-xs-7">
+       <input class="form-control" name="start_date" type="date" id="startdate" required>
+     </div>    
+  </div>
+  <div class="form-group">
+    <label class="col-xs-3 control-label"><b>End Date</b></label>
+    <div class="col-xs-7">
+      <input class="form-control" name="end_date" type="date" id="enddate" required>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-xs-3 control-label"><b>Start Time</b></label>
+    <div class="col-xs-7">
+      <input class="form-control" name="start_time" type="time" id="starttime" required>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-xs-3 control-label"><b>End Time</b></label>
+    <div class="col-xs-7">
+      <input class="form-control" name="end_time" type="time" id="endtime" required>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-xs-3 control-label"><b>Tags</b></label>
+    <div class="col-xs-7">
+        <select class="form-control" name="tag">
+            <option value="" disabled selected>Select Event Tags</option>
+        {{#each tags}}
+            <option values="{{name}}">{{name}}</option>
+        {{/each}}
+        </select>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-xs-3 control-label"><b>Address</b></label>
+    <div class="col-xs-7">
+      <input class="form-control" name="address" type="text" required>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-xs-3 control-label"><b>City</b></label>
+    <div class="col-xs-7">
+      <input class="form-control" name="city" type="text" required>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-xs-3 control-label"><b>Province</b></label>
+    <div class="col-xs-7">
+        <select class="form-control" name="province" required>
+            <option value="BC" selected>BC</option>
+            <option value="NL">NL</option>
+            <option value="PE">PE</option>
+            <option value="NS">NS</option>
+            <option value="NB">NB</option>
+            <option value="QC">QC</option>
+            <option value="ON">ON</option>
+            <option value="MB">MB</option>
+            <option value="SK">SK</option>
+            <option value="AB">AB</option>
+            <option value="YT">YT</option>
+            <option value="NT">NT</option>
+            <option value="NU">NU</option>
+        </select>
+    </div>
+  </div>
+  <div class="form-group">
+      <label class="col-xs-3 control-label"><b>Event Link</b></label>
+      <div class="col-xs-7">
+          <input class="form-control" name="link" type="text" required>
+      </div>
+  </div>
+  <div class="form-group">
+    <label class="col-xs-3 control-label"><b>Description</b></label>
+    <div class="col-xs-7">
+      <textarea class="form-control" name="description" rows="8" required></textarea>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-xs-offset-3 col-xs-10">
+      <button type="submit" class="btn btn-primary" onclick="confirm_add_msg(); ">Add</button>
+    </div>
+  </div>
+  
+</form>
+</div>
 </body>
-</html> 
+
+

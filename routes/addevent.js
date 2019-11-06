@@ -3,6 +3,30 @@ const request = require('request');
 const router = express.Router();
 const db = require('./database').init();
 
+router.get('/', (req,res)=> {
+        if (!req.cookies.i || !req.session.user) {
+            res.redirect('/logout')
+        } else if (req.session.user.user_type != 'vendor') {
+            res.redirect('/logout')
+        } else {
+            var sql_tags = 'select name from tags';
+            db.query(sql_tags, (err, result) => {
+                if (err) {
+                    throw err;
+                } else {
+                    res.render('addevent.hbs', {
+                        tags: result,
+                        isError: 'false',
+                        error: ""
+                    })
+                }
+            })
+
+        }
+    }
+);
+
+
 router.post('/', (req, res) => {
     try {
         let address = req.body.address.trim();
@@ -37,9 +61,9 @@ router.post('/', (req, res) => {
                 }
             })
         });
-        geocode.then(res=>{
-            var lat = res['lat'];
-            var lng = res['lng'];
+        geocode.then(geores=>{
+            var lat = geores['lat'];
+            var lng = geores['lng'];
             let inputs = [
                 admin_id,
                 user_id,
@@ -84,6 +108,8 @@ router.post('/', (req, res) => {
                                     db.query(sql_insert_event_tag, values, (err, result)=>{
                                         if (err) {
                                             throw err;
+                                        }else{
+                                            res.redirect('/vendor/' + user_id);
                                         }
                                     })
 
@@ -98,13 +124,45 @@ router.post('/', (req, res) => {
                 }
             });
             
-        })
-        res.redirect('/vendor/' + user_id);        
+        }).catch((error)=>{
+            // console.log(error);
+            var form = {
+                event_name : eventname,
+                start_time: start_time,
+                end_time: end_time,
+                start_date: start_date,
+                end_date: end_date,
+                event_tag: tag,
+                link: link,
+                address: address,
+                city: city,
+                province: province,
+                description: description
+            };
+
+            var sql_tags = 'select name from tags';
+
+            db.query(sql_tags, (err, result) => {
+                if (err) {
+                    throw err;
+                } else {
+                    res.render('addevent_error.hbs', {
+                        tags: result,
+                        form: form,
+                        isError: 'true',
+                        error: "Please provide correct address."
+                    })
+                }
+            })
+        });
+
     }
         
 	catch (err) {
         console.log(err);
     }
 });
+
+
 
 module.exports = router;
