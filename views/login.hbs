@@ -184,6 +184,7 @@
                   </div>
 
               <!-- Business Modal: Method #2 -->
+                <form action="/register" method="POST" >
                   <div class="modal fade" id="Business1" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                           <div class="modal-dialog" style="overflow-y: initial !important">
                               <div class="modal-content">
@@ -280,6 +281,7 @@
                               </div>
                           </div>
                   </div>
+                </form>
 
                   <div class="modal fade" id="Business3" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                           <div class="modal-dialog">
@@ -417,18 +419,9 @@
                 }            
             ParentDetail = JSON.stringify(ParentAccount);
             console.log(ParentDetail)
+/*
 
-            $.ajax({
-                url: '/parents',
-                type: 'POST',
-                contentType: 'application/json; charset=utf-8',
-                dataType:'json',
-                data: ParentDetail,
-                success: function(result){
-                    console.log(result, 'sending')
-                }
-            })
-
+*/
             }else{
                 alert("Please argee to our Terms & Conditions.")
             } 
@@ -497,22 +490,23 @@
                     "Password2": $("#bus_PWconfirm").val(),
                     'type': 'vendor'
                 }; 
-                Vendor_Account = JSON.stringify(Bus_Account);
+                let Vendor_Account = JSON.stringify(Bus_Account);
                // console.log(Vendor_Account);
                 $('#Business2').modal('hide');
                 $('#Business3').modal('show');
 
                 
                 $.ajax({
-                    url: '/register',
+                    url: 'registerVendor',
                     type: 'POST',
                     contentType: 'application/json; charset=utf-8',
                     dataType:'json',
                     data: Vendor_Account,
-                    success: function(result){
-                        console.log(result, 'sending')
+                    success: function(result) {
+                        console.log(result)
                     }
                 })
+
             }
 
             else{
