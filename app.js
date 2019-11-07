@@ -112,8 +112,40 @@ app.post('/sign-up-form', (req, res) => {
     res.render('not finished')
 })
 
-app.get('/register', (req, res) => {
-    res.render('register.hbs', {});
+app.post('/registerVendor', (req, res) => {
+    // console.log(req.body)
+    console.log()
+    var salt = bcrypt.genSaltSync(saltRounds);
+    var hash = bcrypt.hashSync(req.body.Password1, salt);
+    let new_vendor = {'firstname': req.body.FirstName, 'lastname': req.body.LastName, 'org': req.body.Oraganization, 'phonenum': req.body.PhoneNumber, 'address': req.body.BusAddress, 'email': req.body.EmailAddress, 'website': req.body.Website, 'password': hash, 'type': req.body.type}
+    // console.log(new_vendor)
+    // db.query()
+    let sql_insert_vendor_users = 'INSERT INTO user(user_type, email, pass_hash) VALUES (?, ?, ?)'
+    let user_values = [new_vendor.type, new_vendor.email, new_vendor.password];
+
+    db.query(sql_insert_vendor_users, user_values, function(err, result) {
+        if(err) throw err;
+        let sql_select_user = 'SELECT type from user';
+        db.query(sql_select_user, user_values.type, function(err, result){
+            let sql_user_id = "SELECT last_insert_id() as user_id";
+            db.query(sql_user_id, function(err, result){
+                // console.log(result[0].last_insert_id())
+                let user_id = result[0].user_id
+
+                console.log(user_id)
+
+                let sql_insert_vendor = 'INSERT INTO vendor (user_id, name, contact_name, address, phone_num, website) VALUES (?,?,?,?,?,?) ';
+                
+                let insert_user_values = [user_id, new_vendor.org, new_vendor.firstname + ' ' + new_vendor.lastname, new_vendor.address , new_vendor.phonenum, new_vendor.website]
+                       
+                db.query(sql_insert_vendor, insert_user_values, function(err, result){
+                    if(err) throw err;
+                    res.redirect('/register.hbs')
+                } )
+            })
+        })
+    })
+
 });
 
 app.get('/profile/', (req, res) => {
