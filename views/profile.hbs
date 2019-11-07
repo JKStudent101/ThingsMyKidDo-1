@@ -8,6 +8,7 @@
     <link href="/css/menu.css" type="text/css" rel="stylesheet" />
     <link href="/css/Profile.css" type="text/css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
 </head>
 
@@ -185,7 +186,9 @@
                             <div>
                                <form action="/savewishlist/delete" method="post">
                                    <input class='invis' name='eventid' type='text' value={{event_id}}>
-                                   <button type='submit' class="btn btn-danger" onclick="return confirm('Are you sure you want to delete?');">Delete From Wishlist</button> 
+                                   <button type='submit' class="btn btn-danger" onclick="return confirm('Are you sure you want to delete?');">
+                                       Delete From Wishlist
+                                       </button> 
                                </form>
                               
                             </div>
