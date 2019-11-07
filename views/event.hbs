@@ -5,7 +5,7 @@
         {{> bootstrap}}
         <link href="/css/menu.css" type="text/css" rel="stylesheet" />
         <link href="/css/event.css" type="text/css" rel="stylesheet" />
-        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     </head>
 
     <body>
@@ -79,16 +79,15 @@
 <script>
     let message = document.getElementById("sqlstatus").value;
     if (message == "already in wishlist") {
-        swal({
+        Swal.fire({
             text: "This event is already in your wishilsit",
             icon: "error",
         });
     } else if(message == "added in wishlist"){
-        swal({
+        Swal.fire({
             text: "This event is added in your wishilsit",
             icon: "success",
         });
     }
     
 </script>
-
