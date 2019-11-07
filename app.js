@@ -154,25 +154,37 @@ app.get('/profile/', (req, res) => {
     }
 });
 
-app.get('/admin', (req, res) => {
+app.get('/admin', (req,res)=>{
+    if (!req.cookies.i || !req.session.user) {
+        res.redirect('/logout')
+    } else if (req.session.user.user_type != 'admin') {
+        res.redirect('/logout')
+    } else {
+        res.render('admin_home.hbs')
+    }
+});
+
+app.get('/admin/event', (req, res) => {
     // console.log(req.cookies);
     if (!req.cookies.i || !req.session.user) {
         res.redirect('/logout')
     } else if (req.session.user.user_type != 'admin') {
         res.redirect('/logout')
     } else {
-        var sql = 'SELECT a.event_id, d.name as vendor_name, a.description, a.name as event, \n' +
-            'c.name as tag_name, date_format(a.start_date, "%Y/%m/%d") as start_date, date_format(a.end_date, "%Y/%m/%d") as end_date, \n' +
-            'a.isApproved\n' +
+        var sql = 'SELECT a.event_id, d.name as vendor_name, e.email, d.contact_name, a.description, a.name as event_name, a.isApproved, c.name as tag_name, \n' +
+            'concat(a.start_date, \' \', a.start_time) as start_date, concat(a.end_date, \' \', a.end_time) as end_date, a.link as event_link, \n' +
+            'concat(a.address, \', \', a.city) as address\n' +
             'FROM event a\n' +
             'LEFT JOIN event_tags b ON a.event_id = b.event_id\n' +
             'LEFT JOIN tags c ON b.tag_id = c.tag_id\n' +
-            'LEFT JOIN vendor d ON a.vendor_id = d.user_id';
+            'LEFT JOIN vendor d ON a.vendor_id = d.user_id\n'+
+            'left join user e on d.user_id = e.user_id\n'+
+            'ORDER BY vendor_name, a.start_date';
         db.query(sql, (err, result) => {
             if (err) {
                 throw err;
             } else {
-                res.render('admin.hbs', {
+                res.render('admin_event.hbs', {
                     data: result
                 });
             }
@@ -424,7 +436,7 @@ app.post('/edit/:event_id', (req, res) => {
 });
 
 app.get('/test', (req, res) => {
-    res.render('vendor.hbs')
+    res.render('admin_home.hbs')
 });
 
 const saveToDatabase = async (subscription, user_id) => {
@@ -501,7 +513,7 @@ const newEventNotify = async (event_id) => {
                 console.log(err)
                 reject(err)
             } else if (result.length == 0) {
-                console.log("No subscriptions found for " + user_id);
+                // console.log("No subscriptions found for " + user_id);
                 resolve([])
             } else {
                 resolve(result)

@@ -1,0 +1,31 @@
+.add_btn{
+    background: linear-gradient(to right, #9C27B0, #E040FB);
+    margin-bottom: 20px;
+    font-size: 25px;
+    border-color: #E040FB;
+    text-align: center;
+
+}
+
+.form_text{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.btn_container{
+    width: 100%;
+    text-align: center;
+    display: block;
+    margin:100px auto;
+}
+
+a + a {
+    margin-left: 50px;
+}
+
+button.disabled {
+    pointer-events: none;
+    cursor: default;
+    background-color: lightgrey;
+    border-color: lightgrey;
+}
