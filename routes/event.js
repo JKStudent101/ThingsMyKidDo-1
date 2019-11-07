@@ -1,8 +1,6 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
-
 const router = express.Router();
-
 const db = require('./database').init();
 router.use(cookieParser());
 // to /event
@@ -26,16 +24,22 @@ router.get('/', (req, res) => {
 			var data = [];
 			for (var i = 0; i < result.length; i++) {
 				data.push(result[i]);
-				// console.log(i);
 			}
-
-			res.render('event.hbs', {
-				data: result
-			});
-			// res.send(data);
+			var passedVariable = req.query.valid;
+			if (passedVariable){
+				res.render('event.hbs', {
+					data: result,
+					message: passedVariable
+				});
+			}else {
+				res.render('event.hbs', {
+					data: result
+				});
+			}	
+			
+			
 		}
 	});
-	// response.render('event.hbs', {});
 });
 
 // get all events

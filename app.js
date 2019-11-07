@@ -126,8 +126,9 @@ app.get('/profile/', (req, res) => {
             if (result.length > 0) {
                 let wishlist_array = result[0].wishlist.split(",")
                 let sql =
-                    'select e.*, t.name as category from event as e \n' +
+                    'select e.*, t.name as category, v.name as vendorname from event as e \n' +
                     'inner join event_tags as et on e.event_id = et.event_id \n' +
+                    'inner join vendor as v on e.vendor_id = v.user_id \n' +
                     'inner join tags as t on et.tag_id = t.tag_id;';
                 db.query(sql, (err, result) => {
                     if (err) {

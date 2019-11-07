@@ -11,7 +11,8 @@ router.post('/', (req, res) => {
         if (result.length > 0){
             let wishlist_array = result[0].wishlist.split(",")
             if (wishlist_array.includes(String(event_id))){
-                res.redirect('/event');
+                var string = encodeURIComponent('already in wishlist');
+                res.redirect('/event?valid=' + string);
             } else {
                 wishlist_array.push(String(event_id));
                 let wishlist_string = wishlist_array.toString();
@@ -21,7 +22,8 @@ router.post('/', (req, res) => {
                     if(err){
                         console.log(err);
                     }
-                    res.redirect('/event');
+                    var string = encodeURIComponent('added in wishlist');
+                    res.redirect('/event?valid=' + string);
                 });
             }
         } else {
@@ -29,9 +31,11 @@ router.post('/', (req, res) => {
             let insert_array = [user_id, event_id]
             db.query(sql_insert_wishlist, insert_array, (err, result) => {
                 if(err){
-                    console.log(err);
+                    var string = encodeURIComponent('database error');
+                    res.redirect('/event?valid=' + string);
                 }
-                res.redirect('/event');
+                var string = encodeURIComponent('added in wishlist');
+                res.redirect('/event?valid=' + string);
             })
         }
     }); 
