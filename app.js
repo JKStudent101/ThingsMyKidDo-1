@@ -106,15 +106,64 @@ app.post('/login-form', [
     })
 });
 
-app.post('/sign-up-form', (req, res) => {
-    let salt = bcrypt.genSaltSync(saltRounds);
-    let hash = bcrypt.hashSync('password', salt);
-    res.render('not finished')
+app.post('/registerParent', (req, res) => {
+
+    var salt = bcrypt.genSaltSync(saltRounds);
+    var hash = bcrypt.hashSync(req.body.p_pass, salt);
+
+    console.log(req.body)
+    // res.render('not finished')
+
+    
+
+    let multiple_interests1 = (req.body.childProfile[0].interests).split(',');
+    let multiple_interests2 = (req.body.childProfile[1].interests).split(',');
+    let multiple_interests3 = (req.body.childProfile[2].interests).split(',');
+    let new_child1 = {
+        'nickname1': req.body.childProfile[0].nickname,
+        'gender': req.body.childProfile[0].gender,
+        'interest': multiple_interests1
+    }
+    let new_child2 = {
+        'nickname1': req.body.childProfile[1].nickname,
+        'gender': req.body.childProfile[1].gender,
+        'interest': multiple_interests2
+    }
+    let new_child3 = {
+        'nickname1': req.body.childProfile[2].nickname,
+        'gender': req.body.childProfile[2].gender,
+        'interest': multiple_interests3
+    }
+
+    let new_parent_user = {
+        'email': req.body.p_email,
+        'type': req.body.type,
+        'password': hash
+        }
+        console.log(new_parent_user)
+    
+    sql_user = "INSERT INTO user(user_type, email, pass_hash) VALUES (?,?,?)";
+    let input_user_values = [new_parent_user.type, new_parent_user.email, new_parent_user.password]
+    db.query(sql_user, input_user_values, function(err, result){
+        if(err) throw err; else{
+            sql_select_user_parent_type = 'SELECT user_type from user';
+            db.query(sql_select_user_parent_type, new_parent_user.type, function(err, result){
+                sql_user_parent_id = 'SELECT last_insert_id() as parent_id';
+                db.query(sql_user_parent_id, function(err, result){
+                    // let parent_id = result[0].parent_id
+                    // let child_input_values = [parent_id, ]
+                })
+            })
+            
+        }
+    })
+
+    
 })
 
 app.post('/registerVendor', (req, res) => {
     // console.log(req.body)
-    console.log()
+
     var salt = bcrypt.genSaltSync(saltRounds);
     var hash = bcrypt.hashSync(req.body.Password1, salt);
     let new_vendor = {'firstname': req.body.FirstName, 'lastname': req.body.LastName, 'org': req.body.Oraganization, 'phonenum': req.body.PhoneNumber, 'address': req.body.BusAddress, 'email': req.body.EmailAddress, 'website': req.body.Website, 'password': hash, 'type': req.body.type}
@@ -131,8 +180,6 @@ app.post('/registerVendor', (req, res) => {
             db.query(sql_user_id, function(err, result){
                 // console.log(result[0].last_insert_id())
                 let user_id = result[0].user_id
-
-                console.log(user_id)
 
                 let sql_insert_vendor = 'INSERT INTO vendor (user_id, name, contact_name, address, phone_num, website) VALUES (?,?,?,?,?,?) ';
                 

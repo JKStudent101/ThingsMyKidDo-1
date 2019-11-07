@@ -122,12 +122,45 @@
                                   <div class="modal-body container">
                                       <div class="tab" #id="more_children">
                                           {{!-- {{>KidRegister}} --}}
-                                          <p>Mykid1<input class="register-kid" placeholder="Nickname" id="nickname1">is a <span>{{>gender}}</span> who is interested in <input type="text" name='interests' id='interest'></p>
+                                          <p>Mykid1
+                                              <input class="register-kid" placeholder="Nickname1" id="nickname1">
+                                              is a 
+                                            <span class="form-group">
+                                                <select id="gender1" class="register-Gender">
+                                                    <option>Boy</option>
+                                                    <option>Girl</option>
+                                                </select>
+                                            </span>
+                                              who is interested in 
+                                              <input class="register-kid" type="text" name='interest1' id='interest1'>
+                                            </p>
 
-                                          {{!-- <p>Mykid2<input class="register-kid" placeholder="Nickname" name="nickname" id="nickname2">is a <span>{{>gender}}</span> who is interested in {{>interests}}</p>
-                                          <p>Mykid3<input class="register-kid" placeholder="Nickname" name="nickname" id="nickname3">is a <span>{{>gender}}</span> who is interested in<input class="register-kid" placeholder="Interest" name="interest"></p> --}}
-                                          <div class="new_kid"></div>
-                                          <button type="button" id="add_more" name="addmore">Add More</button>
+                                          <p>
+                                              Mykid2
+                                              <input class="register-kid" placeholder="Nickname2" name="nickname2" id="nickname2">
+                                              is a
+                                            <span class="form-group">
+                                                <select id="gender2" class="register-Gender">
+                                                    <option>Boy</option>
+                                                    <option>Girl</option>
+                                                </select>
+                                            </span>
+                                              who is interested in 
+                                              <input class="register-kid" placeholder="Interest" name="interest2" id="interest2">
+                                              </p>
+                                            <p>
+                                              Mykid3
+                                              <input class="register-kid" placeholder="Nickname3" name="nickname3" id="nickname3">
+                                              is a
+                                            <span class="form-group">
+                                                <select id="gender3" class="register-Gender">
+                                                    <option>Boy</option>
+                                                    <option>Girl</option>
+                                                </select>
+                                            </span>
+                                              who is interested in
+                                              <input class="register-kid" placeholder="Interest" name="interest3" id="interest3">
+                                            </p> 
                                       </div>
                                   </div>
                                   <div class="modal-footer">
@@ -359,16 +392,17 @@
         //
         var count = 1;
         var ChildProfile;
+        /*
         $("#add_more").click(function(){
-                var inputs = '<input class="register-kid" type="text" id="nickname'+count+'"> nickname is a <select name="gender" id="gender"><option value="boy">boy</option><option value="girl">girl</option></select> who is interested in <input type="text"> name="interest" id="interest'+ count+'"'     
+                var inputs = '<input class="register-kid" type="text" id="nickname'+count+'"> nickname is a <select name="gender" id="gender"><option value="boy">boy</option><option value="girl">girl</option></select> who is interested in <input type="text"> name="interest'+ count+'" id="interest'+ count+'"'     
                 $('#more_children').append(inputs);
                 count ++;
 
             var childNickname  = $('#nickname\+count').val();
             var childrenGender = $('#Kid-Gender').find(":selected").text();
-            var interestArray = [];
-            var interests = $('#interest\+count').val().split(','); // separate user input of interest into array
-            interestArray.push(interests);
+
+            var interests = $('#interest\+count').val()(','); // separate user input of interest into array
+
 
             ChildProfile = {
                 'nickname': childNickname,
@@ -376,9 +410,11 @@
                 'interests': interests
             }
 
-            console.log(ChildProfile)
+            //console.log(ChildProfile)
 
         })
+
+        */
 
 
         //Register Modal
@@ -387,38 +423,81 @@
         $('#P-Confirm').on('click', function(){
             
             if ($("#customCheck1").is(':checked')){
-            let pEmail = $('#p_email').val();
-            let pPhone = $('#p_phone').val();
-            let pPassword = $('#p_password').val();
-            let pPassword2 = $('#p_password2').val();
-            var ParentRole = $('#Guardian').find(":selected").text();
+                let pEmail = $('#p_email').val();
+                let pPhone = $('#p_phone').val();
+                let pPassword = $('#p_password').val();
+                let pPassword2 = $('#p_password2').val();
+                var ParentRole = $('#Guardian').find(":selected").text();
 
             
             
 
-            
-            
+            var childNickname1  = $('#nickname1').val();
+            var childrenGender1 = $('#gender1').find(":selected").text();
+            var interests1 = $('#interest1').val();
+
+            ChildProfile1 = {
+                'nickname': childNickname1,
+                'gender': childrenGender1,
+                'interests': interests1
+            }
+
+            var childNickname2  = $('#nickname2').val();
+            var childrenGender2 = $('#gender2').find(":selected").text();
+            var interests2 = $('#interest2').val();
+
+             ChildProfile2 = {
+                'nickname': childNickname2,
+                'gender': childrenGender2,
+                'interests': interests2
+            }
+
+            var childNickname3  = $('#nickname3').val();
+            var childrenGender3 = $('#gender3').find(":selected").text();
+            var interests3 = $('#interest3').val();
+
+             ChildProfile3 = {
+                'nickname': childNickname3,
+                'gender': childrenGender3,
+                'interests': interests3
+            }
+
+            let allchild = [ChildProfile1, ChildProfile2, ChildProfile3];
+
             $('#P-Skip').click(function(){
                 $(this).data('clicked', true)
             })
             if($('#P-Skip').data('clicked')){
-                ChildProfile = {
+                allchild = {
                     'nickname': '',
                     'gender': '',
                     'interests': []
                 };
             } 
 
+
+            
             let ParentAccount = {
                 'p_email': pEmail,
                 'p_phone': pPhone,
                 'p_pass': pPassword,
                 'p_pass2': pPassword2,
                 'p_role': ParentRole,
-                'childProfile': ChildProfile    
+                'childProfile': allchild,
+                'type': 'parent'    
                 }            
             ParentDetail = JSON.stringify(ParentAccount);
             console.log(ParentDetail)
+            $.ajax({
+                    url: 'registerParent',
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType:'json',
+                    data: ParentDetail,
+                    success: function(result) {
+                        console.log(result)
+                    }
+                })
 /*
 
 */
