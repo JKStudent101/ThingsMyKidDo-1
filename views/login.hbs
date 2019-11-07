@@ -35,7 +35,7 @@
         </div>
 
         <div>  
-                <form>
+                <form id="">
                   <div class="modal fade" id="Register" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                       <div class="modal-dialog modal-lg">
                           <div class="modal-content">
@@ -49,8 +49,8 @@
                                     </div>
                               </div>
                               <div class="modal-footer">
-                                <button type="button" class="submit1" align="center" data-toggle="modal" id="Family" >Parent</button>
-                                <button type="button" class="submit1" align="center" data-toggle="modal" id="Vendor" >Vendor</button>                
+                                <button type="button" class="submit1" align="center" data-toggle="modal" id="Family" value = 'parent'>Parent</button>
+                                <button type="button" class="submit1" align="center" data-toggle="modal" id="Vendor" value='vendor'>Vendor</button>                
                               </div>
                           </div>
                       </div>
@@ -65,10 +65,10 @@
                                   </div>
                                   <div class="modal-body">
                                       <div class="tab">
-                                          <p><input class="register" placeholder="Username/Email address" name="email"></p>
-                                          <p><input class="register" placeholder="Phone number"  name="phone"></p>
-                                          <p><input class="register" placeholder="Password"  name="pw"></p>
-                                          <p><input class="register" placeholder="Comfirm Password"  name="confirm_pw"></p>
+                                          <p><input class="register" placeholder="Username/Email address" name="email" id='p_email'></p>
+                                          <p><input class="register" placeholder="Phone number"  name="phone" id='p_phone'></p>
+                                          <p><input class="register" placeholder="Password"  name="pw" id='p_password'></p>
+                                          <p><input class="register" placeholder="Comfirm Password"  name="confirm_pw" id='p_password2'></p>
                                       </div>
                                   </div>
                                   <div class="modal-footer">
@@ -119,11 +119,15 @@
                                       <p>If you wish to create your children's profiles after you have created your account, you can skip this step.</p>
                                       <button type="button" class="submit1" id="P-Skip">Skip</button>
                                   </div>
-                                  <div class="modal-body">
-                                      <div class="tab">
-                                          {{>KidRegister}}
-                                          <p>My 2nd kid<input class="register-kid" placeholder="Nickname" name="nickname">is a <span>{{>gender}}</span> who is interested in {{>interests}}</p>
-                                          <p>My kid<input class="register-kid" placeholder="Nickname" name="nickname">is a <span>{{>gender}}</span> who is interested in<input class="register-kid" placeholder="Interest" name="interest"></p>
+                                  <div class="modal-body container">
+                                      <div class="tab" #id="more_children">
+                                          {{!-- {{>KidRegister}} --}}
+                                          <p>Mykid1<input class="register-kid" placeholder="Nickname" id="nickname1">is a <span>{{>gender}}</span> who is interested in <input type="text" name='interests' id='interest'></p>
+
+                                          {{!-- <p>Mykid2<input class="register-kid" placeholder="Nickname" name="nickname" id="nickname2">is a <span>{{>gender}}</span> who is interested in {{>interests}}</p>
+                                          <p>Mykid3<input class="register-kid" placeholder="Nickname" name="nickname" id="nickname3">is a <span>{{>gender}}</span> who is interested in<input class="register-kid" placeholder="Interest" name="interest"></p> --}}
+                                          <div class="new_kid"></div>
+                                          <button type="button" id="add_more" name="addmore">Add More</button>
                                       </div>
                                   </div>
                                   <div class="modal-footer">
@@ -180,6 +184,7 @@
                   </div>
 
               <!-- Business Modal: Method #2 -->
+                <form action="/register" method="POST" >
                   <div class="modal fade" id="Business1" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                           <div class="modal-dialog" style="overflow-y: initial !important">
                               <div class="modal-content">
@@ -276,6 +281,7 @@
                               </div>
                           </div>
                   </div>
+                </form>
 
                   <div class="modal fade" id="Business3" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                           <div class="modal-dialog">
@@ -350,9 +356,76 @@
             $('#Parent5').modal('show');
         });
 
+        //
+        var count = 1;
+        var ChildProfile;
+        $("#add_more").click(function(){
+                var inputs = '<input class="register-kid" type="text" id="nickname'+count+'"> nickname is a <select name="gender" id="gender"><option value="boy">boy</option><option value="girl">girl</option></select> who is interested in <input type="text"> name="interest" id="interest'+ count+'"'     
+                $('#more_children').append(inputs);
+                count ++;
+
+            var childNickname  = $('#nickname\+count').val();
+            var childrenGender = $('#Kid-Gender').find(":selected").text();
+            var interestArray = [];
+            var interests = $('#interest\+count').val().split(','); // separate user input of interest into array
+            interestArray.push(interests);
+
+            ChildProfile = {
+                'nickname': childNickname,
+                'gender': childrenGender,
+                'interests': interests
+            }
+
+            console.log(ChildProfile)
+
+        })
+
+
         //Register Modal
         //set "Continue" button id on click to hide 1st modal and trigger 2nd modal
         //$("#B-Register-info").on( "click",  function Summary_Bus()); 
+        $('#P-Confirm').on('click', function(){
+            
+            if ($("#customCheck1").is(':checked')){
+            let pEmail = $('#p_email').val();
+            let pPhone = $('#p_phone').val();
+            let pPassword = $('#p_password').val();
+            let pPassword2 = $('#p_password2').val();
+            var ParentRole = $('#Guardian').find(":selected").text();
+
+            
+            
+
+            
+            
+            $('#P-Skip').click(function(){
+                $(this).data('clicked', true)
+            })
+            if($('#P-Skip').data('clicked')){
+                ChildProfile = {
+                    'nickname': '',
+                    'gender': '',
+                    'interests': []
+                };
+            } 
+
+            let ParentAccount = {
+                'p_email': pEmail,
+                'p_phone': pPhone,
+                'p_pass': pPassword,
+                'p_pass2': pPassword2,
+                'p_role': ParentRole,
+                'childProfile': ChildProfile    
+                }            
+            ParentDetail = JSON.stringify(ParentAccount);
+            console.log(ParentDetail)
+/*
+
+*/
+            }else{
+                alert("Please argee to our Terms & Conditions.")
+            } 
+        });
         $("#B-Register-info").on( "click",  function() {
             
             var b_Fname = $("#bus_Fname").val();
@@ -367,8 +440,11 @@
 
             if (b_PW != b_PWconfirm) {
                 alert("Passwords do not match!")
-            }
-            else{
+            } else if((b_Phone.length < 10 )|| (b_Phone.length > 10)){
+                alert('incorrect phone number')
+            } else{
+            
+        
                 $('#Business1').modal('hide');
                 $('#Business2').modal('show');
                 $("#Vendor_Fname").text(b_Fname);
@@ -400,26 +476,44 @@
         $("#B-Confirm-info").on( "click", function() {
 
             if ($("#bus_TermCheck").is(':checked')){
-                Bus_Account = {
-                    "First Name": $("#bus_Fname").val(),
-                    "Last Name": $("#bus_Lname").val(),
-                    "Oraganization": $("#bus_Orgname").val(),
-                    "Phone Number": $("#bus_Phone").val(),
-                    "Email Address": $("#bus_Email").val(),
-                    "Website": $("#bus_Website").val(),
-                    "Password": $("#bus_PWconfirm").val()
-                };
 
-                Vendor_Account = JSON.stringify(Bus_Account);
-                console.log(Vendor_Account);
+                Bus_Account = {
+                    
+                    "FirstName": $("#bus_Fname").val(),
+                    "LastName": $("#bus_Lname").val(),
+                    "Oraganization": $("#bus_Orgname").val(),
+                    "PhoneNumber": $("#bus_Phone").val(),
+                     'BusAddress' : $("#bus_Address").val(),
+                    "EmailAddress": $("#bus_Email").val(),
+                    "Website": $("#bus_Website").val(),
+                    "Password1": $("#bus_PW").val(),
+                    "Password2": $("#bus_PWconfirm").val(),
+                    'type': 'vendor'
+                }; 
+                let Vendor_Account = JSON.stringify(Bus_Account);
+               // console.log(Vendor_Account);
                 $('#Business2').modal('hide');
                 $('#Business3').modal('show');
+
+                
+                $.ajax({
+                    url: 'registerVendor',
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType:'json',
+                    data: Vendor_Account,
+                    success: function(result) {
+                        console.log(result)
+                    }
+                })
+
             }
 
             else{
                 alert("Please argee to our Terms & Conditions.")
             }   
         });
+
     </script>    
         
         
