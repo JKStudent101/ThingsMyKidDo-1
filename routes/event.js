@@ -62,9 +62,13 @@ router.get('/getall', (req, res) => {
 
 router.get('/gettags', (req, res) => {
 	let sql =
-		'select DISTINCT t.name as tag from event as e \n' +
-		'inner join event_tags as et on et.event_id = e.event_id \n' +
-		'inner join tags as t on t.tag_id = et.tag_id';
+		'SELECT DISTINCT t.name  \n' +
+		'FROM event e \n' +
+		'INNER JOIN event_tags et \n' +
+		'ON e.event_id = et.event_id \n' +
+		'INNER JOIN tags t\n' +
+		'ON et.tag_id = t.tag_id \n' +
+		'ORDER BY t.name		';
 	db.query(sql, (err, result) => {
 		if (!req.cookies.i) {
 			res.redirect('/login');

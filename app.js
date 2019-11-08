@@ -108,15 +108,14 @@ app.post('/login-form', [
 
 app.post('/registerParent', (req, res) => {
 
-    let errors = [];
-
-
     var salt = bcrypt.genSaltSync(saltRounds);
     var hash = bcrypt.hashSync(req.body.p_pass, salt);
 
     console.log(req.body)
     // res.render('not finished')
+
     
+
     let multiple_interests1 = (req.body.childProfile[0].interests).split(',');
     let multiple_interests2 = (req.body.childProfile[1].interests).split(',');
     let multiple_interests3 = (req.body.childProfile[2].interests).split(',');
@@ -134,7 +133,7 @@ app.post('/registerParent', (req, res) => {
         'nickname1': req.body.childProfile[2].nickname,
         'gender': req.body.childProfile[2].gender,
         'interest': multiple_interests3
-    } 
+    }
 
     let new_parent_user = {
         'email': req.body.p_email,
@@ -149,26 +148,10 @@ app.post('/registerParent', (req, res) => {
         if(err) throw err; else{
             sql_select_user_parent_type = 'SELECT user_type from user';
             db.query(sql_select_user_parent_type, new_parent_user.type, function(err, result){
-                if(err) throw err;
                 sql_user_parent_id = 'SELECT last_insert_id() as parent_id';
                 db.query(sql_user_parent_id, function(err, result){
-                    if(err) throw err;
-                    let parent_id = result[0].parent_id
+                    // let parent_id = result[0].parent_id
                     // let child_input_values = [parent_id, ]
-                    let sql_parent_table = 'INSERT INTO parent(user_id) VALUES (?)'
-                    db.query(sql_parent_table, parent_id, function(err, result){
-                        if(err) throw err;
-                        let sql_child_table = 'INSERT INTO child(child_nickname) VALUES(?)'
-                        let sql_child_values = [new_child1.nickname1]
-                        db.query(sql_child_table, sql_child_values, function(err, result){
-                            let sql_select_child_name = 'SELECT nickname FROM child';
-                            db.query(sql_select_child_name, function(err, result){
-                                if(err) throw err;
-                                
-                            })
-                            res.render('register.hbs')
-                        })
-                    })
                 })
             })
             
