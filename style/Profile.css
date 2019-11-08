@@ -85,3 +85,7 @@ th {
 .invis {
     display: none;
 }
+
+#swal2-content {
+    font-size: large;
+}
