@@ -17,16 +17,18 @@
             <p class="form_text">Welcome {{vendor}}! </p>
             <a href="/addevent" class="btn btn-info add_btn">Add Event</a>
             <div class="row">
-                <div class="col-md-7">
+                <div class="col-md-12">
                     <table class="table table-bordered table-hover">
 
                         <thead>
                         <tr>
                             <td>Event ID</td>
                             <td>Event</td>
+                            <td class="col-md-2">Event Description</td>
                             <td>Start Date</td>
                             <td>End Date</td>
                             <td>Tags</td>
+                            <td>Address</td>
                             <td>Approval status</td>
                             <td>Actions</td>
                         </tr>
@@ -35,10 +37,12 @@
                         {{#each data}}
                         <tr>
                             <td>{{event_id}} </td>
-                            <td>{{event}}</td>
+                            <td>{{event_name}}</td>
+                            <td>{{description}}</td>
                             <td>{{start_date}}</td>
                             <td>{{end_date}}</td>
                             <td>{{tag_name}}</td>
+                            <td>{{address}}</td>
                             <td>{{isApproved}}</td>
                             <td>
                                 {{#ifCond isApproved "Pending"}}
