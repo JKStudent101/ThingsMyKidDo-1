@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
 		'INNER JOIN event_tags et \n' +
 		'ON e.event_id = et.event_id \n' +
 		'INNER JOIN tags t\n' +
-		'ON et.event_id = t.tag_id \n' +
+		'ON et.tag_id = t.tag_id \n' +
 		'ORDER BY t.name		';
 	db.query(sql, (err, result) => {
 		if (!req.cookies.i) {
@@ -26,18 +26,16 @@ router.get('/', (req, res) => {
 				data.push(result[i]);
 			}
 			var passedVariable = req.query.valid;
-			if (passedVariable){
+			if (passedVariable) {
 				res.render('event.hbs', {
 					data: result,
 					message: passedVariable
 				});
-			}else {
+			} else {
 				res.render('event.hbs', {
 					data: result
 				});
-			}	
-			
-			
+			}
 		}
 	});
 });
@@ -68,7 +66,7 @@ router.get('/gettags', (req, res) => {
 		'INNER JOIN event_tags et \n' +
 		'ON e.event_id = et.event_id \n' +
 		'INNER JOIN tags t\n' +
-		'ON et.event_id = t.tag_id \n' +
+		'ON et.tag_id = t.tag_id \n' +
 		'ORDER BY t.name		';
 	db.query(sql, (err, result) => {
 		if (!req.cookies.i) {
@@ -83,12 +81,9 @@ router.get('/gettags', (req, res) => {
 				// console.log(i);
 			}
 
-			res.send(data)
-			
+			res.send(data);
 		}
 	});
 });
-
-
 
 module.exports = router;

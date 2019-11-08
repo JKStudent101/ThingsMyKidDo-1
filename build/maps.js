@@ -1,30 +1,33 @@
 let markers = [];
 let eventMarkers = [];
+
+// initializers
 let coords;
 let marker;
 let map;
-let gmarkers = [];
 let infowindow;
-let filteroption="";
+
+let gmarkers = [];
+let filteroption = '';
 let tags = [];
 let tagsisclicked = [];
 let user_id = null;
 $.ajax({
-	url: '/event/gettags', 
+	url: '/event/gettags',
 	type: 'GET',
 	async: false,
 	dataType: 'json',
-	success: (data) => {	
+	success: (data) => {
 		for (var i = 0; i < data.length; i++) {
 			tags.push(data[i].name);
 		}
 	}
-})
+});
 
 function initMap() {
 	// Map options
 	let options = {
-		zoom: 7,
+		zoom: 9,
 		// center: { lat: 49.4928, lng: -117.2948 },
 
 		mapTypeControlOptions: {
@@ -148,40 +151,83 @@ function initMap() {
 
 	// info initialize
 	infoWindow = new google.maps.InfoWindow({});
-	
+
 	// load events on search button click event
 	$('#getData').click((e) => {
 		e.preventDefault();
-		let tagsisclicked=[]
+		let tagsisclicked = [];
 		// get user input event or all event
 		let tagOption = $('#searchOption').val(); // hockey
 		let userInput = $('#SearchBar').val().toLowerCase(); // eventname
-		
+
 		for (var i = 0; i < tags.length; i++) {
-			if($("#"+tags[i]+"").prop('checked')){
+			if ($('#' + tags[i] + '').prop('checked')) {
 				tagsisclicked.push(tags[i]);
 			}
 		}
-		
+
 		const requestAll = '/event/getall';
-		switch(userInput){
-			case "":
-				if($('#allevents').prop('checked')){
-					filteroption = "getallE";
-				} 
-				else{
-					filteroption = "getOneTag";
+		switch (userInput) {
+			case '':
+				if ($('#allevents').prop('checked')) {
+					filteroption = 'getallE';
+				} else {
+					filteroption = 'getOneTag';
 				}
 				break;
 
 			default:
-				if($('#allevents').prop('checked')){
-					filteroption = "getWithKeyW";
+				if ($('#allevents').prop('checked')) {
+					filteroption = 'getWithKeyW';
 				} else {
-					filteroption = "getWithKey&Tag";
+					filteroption = 'getWithKey&Tag';
 				}
-				
-				
+		}
+		let iContent;
+		let infoTitleLink;
+
+		function addDetails(infodetail, markersarray) {
+			/* 
+				adds information on window and info window
+				arguments:
+					infodetails : event object from data
+					markers: adds properties to the markers for display
+			*/
+			infoTitleLink =
+				'<a href="' + infodetail.link + ' " target="_blank">' + infodetail.name + '</a>';
+			iContent = infoTitleLink + '<p>' + infodetail.description + '</p>';
+			$('#events').append(
+				'<div id="details" >' +
+					"<form action='/savewishlist' method='post'><span>" +
+					'<h3>' +
+					// v.name
+					infoTitleLink +
+					'</h3>' +
+					"<input class='invis' name='eventid' type='text' value=" +
+					infodetail.event_id +
+					'>' +
+					'<p>' +
+					infodetail.description +
+					'</p>' +
+					'<p>' +
+					'Start date \n' +
+					infodetail.start_date +
+					'</p>' +
+					'<p>' +
+					'end date \n' +
+					infodetail.end_date +
+					'</p>' +
+					'</span>' +
+					"<button type='submit'>add to wishlist </button></form>" +
+					'</div>'
+			);
+			markersarray.push({
+				content: iContent,
+				coords: {
+					lat: parseFloat(infodetail.lat),
+					lng: parseFloat(infodetail.lng)
+				}
+			});
 		}
 
 		$.ajax({
@@ -190,96 +236,33 @@ function initMap() {
 			async: false,
 			dataType: 'json',
 			success: (data) => {
-				
 				$('#events').empty();
-				if (filteroption == "getallE") {
+				if (filteroption == 'getallE') {
 					if (gmarkers.length > 0) {
 						removeMarkers();
 					}
 					$.map(data, function(value, i) {
-						$('#events').append(
-							"<form action='/savewishlist' method='post'><span>" +
-								'<h3>' +
-								// v.name
-								value.name +
-								'</h3>' +
-								"<input class='invis' name='eventid' type='text' value=" + value.event_id + ">" +
-								'<p>' +
-								value.description +
-								'</p>' +
-								'</span>' +
-								"<button type='submit'>add to wishlist </button></form>"
-						);						// push event vlaues into the markers
-						markers.push({
-							content: value.description,
-							coords: {
-								lat: parseFloat(value.lat),
-								lng: parseFloat(value.lng)
-							}
-						});
-						
+						// push event vlaues into the markers
+						addDetails(value, markers);
 					});
-				}
-				else if(filteroption== "getOneTag") {
+				} else if (filteroption == 'getOneTag') {
 					if (gmarkers.length > 0) {
 						removeMarkers();
 					}
 					$.map(data, function(value, i) {
 						for (var i = 0; i < tagsisclicked.length; i++) {
 							if (tagsisclicked[i] == value.category) {
-								$('#events').append(
-									"<form action='/savewishlist' method='post'><span>" +
-									'<h3>' +
-									// v.name
-									value.name +
-									'</h3>' +
-									"<input class='invis' name='eventid' type='text' value=" + value.event_id + ">" +
-									'<p>' +
-									value.description +
-									'</p>' +
-									'</span>' +
-									"<button type='submit'>add to wishlist </button></form>"
-								);
-								markers.push({
-									content: value.description,
-									coords: {
-										lat: parseFloat(value.lat),
-										lng: parseFloat(value.lng)
-									}
-								});
-								
+								addDetails(value, markers);
 							}
 						}
 					});
-
-				}
-				else if (filteroption== "getWithKeyW") {
+				} else if (filteroption == 'getWithKeyW') {
 					if (gmarkers.length > 0) {
 						removeMarkers();
 					}
 					$.map(data, function(value, i) {
 						if (value.name.toLowerCase().includes(userInput)) {
-							$('#events').append(
-								"<form action='/savewishlist' method='post'><span>" +
-								'<h3>' +
-								// v.name
-								value.name +
-								'</h3>' +
-								"<input class='invis' name='eventid' type='text' value=" + value.event_id + ">" +
-								'<p>' +
-								value.description +
-								'</p>' +
-								'</span>' +
-								"<button type='submit'>add to wishlist </button></form>"
-							);
-							markers.push({
-								content: value.description,
-								coords: {
-									lat: parseFloat(value.lat),
-									lng: parseFloat(value.lng)
-								}
-							});
-							
+							addDetails(value, markers);
 						}
 					});
 				} else {
@@ -288,49 +271,25 @@ function initMap() {
 					}
 					$.map(data, function(value, i) {
 						for (var i = 0; i < tagsisclicked.length; i++) {
-							if (tagsisclicked[i] == value.category && value.name.toLowerCase().includes(userInput)) {
-								$('#events').append(
-									"<form action='/savewishlist' method='post'><span>" +
-									'<h3>' +
-									// v.name
-									value.name +
-									'</h3>' +
-									"<input class='invis' name='eventid' type='text' value=" + value.event_id + ">" +
-									'<p>' +
-									value.description +
-									'</p>' +
-									'</span>' +
-									"<button type='submit'>add to wishlist </button></form>"
-								);
-								
-								markers.push({
-									content: value.description,
-									coords: {
-										lat: parseFloat(value.lat),
-										lng: parseFloat(value.lng)
-									}
-								});
+							if (
+								tagsisclicked[i] == value.category &&
+								value.name.toLowerCase().includes(userInput)
+							) {
+								addDetails(value, markers);
 								// add all events to the marker
 							}
-
 						}
 					});
 				}
 				for (let i = 0; i < markers.length; i++) {
 					// Add markers
-						addMarker(markers[i]);
+					addMarker(markers[i]);
 				}
 			}
 		});
-		
+
 		markers = [];
 
-		function addEventstoMarkers(eventarray) {
-			for (let i = 0; i < eventar.length; i++) {
-				// Add markers
-				addMarker(markers[i]);
-			}
-		}
 		// remove global gmarker array
 		function removeMarkers() {
 			for (i = 0; i < gmarkers.length; i++) {
@@ -364,17 +323,12 @@ function initMap() {
 
 			// Check content
 			if (props.content) {
-				// infoWindow = new google.maps.InfoWindow({
-				// 	content: props.content
-				// });
-				// console.log(infoWindow);
 				marker.addListener('click', function() {
 					infoWindow.setContent(marker.content);
 					infoWindow.open(map, marker);
 				});
 			}
 		}
-		
 	});
 
 	if (navigator.geolocation) {

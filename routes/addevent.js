@@ -32,7 +32,7 @@ router.post('/', (req, res) => {
         let address = req.body.address.trim();
         let city = req.body.city.trim();
         let province = req.body.province;
-        let admin_id = 1;
+        // let admin_id = 0;
         let formed_address = address.replace(/ /g, "+");
         let search_string = "https://maps.googleapis.com/maps/api/geocode/json?address="+formed_address+",+"+city+",+"+province+"&key=AIzaSyAN6q6jOWczlbNgBPd_ljm857YUqpyIoVU";
         let user_id = req.session.user.user_id;
@@ -65,7 +65,7 @@ router.post('/', (req, res) => {
             var lat = geores['lat'];
             var lng = geores['lng'];
             let inputs = [
-                admin_id,
+                // admin_id,
                 user_id,
                 description,
                 eventname,
@@ -83,7 +83,7 @@ router.post('/', (req, res) => {
                 tag,
             ];
 
-            var sql_insert = "INSERT INTO event(admin_id, vendor_id, description, name, start_time, end_time, start_date, end_date, isApproved, lng, lat, address, city, province, link) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" ;
+            var sql_insert = "INSERT INTO event(vendor_id, description, name, start_time, end_time, start_date, end_date, isApproved, lng, lat, address, city, province, link) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)" ;
                 db.query(sql_insert, inputs, (err, result) => {
                 if (err) {
                     throw err;
