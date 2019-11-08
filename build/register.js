@@ -119,6 +119,8 @@ $('#P-Confirm').on('click', function(){
         alert("Please argee to our Terms & Conditions.")
     } 
 });
+
+//Button for displaying Vendor info
 $("#B-Register-info").on( "click",  function() {
     
     var b_Fname = $("#bus_Fname").val();
@@ -154,14 +156,6 @@ $("#B-Register-info").on( "click",  function() {
 //set "Back" button id on click to hide 2nd modal and trigger 1st modal
 //jquery: .empty() might be redundant
 $("#B-Redo-info").on( "click", function() {
-    $("#Vendor_Fname").empty();
-    $("#Vendor_Lname").empty();
-    $("#Vendor_Org").empty();
-    $("#Vendor_Address").empty();
-    $("#Vendor_Phone").empty();
-    $("#Vendor_Email").empty();
-    $("#Vendor_Website").empty();
-
     $('#Business2').modal('hide');
     $('#Business1').modal('show');
 });
@@ -205,5 +199,32 @@ $("#B-Confirm-info").on( "click", function() {
     else{
         alert("Please argee to our Terms & Conditions.")
     }   
+});
+
+$("#B-Register-complete").on("click", function(){
+    $("#bus_Fname").val("");
+    $("#bus_Lname").val("");
+    $("#bus_Orgname").val("");
+    $("#bus_Address").val("");
+    $("#bus_Phone").val("");
+    $("#bus_Email").val("");
+    $("#bus_Website").val("");
+    $("#bus_PW").val("");
+    $("#bus_PWconfirm").val("");
+    $("#bus_TermCheck").prop('checked',false)
+});
+
+
+$(".close").on("click", function(){
+    $("#bus_Fname").val("");
+    $("#bus_Lname").val("");
+    $("#bus_Orgname").val("");
+    $("#bus_Address").val("");
+    $("#bus_Phone").val("");
+    $("#bus_Email").val("");
+    $("#bus_Website").val("");
+    $("#bus_PW").val("");
+    $("#bus_PWconfirm").val("");
+    $("#bus_TermCheck").prop('checked',false);
 });
 
