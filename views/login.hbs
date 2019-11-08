@@ -122,12 +122,47 @@
                                   <div class="modal-body container">
                                       <div class="tab" #id="more_children">
                                           {{!-- {{>KidRegister}} --}}
-                                          <p>Mykid1<input class="register-kid" placeholder="Nickname" id="nickname1">is a <span>{{>gender}}</span> who is interested in <input type="text" name='interests' id='interest'></p> 
-                                            {{!--<span name='interests' id='interest'>{{<interests}}</span>.--}} 
-                                          {{!-- <p>Mykid2<input class="register-kid" placeholder="Nickname" name="nickname" id="nickname2">is a <span>{{>gender}}</span> who is interested in {{>interests}}</p> --}}
-                                          <p>Mykid3<input class="register-kid" placeholder="Nickname" name="nickname3" id="nickname3">is a <span>{{>gender}}</span> who is interested in<input class="register-kid" placeholder="Interest" name="interest"></p> 
-                                          <div class="new_kid"></div>
-                                          <button type="button" id="add_more" name="addmore">Add More</button>
+                                         
+                                          <p>Mykid1
+                                              <input class="register-kid" placeholder="Nickname1" id="nickname1">
+                                              is a 
+                                            <span class="form-group">
+                                                <select id="gender1" class="register-Gender">
+                                                    <option>Boy</option>
+                                                    <option>Girl</option>
+                                                </select>
+                                            </span>
+                                              who is interested in 
+                                              <input class="register-kid" type="text" name='interest1' id='interest1'>
+                                            </p>
+                                            <span style=""><button type="button" class="glyphicon glyphicon-remove" id="delete" name="delete" onclick="DeleteRow()"></button></span>
+
+                                          <p>
+                                              Mykid2
+                                              <input class="register-kid" placeholder="Nickname2" name="nickname2" id="nickname2">
+                                              is a
+                                            <span class="form-group">
+                                                <select id="gender2" class="register-Gender">
+                                                    <option>Boy</option>
+                                                    <option>Girl</option>
+                                                </select>
+                                            </span>
+                                              who is interested in 
+                                              <input class="register-kid" placeholder="Interest" name="interest2" id="interest2">
+                                              </p>
+                                            <p>
+                                              Mykid3
+                                              <input class="register-kid" placeholder="Nickname3" name="nickname3" id="nickname3">
+                                              is a
+                                            <span class="form-group">
+                                                <select id="gender3" class="register-Gender">
+                                                    <option>Boy</option>
+                                                    <option>Girl</option>
+                                                </select>
+                                            </span>
+                                              who is interested in
+                                              <input class="register-kid" placeholder="Interest" name="interest3" id="interest3">
+                                            </p> 
                                       </div>
                                   </div>
                                   <div class="modal-footer">
@@ -305,6 +340,8 @@
             </div>  
 
         <script src="/scripts/register.js"></script>    
+
+       
         
         
         

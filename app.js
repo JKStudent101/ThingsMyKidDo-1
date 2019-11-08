@@ -106,15 +106,64 @@ app.post('/login-form', [
     })
 });
 
-app.post('/sign-up-form', (req, res) => {
-    let salt = bcrypt.genSaltSync(saltRounds);
-    let hash = bcrypt.hashSync('password', salt);
-    res.render('not finished')
+app.post('/registerParent', (req, res) => {
+
+    var salt = bcrypt.genSaltSync(saltRounds);
+    var hash = bcrypt.hashSync(req.body.p_pass, salt);
+
+    console.log(req.body)
+    // res.render('not finished')
+
+    
+
+    let multiple_interests1 = (req.body.childProfile[0].interests).split(',');
+    let multiple_interests2 = (req.body.childProfile[1].interests).split(',');
+    let multiple_interests3 = (req.body.childProfile[2].interests).split(',');
+    let new_child1 = {
+        'nickname1': req.body.childProfile[0].nickname,
+        'gender': req.body.childProfile[0].gender,
+        'interest': multiple_interests1
+    }
+    let new_child2 = {
+        'nickname1': req.body.childProfile[1].nickname,
+        'gender': req.body.childProfile[1].gender,
+        'interest': multiple_interests2
+    }
+    let new_child3 = {
+        'nickname1': req.body.childProfile[2].nickname,
+        'gender': req.body.childProfile[2].gender,
+        'interest': multiple_interests3
+    }
+
+    let new_parent_user = {
+        'email': req.body.p_email,
+        'type': req.body.type,
+        'password': hash
+        }
+        console.log(new_parent_user)
+    
+    sql_user = "INSERT INTO user(user_type, email, pass_hash) VALUES (?,?,?)";
+    let input_user_values = [new_parent_user.type, new_parent_user.email, new_parent_user.password]
+    db.query(sql_user, input_user_values, function(err, result){
+        if(err) throw err; else{
+            sql_select_user_parent_type = 'SELECT user_type from user';
+            db.query(sql_select_user_parent_type, new_parent_user.type, function(err, result){
+                sql_user_parent_id = 'SELECT last_insert_id() as parent_id';
+                db.query(sql_user_parent_id, function(err, result){
+                    // let parent_id = result[0].parent_id
+                    // let child_input_values = [parent_id, ]
+                })
+            })
+            
+        }
+    })
+
+    
 })
 
 app.post('/registerVendor', (req, res) => {
     // console.log(req.body)
-    console.log()
+
     var salt = bcrypt.genSaltSync(saltRounds);
     var hash = bcrypt.hashSync(req.body.Password1, salt);
     let new_vendor = {'firstname': req.body.FirstName, 'lastname': req.body.LastName, 'org': req.body.Oraganization, 'phonenum': req.body.PhoneNumber, 'address': req.body.BusAddress, 'email': req.body.EmailAddress, 'website': req.body.Website, 'password': hash, 'type': req.body.type}
@@ -131,8 +180,6 @@ app.post('/registerVendor', (req, res) => {
             db.query(sql_user_id, function(err, result){
                 // console.log(result[0].last_insert_id())
                 let user_id = result[0].user_id
-
-                console.log(user_id)
 
                 let sql_insert_vendor = 'INSERT INTO vendor (user_id, name, contact_name, address, phone_num, website) VALUES (?,?,?,?,?,?) ';
                 
@@ -186,25 +233,37 @@ app.get('/profile/', (req, res) => {
     }
 });
 
-app.get('/admin', (req, res) => {
+app.get('/admin', (req,res)=>{
+    if (!req.cookies.i || !req.session.user) {
+        res.redirect('/logout')
+    } else if (req.session.user.user_type != 'admin') {
+        res.redirect('/logout')
+    } else {
+        res.render('admin_home.hbs')
+    }
+});
+
+app.get('/admin/event', (req, res) => {
     // console.log(req.cookies);
     if (!req.cookies.i || !req.session.user) {
         res.redirect('/logout')
     } else if (req.session.user.user_type != 'admin') {
         res.redirect('/logout')
     } else {
-        var sql = 'SELECT a.event_id, d.name as vendor_name, a.description, a.name as event, \n' +
-            'c.name as tag_name, date_format(a.start_date, "%Y/%m/%d") as start_date, date_format(a.end_date, "%Y/%m/%d") as end_date, \n' +
-            'a.isApproved\n' +
+        var sql = 'SELECT a.event_id, d.name as vendor_name, e.email, d.contact_name, a.description, a.name as event_name, a.isApproved, c.name as tag_name, \n' +
+            'concat(a.start_date, \' \', a.start_time) as start_date, concat(a.end_date, \' \', a.end_time) as end_date, a.link as event_link, \n' +
+            'concat(a.address, \', \', a.city) as address\n' +
             'FROM event a\n' +
             'LEFT JOIN event_tags b ON a.event_id = b.event_id\n' +
             'LEFT JOIN tags c ON b.tag_id = c.tag_id\n' +
-            'LEFT JOIN vendor d ON a.vendor_id = d.user_id';
+            'LEFT JOIN vendor d ON a.vendor_id = d.user_id\n'+
+            'left join user e on d.user_id = e.user_id\n'+
+            'ORDER BY vendor_name, a.start_date';
         db.query(sql, (err, result) => {
             if (err) {
                 throw err;
             } else {
-                res.render('admin.hbs', {
+                res.render('admin_event.hbs', {
                     data: result
                 });
             }
@@ -218,8 +277,8 @@ app.post('/approve-event', (req, res) => {
     } else {
         console.log('approving')
         let event_id = req.body.id
-        let sql = "UPDATE event SET isApproved = 'Approved' WHERE event_id = ?";
-        db.query(sql, event_id, async (err, result) => {
+        let sql = "UPDATE event SET isApproved = 'Approved', admin_id =? WHERE event_id = ?";
+        db.query(sql, [req.session.user.user_id,event_id] , async (err, result) => {
             if (err) {
                 throw err;
             } else {
@@ -230,6 +289,8 @@ app.post('/approve-event', (req, res) => {
         });
     }
 });
+
+
 
 app.get('/vendor/:vendor_id', (req, res) => {
     if (!req.cookies.i || !req.session.user) {
@@ -251,8 +312,8 @@ app.get('/vendor/:vendor_id', (req, res) => {
                     } else {
                         var tags_list = result;
 
-                        var sql = 'SELECT a.event_id, d.name as vendor_name, a.description, a.name as event, \n' +
-                            'GROUP_CONCAT(c.name SEPARATOR \', \') as tag_name , date_format(a.start_date, "%Y/%m/%d") as start_date, date_format(a.end_date, "%Y/%m/%d") as end_date, \n' +
+                        var sql = 'SELECT a.event_id, d.name as vendor_name, a.description, a.name as event_name, concat(a.address, \', \', a.city) as address, \n' +
+                            'GROUP_CONCAT(c.name SEPARATOR \', \') as tag_name , concat(a.start_date, \' \', a.start_time) as start_date, concat(a.end_date, \' \', a.end_time) as end_date, \n' +
                             'a.isApproved\n' +
                             'FROM event a\n' +
                             'LEFT JOIN event_tags b ON a.event_id = b.event_id\n' +
@@ -284,7 +345,7 @@ app.get('/vendor/:vendor_id', (req, res) => {
 app.get('/delete/:event_id', (req, res) => {
     if (!req.cookies.i || !req.session.user) {
         res.redirect('/logout')
-    } else if (req.session.user.user_type != 'vendor') {
+    } else if ((req.session.user.user_type != 'vendor') && (req.session.user.user_type != 'admin')) {
         res.redirect('/logout')
     } else {
         var sql_delete_tag = 'delete from event_tags where event_id = ?';
@@ -298,7 +359,12 @@ app.get('/delete/:event_id', (req, res) => {
                         throw err;
                     } else {
                         // console.log(req.session.user.user_id);
-                        res.redirect('/vendor/' + req.session.user.user_id);
+                        if (req.session.user.user_type == 'vendor'){
+                            res.redirect('/vendor/' + req.session.user.user_id);
+                        } else if (req.session.user.user_type == 'admin'){
+                            res.redirect('/admin/event');
+                        }
+
                     }
                 });
             }
@@ -309,7 +375,7 @@ app.get('/delete/:event_id', (req, res) => {
 app.get('/edit/:event_id', (req, res) => {
     if (!req.cookies.i || !req.session.user) {
         res.redirect('/logout')
-    } else if (req.session.user.user_type != 'vendor') {
+    } else if ((req.session.user.user_type != 'vendor') && (req.session.user.user_type != 'admin')) {
         res.redirect('/logout')
     } else {
         var sql_tags = 'select name from tags';
@@ -328,7 +394,7 @@ app.get('/edit/:event_id', (req, res) => {
                     if (err) {
                         throw err;
                     } else {
-                        // console.log(result[0].start_time);
+                        // console.log(result[0].start_date.toISOString().split('T')[0]);
                         res.render('editevent.hbs', {
                             data: result[0],
                             start_date: result[0].start_date.toISOString().split('T')[0],
@@ -410,7 +476,11 @@ app.post('/edit/:event_id', (req, res) => {
                                 if (err) {
                                     throw err;
                                 }else{
-                                    res.redirect('/vendor/' + req.session.user.user_id);
+                                    if (req.session.user.user_type == 'vendor'){
+                                        res.redirect('/vendor/' + req.session.user.user_id);
+                                    } else if (req.session.user.user_type == 'admin'){
+                                        res.redirect('/admin/event');
+                                    }
                                 }
                             })
                         }
@@ -456,7 +526,7 @@ app.post('/edit/:event_id', (req, res) => {
 });
 
 app.get('/test', (req, res) => {
-    res.render('vendor.hbs')
+    res.render('admin_event.hbs')
 });
 
 const saveToDatabase = async (subscription, user_id) => {
@@ -533,7 +603,7 @@ const newEventNotify = async (event_id) => {
                 console.log(err)
                 reject(err)
             } else if (result.length == 0) {
-                console.log("No subscriptions found for " + user_id);
+                // console.log("No subscriptions found for " + user_id);
                 resolve([])
             } else {
                 resolve(result)
