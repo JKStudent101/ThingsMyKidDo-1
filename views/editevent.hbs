@@ -6,7 +6,8 @@
     <link href="/css/menu.css" type="text/css" rel="stylesheet" />
     <link href="/css/vendor.css" type="text/css" rel="stylesheet" />
 
-    <script src="/scripts/vendor.js"></script>
+
+
     <script>
         if ({{isError}}) {
             alert("{{error}}")
@@ -22,7 +23,7 @@
 <div class="col-md-12">
 
 <p class="text-center form_text">Event Form</p>
-<form class="form-horizontal" method="POST" action="/edit/{{data.event_id}}">
+<form name = "add-form" class="form-horizontal" method="POST" action="/edit/{{data.event_id}}" onsubmit="return add_validation()">
     <div class="form-group">
         <label class="col-xs-3 control-label"><b>Event id</b></label>
         <div class="col-xs-7">
@@ -124,5 +125,6 @@
 </form>
 </div>
 </body>
+</html>
 
-
+<script src="/scripts/vendor.js"></script>
