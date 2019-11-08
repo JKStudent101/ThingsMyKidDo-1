@@ -19,11 +19,11 @@
     margin:100px auto;
 }
 
-a + a {
+.btns > a + a {
     margin-left: 50px;
 }
 
-button.disabled {
+a.disabled {
     pointer-events: none;
     cursor: default;
     background-color: lightgrey;
