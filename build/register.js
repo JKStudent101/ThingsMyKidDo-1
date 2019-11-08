@@ -10,8 +10,21 @@ $("#Vendor").on( "click", function() {
 //Parent Modal
 //set "Continue" button id on click to hide 1st modal and trigger 2nd modal
 $("#P-Account").on( "click", function() {
+    var P_Email = $('#p_email').val();
+    var P_Phone = $('#p_phone').val();
+    var P_PW = $('#p_password').val();
+    var P_PWConfirm = $('#p_confirm_pw').val();
+    
+    if (P_PW != P_PWConfirm) {
+        alert("Passwords do not match!")
+    } else {
+    
+    $('#Parent_Email').html(P_Email);
+    $('#Parent_Phone').html(P_Phone);
+
     $('#Parent1').modal('hide');
     $('#Parent2').modal('show');
+    }
 });
 //set "Register" button id on click to load input + hide 2nd modal, and trigger 3rd modal
 $("#P-Redo-Account").on( "click", function() {
@@ -20,8 +33,14 @@ $("#P-Redo-Account").on( "click", function() {
 });
 //set "Back" button id on click to hide 3rd modal and trigger 2nd modal
 $("#P-User").on( "click", function() {
+    var Parent_Role = $('#Guardian').find(":selected").text();
+
+    $('#Parent_Role').html(Parent_Role);
+
     $('#Parent2').modal('hide');
     $('#Parent3').modal('show');
+
+
 });
 //set "Back" button id on click to hide 2nd modal and trigger 1st modal
 $("#P-Redo-User").on( "click", function() {
@@ -30,6 +49,13 @@ $("#P-Redo-User").on( "click", function() {
 });
 //set "Skip" button id on click to hide 2nd modal and trigger 3rd modal
 $("#P-Skip").on( "click", function() {
+
+    var ChildProfile = {
+        'nickname': '',
+        'gender': '',
+        'interests': []
+    };
+
     $('#Parent3').modal('hide');
     $('#Parent4').modal('show');
 });
@@ -80,42 +106,33 @@ $("#add_more").click(function(){
 $('#P-Confirm').on('click', function(){
     
     if ($("#customCheck1").is(':checked')){
-    let pEmail = $('#p_email').val();
-    let pPhone = $('#p_phone').val();
-    let pPassword = $('#p_password').val();
-    let pPassword2 = $('#p_password2').val();
-    var ParentRole = $('#Guardian').find(":selected").text();
 
-    
-    
-
-    
-    
-    $('#P-Skip').click(function(){
-        $(this).data('clicked', true)
-    })
-    if($('#P-Skip').data('clicked')){
-        ChildProfile = {
-            'nickname': '',
-            'gender': '',
-            'interests': []
-        };
-    } 
-
-    let ParentAccount = {
-        'p_email': pEmail,
-        'p_phone': pPhone,
-        'p_pass': pPassword,
-        'p_pass2': pPassword2,
-        'p_role': ParentRole,
-        'childProfile': ChildProfile    
-        }            
-    ParentDetail = JSON.stringify(ParentAccount);
-    console.log(ParentDetail)
+/*
+        $('#P-Skip').click(function(){
+            $(this).data('clicked', true)
+        })
+        if($('#P-Skip').data('clicked')){
+            ChildProfile = {
+                'nickname': '',
+                'gender': '',
+                'interests': []
+            };
+        } 
+*/
+        let ParentAccount = {
+            'p_email': P_Email,
+            'p_phone': P_Phone,
+            'p_pass': P_Password,
+            'p_pass2': P_Password2,
+            'p_role': Parent_Role,
+            'childProfile': ChildProfile    
+            }            
+        ParentDetail = JSON.stringify(ParentAccount);
+        console.log(ParentDetail)
 /*
 
 */
-    }else{
+    } else{
         alert("Please argee to our Terms & Conditions.")
     } 
 });
@@ -138,10 +155,9 @@ $("#B-Register-info").on( "click",  function() {
     } else if((b_Phone.length < 10 )|| (b_Phone.length > 10)){
         alert('incorrect phone number')
     } else{
-    
-
         $('#Business1').modal('hide');
         $('#Business2').modal('show');
+
         $("#Vendor_Fname").text(b_Fname);
         $("#Vendor_Lname").html(b_Lname);
         $("#Vendor_Org").html(b_Org);
@@ -215,7 +231,7 @@ $("#B-Register-complete").on("click", function(){
 });
 
 
-$(".close").on("click", function(){
+$(".B-clear").on("click", function(){
     $("#bus_Fname").val("");
     $("#bus_Lname").val("");
     $("#bus_Orgname").val("");
@@ -226,5 +242,13 @@ $(".close").on("click", function(){
     $("#bus_PW").val("");
     $("#bus_PWconfirm").val("");
     $("#bus_TermCheck").prop('checked',false);
+});
+
+$(".P-clear").on("click", function(){
+    $("#p_email").val("");
+    $("#p_phone").val("");
+    $("#p_password").val("");
+    $("#p_confirm_pw").val("");
+    $('select').prop('selectedindex',0);
 });
 

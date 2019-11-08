@@ -60,15 +60,15 @@
                           <div class="modal-dialog">
                               <div class="modal-content">
                                   <div class="modal-header">
-                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                      <button type="button" class="close P-clear" data-dismiss="modal">&times;</button>
                                       <h4 class="modal-title">Create Account</h4>
                                   </div>
                                   <div class="modal-body">
                                       <div class="tab">
-                                          <p><input class="register" placeholder="Username/Email address" name="email" id='p_email'></p>
+                                          <p><input class="register" placeholder="Email address" name="email" id='p_email'></p>
                                           <p><input class="register" placeholder="Phone number"  name="phone" id='p_phone'></p>
                                           <p><input class="register" placeholder="Password"  name="pw" id='p_password'></p>
-                                          <p><input class="register" placeholder="Comfirm Password"  name="confirm_pw" id='p_password2'></p>
+                                          <p><input class="register" placeholder="Comfirm Password"  name="confirm_pw" id='p_confirm_pw'></p>
                                       </div>
                                   </div>
                                   <div class="modal-footer">
@@ -82,7 +82,7 @@
                           <div class="modal-dialog">
                               <div class="modal-content">
                                   <div class="modal-header">
-                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                      <button type="button" class="close P-clear" data-dismiss="modal">&times;</button>
                                       <h4 class="modal-title">Create Account</h4>
                                   </div>
                                   <div class="modal-body">
@@ -91,7 +91,8 @@
                                           <p>"I'm an awesome 
                                               <span>
                                                     <form>
-                                                        <select id="Guardian" class="guardian">
+                                                        <select class="guardian" id="Guardian">
+                                                            <option> </option>
                                                             <option>Mom</option>
                                                             <option>Dad</option>
                                                             <option>Relative</option>
@@ -114,7 +115,7 @@
                           <div class="modal-dialog modal-lg">
                               <div class="modal-content">
                                   <div class="modal-header">
-                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                      <button type="button" class="close P-clear" data-dismiss="modal">&times;</button>
                                       <h4 class="modal-title">Children Profiles (optional)</h4>
                                       <p>If you wish to create your children's profiles after you have created your account, you can skip this step.</p>
                                       <button type="button" class="submit1" id="P-Skip">Skip</button>
@@ -177,12 +178,32 @@
                           <div class="modal-dialog">
                               <div class="modal-content">
                                   <div class="modal-header">
-                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                      <button type="button" class="close P-clear" data-dismiss="modal">&times;</button>
                                       <h4 class="modal-title">Confirm Account Info</h4>
                                   </div>
                                   <div class="modal-body">
                                       <div class="tab">
                                           <p>Parent Account</p>
+                                          <form class="form-horizontal pf">
+                                                <div class="form-group" style="margin-left:10px">
+                                                    <label class="control-label" >Email Address</label>
+                                                    <div>
+                                                        <p class="form-control-static" id="Parent_Email"></p>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group" style="margin-left:10px">
+                                                    <label class=" control-label" >Phone Number</label>
+                                                    <div class="">
+                                                        <p class="form-control-static" id="Parent_Phone"></p>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group" style="margin-left:10px">
+                                                    <label class="control-label">Relationship to child</label>
+                                                    <div class="">
+                                                        <p class="form-control-static" id="Parent_Role"></p>
+                                                    </div>
+                                                </div>
+                                          </form>
                                           <p>Children list</p>
                                       </div>
                                       <hr class="my-2">
@@ -224,7 +245,7 @@
                           <div class="modal-dialog" style="overflow-y: initial !important">
                               <div class="modal-content">
                                   <div class="modal-header">
-                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                      <button type="button" class="close B-clear" data-dismiss="modal">&times;</button>
                                       <h4 class="modal-title">Create Account</h4>
                                   </div>
                                   <div class="modal-body" id="B-1" style="max-height: calc(100vh - 200px); overflow-y: auto;">
@@ -237,7 +258,7 @@
                                           <p><input class="register" id="bus_Email" placeholder="Email address" name="email"></p>
                                           <p><input class="register" id="bus_Website" placeholder="Organization website" name="website"></p>
                                           <p><input class="register" id="bus_PW" placeholder="Password" name="pw"></p>
-                                          <p><input class="register" id="bus_PWconfirm" placeholder="Comfirm Password" name="confirm_pw"></p>
+                                          <p><input class="register" id="bus_PWconfirm" placeholder="Confirm Password" name="confirm_pw"></p>
                                       </div>
                                   </div>
                                   <div class="modal-footer">
@@ -253,11 +274,11 @@
                               <!-- Modal content-->
                               <div class="modal-content">
                                   <div class="modal-header">
-                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                      <button type="button" class="close B-clear" data-dismiss="modal">&times;</button>
                                       <h4 class="modal-title">Confirm Account Info</h4>
                                   </div>
                                   <div class="modal-body" id="B-2" style="max-height: calc(100vh - 200px); overflow-y: auto;">
-                                      <form class="form-horizontal pf"><!---->
+                                      <form class="form-horizontal pf">
                                           <div class="form-group" style="margin-left:10px">
                                               <label class="control-label" >First Name</label>
                                               <div>
