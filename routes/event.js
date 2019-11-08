@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
 		'INNER JOIN event_tags et \n' +
 		'ON e.event_id = et.event_id \n' +
 		'INNER JOIN tags t\n' +
-		'ON et.event_id = t.tag_id \n' +
+		'ON et.tag_id = t.tag_id \n' +
 		'ORDER BY t.name		';
 	db.query(sql, (err, result) => {
 		if (!req.cookies.i) {
@@ -68,7 +68,7 @@ router.get('/gettags', (req, res) => {
 		'INNER JOIN event_tags et \n' +
 		'ON e.event_id = et.event_id \n' +
 		'INNER JOIN tags t\n' +
-		'ON et.event_id = t.tag_id \n' +
+		'ON et.tag_id = t.tag_id \n' +
 		'ORDER BY t.name		';
 	db.query(sql, (err, result) => {
 		if (!req.cookies.i) {
