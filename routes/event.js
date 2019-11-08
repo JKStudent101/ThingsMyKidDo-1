@@ -26,7 +26,6 @@ router.get('/', (req, res) => {
 				data.push(result[i]);
 			}
 			var passedVariable = req.query.valid;
-			console.log(data);
 			if (passedVariable) {
 				res.render('event.hbs', {
 					data: result,
