@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
 		'INNER JOIN event_tags et \n' +
 		'ON e.event_id = et.event_id \n' +
 		'INNER JOIN tags t\n' +
-		'ON et.event_id = t.tag_id \n' +
+		'ON et.tag_id = t.tag_id \n' +
 		'ORDER BY t.name		';
 	db.query(sql, (err, result) => {
 		if (!req.cookies.i) {
@@ -26,18 +26,17 @@ router.get('/', (req, res) => {
 				data.push(result[i]);
 			}
 			var passedVariable = req.query.valid;
-			if (passedVariable){
+			console.log(data);
+			if (passedVariable) {
 				res.render('event.hbs', {
 					data: result,
 					message: passedVariable
 				});
-			}else {
+			} else {
 				res.render('event.hbs', {
 					data: result
 				});
-			}	
-			
-			
+			}
 		}
 	});
 });
@@ -63,13 +62,9 @@ router.get('/getall', (req, res) => {
 
 router.get('/gettags', (req, res) => {
 	let sql =
-		'SELECT DISTINCT t.name  \n' +
-		'FROM event e \n' +
-		'INNER JOIN event_tags et \n' +
-		'ON e.event_id = et.event_id \n' +
-		'INNER JOIN tags t\n' +
-		'ON et.event_id = t.tag_id \n' +
-		'ORDER BY t.name		';
+		'select DISTINCT t.name as tag from event as e \n' +
+		'inner join event_tags as et on et.event_id = e.event_id \n' +
+		'inner join tags as t on t.tag_id = et.tag_id';
 	db.query(sql, (err, result) => {
 		if (!req.cookies.i) {
 			res.redirect('/login');
@@ -83,12 +78,9 @@ router.get('/gettags', (req, res) => {
 				// console.log(i);
 			}
 
-			res.send(data)
-			
+			res.send(data);
 		}
 	});
 });
-
-
 
 module.exports = router;
