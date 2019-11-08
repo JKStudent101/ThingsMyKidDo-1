@@ -17,7 +17,10 @@ $("#P-Account").on( "click", function() {
     
     if (P_PW != P_PWConfirm) {
         alert("Passwords do not match!")
-    } else {
+    } else if((P_Phone.length < 10 )|| (P_Phone.length > 10)){
+        alert('incorrect phone number')
+    }
+    else {
     
     $('#Parent_Email').html(P_Email);
     $('#Parent_Phone').html(P_Phone);
@@ -33,7 +36,7 @@ $("#P-Redo-Account").on( "click", function() {
 });
 //set "Back" button id on click to hide 3rd modal and trigger 2nd modal
 $("#P-User").on( "click", function() {
-    var Parent_Role = $('#Guardian').find(":selected").text();
+    var Parent_Role = $('#Guardian').val();
 
     $('#Parent_Role').html(Parent_Role);
 
@@ -69,11 +72,7 @@ $("#P-Redo-Kids").on( "click", function() {
     $('#Parent4').modal('hide');
     $('#Parent3').modal('show');
 });
-//set "Confirm" button id on click to hide 3rd modal and trigger 4th modal
-$("#P-Confirm").on( "click", function() {
-    $('#Parent4').modal('hide');
-    $('#Parent5').modal('show');
-});
+
 
 //
 var count = 1;
@@ -100,13 +99,10 @@ $("#add_more").click(function(){
 })
 
 
-//Register Modal
-//set "Continue" button id on click to hide 1st modal and trigger 2nd modal
-//$("#B-Register-info").on( "click",  function Summary_Bus()); 
+//set "Confirm" button id on click to hide 3rd modal and trigger 4th modal
 $('#P-Confirm').on('click', function(){
     
-    if ($("#customCheck1").is(':checked')){
-
+    if ($("#Parent_TermCheck").is(':checked')){
 /*
         $('#P-Skip').click(function(){
             $(this).data('clicked', true)
@@ -119,24 +115,27 @@ $('#P-Confirm').on('click', function(){
             };
         } 
 */
-        let ParentAccount = {
-            'p_email': P_Email,
-            'p_phone': P_Phone,
-            'p_pass': P_Password,
-            'p_pass2': P_Password2,
-            'p_role': Parent_Role,
-            'childProfile': ChildProfile    
-            }            
-        ParentDetail = JSON.stringify(ParentAccount);
-        console.log(ParentDetail)
-/*
+        ParentAccount = {
+            'p_email': $('#p_email').val(),
+            'p_phone': $('#p_phone').val(),
+            'p_pass': $('#p_password').val(),
+            'p_pass2': $('#p_confirm_pw').val(),
+            'p_role': $('#Guardian').val(),
+            //'childProfile': ChildProfile    
+            };            
+        let ParentDetail = JSON.stringify(ParentAccount);
+        //console.log(ParentDetail);
 
-*/
-    } else{
-        alert("Please argee to our Terms & Conditions.")
+        $('#Parent4').modal('hide');
+        $('#Parent5').modal('show');
+    } 
+    else{
+        alert("Please agree to our terms & conditions.")
     } 
 });
 
+//Register Modal
+//set "Continue" button id on click to hide 1st modal and trigger 2nd modal
 //Button for displaying Vendor info
 $("#B-Register-info").on( "click",  function() {
     
@@ -186,7 +185,7 @@ $("#B-Confirm-info").on( "click", function() {
             "LastName": $("#bus_Lname").val(),
             "Oraganization": $("#bus_Orgname").val(),
             "PhoneNumber": $("#bus_Phone").val(),
-             'BusAddress' : $("#bus_Address").val(),
+            "BusAddress" : $("#bus_Address").val(),
             "EmailAddress": $("#bus_Email").val(),
             "Website": $("#bus_Website").val(),
             "Password1": $("#bus_PW").val(),
@@ -209,9 +208,7 @@ $("#B-Confirm-info").on( "click", function() {
                 console.log(result)
             }
         })
-
     }
-
     else{
         alert("Please argee to our Terms & Conditions.")
     }   
@@ -249,6 +246,7 @@ $(".P-clear").on("click", function(){
     $("#p_phone").val("");
     $("#p_password").val("");
     $("#p_confirm_pw").val("");
-    $('select').prop('selectedindex',0);
+    $(".guardian").val("");
+    $("#Parent_TermCheck").prop('checked',false);
 });
 
