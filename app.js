@@ -277,8 +277,8 @@ app.post('/approve-event', (req, res) => {
     } else {
         console.log('approving')
         let event_id = req.body.id
-        let sql = "UPDATE event SET isApproved = 'Approved' WHERE event_id = ?";
-        db.query(sql, event_id, async (err, result) => {
+        let sql = "UPDATE event SET isApproved = 'Approved', admin_id =? WHERE event_id = ?";
+        db.query(sql, [req.session.user.user_id,event_id] , async (err, result) => {
             if (err) {
                 throw err;
             } else {
@@ -289,6 +289,8 @@ app.post('/approve-event', (req, res) => {
         });
     }
 });
+
+
 
 app.get('/vendor/:vendor_id', (req, res) => {
     if (!req.cookies.i || !req.session.user) {
@@ -310,8 +312,8 @@ app.get('/vendor/:vendor_id', (req, res) => {
                     } else {
                         var tags_list = result;
 
-                        var sql = 'SELECT a.event_id, d.name as vendor_name, a.description, a.name as event, \n' +
-                            'GROUP_CONCAT(c.name SEPARATOR \', \') as tag_name , date_format(a.start_date, "%Y/%m/%d") as start_date, date_format(a.end_date, "%Y/%m/%d") as end_date, \n' +
+                        var sql = 'SELECT a.event_id, d.name as vendor_name, a.description, a.name as event_name, concat(a.address, \', \', a.city) as address, \n' +
+                            'GROUP_CONCAT(c.name SEPARATOR \', \') as tag_name , concat(a.start_date, \' \', a.start_time) as start_date, concat(a.end_date, \' \', a.end_time) as end_date, \n' +
                             'a.isApproved\n' +
                             'FROM event a\n' +
                             'LEFT JOIN event_tags b ON a.event_id = b.event_id\n' +
@@ -343,7 +345,7 @@ app.get('/vendor/:vendor_id', (req, res) => {
 app.get('/delete/:event_id', (req, res) => {
     if (!req.cookies.i || !req.session.user) {
         res.redirect('/logout')
-    } else if (req.session.user.user_type != 'vendor') {
+    } else if ((req.session.user.user_type != 'vendor') && (req.session.user.user_type != 'admin')) {
         res.redirect('/logout')
     } else {
         var sql_delete_tag = 'delete from event_tags where event_id = ?';
@@ -357,7 +359,12 @@ app.get('/delete/:event_id', (req, res) => {
                         throw err;
                     } else {
                         // console.log(req.session.user.user_id);
-                        res.redirect('/vendor/' + req.session.user.user_id);
+                        if (req.session.user.user_type == 'vendor'){
+                            res.redirect('/vendor/' + req.session.user.user_id);
+                        } else if (req.session.user.user_type == 'admin'){
+                            res.redirect('/admin/event');
+                        }
+
                     }
                 });
             }
@@ -368,7 +375,7 @@ app.get('/delete/:event_id', (req, res) => {
 app.get('/edit/:event_id', (req, res) => {
     if (!req.cookies.i || !req.session.user) {
         res.redirect('/logout')
-    } else if (req.session.user.user_type != 'vendor') {
+    } else if ((req.session.user.user_type != 'vendor') && (req.session.user.user_type != 'admin')) {
         res.redirect('/logout')
     } else {
         var sql_tags = 'select name from tags';
@@ -387,7 +394,7 @@ app.get('/edit/:event_id', (req, res) => {
                     if (err) {
                         throw err;
                     } else {
-                        // console.log(result[0].start_time);
+                        // console.log(result[0].start_date.toISOString().split('T')[0]);
                         res.render('editevent.hbs', {
                             data: result[0],
                             start_date: result[0].start_date.toISOString().split('T')[0],
@@ -469,7 +476,11 @@ app.post('/edit/:event_id', (req, res) => {
                                 if (err) {
                                     throw err;
                                 }else{
-                                    res.redirect('/vendor/' + req.session.user.user_id);
+                                    if (req.session.user.user_type == 'vendor'){
+                                        res.redirect('/vendor/' + req.session.user.user_id);
+                                    } else if (req.session.user.user_type == 'admin'){
+                                        res.redirect('/admin/event');
+                                    }
                                 }
                             })
                         }
@@ -515,7 +526,7 @@ app.post('/edit/:event_id', (req, res) => {
 });
 
 app.get('/test', (req, res) => {
-    res.render('admin_home.hbs')
+    res.render('admin_event.hbs')
 });
 
 const saveToDatabase = async (subscription, user_id) => {

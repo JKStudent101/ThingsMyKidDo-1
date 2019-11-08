@@ -1,16 +1,4 @@
-$(document).ready(function () {
-    var now = new Date();
-
-    var day = ("0" + now.getDate()).slice(-2);
-    var month = ("0" + (now.getMonth() + 1)).slice(-2);
-
-    var today = now.getFullYear() + "-" + (month) + "-" + (day);
-
-
-    $('#startdate').val(today);
-});
-
- const confirm_add_msg =()=>{
+const confirm_add_msg =()=>{
      return confirm('Are you sure you want to add event?')
  };
 
@@ -18,7 +6,7 @@ $(document).ready(function () {
  document.getElementsByName("start_date")[0].setAttribute('min', today);
  document.getElementsByName("end_date")[0].setAttribute('min', today);
 
- const add_validatation = ()=>{
+ const add_validation = ()=>{
      var event_name = document.forms["add-form"]["eventname"];
      var start_date = document.forms["add-form"]["start_date"];
      var end_date = document.forms["add-form"]["end_date"];
@@ -78,12 +66,6 @@ $(document).ready(function () {
          return false;
      }
 
-     if (tags.selectedIndex <1 ){
-         window.alert("Please select event tag.");
-         tags.focus();
-         return false;
-     }
-
      if (!(city.value.match(/^[A-Za-z]+$/))){
          window.alert("Please enter valid city.");
          city.focus();
@@ -96,3 +78,4 @@ $(document).ready(function () {
          return false;
      }
  };
+

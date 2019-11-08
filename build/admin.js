@@ -1,5 +1,3 @@
-
-
 const approve = (event_id) => {
     let request = new window.XMLHttpRequest();
     let data = {
