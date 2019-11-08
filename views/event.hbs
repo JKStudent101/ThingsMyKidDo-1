@@ -17,24 +17,25 @@
             <div class="row">
                 <div class="col-xs-6">
                     <div class="jumbotron">
-                        <div>
-                            <form class="form-inline">
-                                                                
+                            <form class="form-inline">                            
 
-                                <label for="">Search events</label>
+                                <h4>Search events</h4>
 
                                 
-                                <div>
-                                    <label for="" class="container1">
-                                    <input type="checkbox" id="allevents" value="getAllEvents" checked>All event
+                                <div class="inputGroup">
                                     
+                                    <input type="checkbox" class="invis" id="allevents" value="getAllEvents" checked>
+                                    <label for="allevents">All Events</label>
                                     </label>
                                 </div>
                                 {{#each data}}
-                                    <label class="container1">
-                                        <input type="checkbox" value={{name}} id={{name}}>{{name}}
-                                    </label>
-                                        
+                                    <div class="inputGroup">
+                                    
+                                        <input type="checkbox" class="invis" value={{name}} id={{name}}>
+                                        <label for={{name}}>{{name}}</label>
+                    
+                                    </div>
+                                
                                 {{/each}}
                                 <br>
 
@@ -43,7 +44,7 @@
                                 </div>
                                 <button type="submit" class="btn btn-default" id="getData">Search</button>
                             </form>
-                        </div>
+                        
                     </div>
                     <div class="col-xs-6">
                     <div class="card" style="width: 50rem;">
