@@ -26,18 +26,17 @@ router.get('/', (req, res) => {
 				data.push(result[i]);
 			}
 			var passedVariable = req.query.valid;
-			if (passedVariable){
+			console.log(data);
+			if (passedVariable) {
 				res.render('event.hbs', {
 					data: result,
 					message: passedVariable
 				});
-			}else {
+			} else {
 				res.render('event.hbs', {
 					data: result
 				});
-			}	
-			
-			
+			}
 		}
 	});
 });
@@ -83,12 +82,9 @@ router.get('/gettags', (req, res) => {
 				// console.log(i);
 			}
 
-			res.send(data)
-			
+			res.send(data);
 		}
 	});
 });
-
-
 
 module.exports = router;
