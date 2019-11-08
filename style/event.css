@@ -1,12 +1,15 @@
 #map {
     height: 400px;
 }
+
 #content {
     height: 30vh;
     width: 30vw;
 }
 
+
 /* Customize the label (the container) */
+
 .container1 {
     display: inline-block;
     position: relative;
@@ -14,18 +17,15 @@
     margin-bottom: 12px;
     cursor: pointer;
     font-size: 22px;
-  }
-  
-  /* Hide the browser's default radio button */
-
-  .invis {
-    display: none;
-  }
- 
-#swal2-content {
-  font-size: large;
 }
-  
 
-  
-  
+
+/* Hide the browser's default radio button */
+
+.invis {
+    display: none;
+}
+
+#swal2-content {
+    font-size: large;
+}

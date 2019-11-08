@@ -89,7 +89,7 @@
     width: 70%;
     left: 20%;
     position: relative;
-    margin-top: 2%;
+    margin-top: auto;
 }
 
 body {
@@ -105,7 +105,7 @@ body {
 }
 
 .container {
-    padding-top: 6%;
+    padding-top: 10%;
 }
 
 
