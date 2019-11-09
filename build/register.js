@@ -124,7 +124,7 @@ $('#P-Confirm').on('click', function(){
             //'childProfile': ChildProfile    
             };            
         let ParentDetail = JSON.stringify(ParentAccount);
-        //console.log(ParentDetail);
+        console.log(ParentDetail);
 
         $('#Parent4').modal('hide');
         $('#Parent5').modal('show');
@@ -241,6 +241,17 @@ $(".B-clear").on("click", function(){
     $("#bus_TermCheck").prop('checked',false);
 });
 
+/*
+$("#P_Register-complete").on("click", function(){
+    $("#p_email").val("");
+    $("#p_phone").val("");
+    $("#p_password").val("");
+    $("#p_confirm_pw").val("");
+    $(".guardian").val("");
+    $("#Parent_TermCheck").prop('checked',false);
+});
+*/
+
 $(".P-clear").on("click", function(){
     $("#p_email").val("");
     $("#p_phone").val("");
@@ -250,3 +261,7 @@ $(".P-clear").on("click", function(){
     $("#Parent_TermCheck").prop('checked',false);
 });
 
+
+$('#toHome').click(function(){
+    $(".P-clear").click();
+});
