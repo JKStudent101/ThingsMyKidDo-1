@@ -41,6 +41,10 @@ const registerServiceWorker = async () => {
     }
 }
 
+const deregisterServiceWorker = async () => {
+
+}
+
 /*
 Asks permission to send notifications
 */
