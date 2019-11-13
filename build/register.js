@@ -1,4 +1,5 @@
 $(document).ready(function() {
+	let num = '';
 	$('#Family').on('click', function() {
 		$('#Register').modal('hide');
 		$('#Parent1').modal('show');
@@ -45,10 +46,13 @@ $(document).ready(function() {
 		$('#Parent3').modal('show');
 	});
 	//set "Confirm" button id on click to hide 3rd modal and trigger 4th modal
-	$('#P-Confirm').on('click', function() {
-		$('#Parent4').modal('hide');
-		$('#Parent5').modal('show');
-	});
+	// $('#P-Confirm').on('click', function() {
+	// 	console.log(num);
+	// 	if (num != 'error') {
+	// 		$('#Parent4').modal('hide');
+	// 		$('#Parent5').modal('show');
+	// 	}
+	// });
 
 	//
 	var count = 0;
@@ -109,7 +113,7 @@ $(document).ready(function() {
 	count = count + 1;
 
 	$('#P-Confirm').on('click', function() {
-		if ($('#customCheck1').is(':checked')) {
+		if ($('#Parent_TermCheck').is(':checked')) {
 			let pEmail = $('#p_email').val();
 			let pPhone = $('#p_phone').val();
 			let pPassword = $('#p_password').val();
@@ -142,11 +146,15 @@ $(document).ready(function() {
 				}
 			});
 
+			$('#Parent4').modal('hide');
+			$('#Parent5').modal('show');
+
 			/*
 
 */
 		} else {
 			alert('Please argee to our Terms & Conditions.');
+			num = 'error';
 		}
 	});
 

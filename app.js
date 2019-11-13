@@ -118,15 +118,19 @@ app.post('/registerParent', (req, res) => {
         'email': req.body.p_p_email,
         'password': hash
     }
+
+
     
     sql_user = "INSERT INTO user(user_type, email, pass_hash) VALUES (?,?,?)";
     let input_user_values = [new_parent_user.type, new_parent_user.email, new_parent_user.password]
+    
     db.query(sql_user, input_user_values, function(err, result){
         if(err) throw err; else{
             sql_select_user_parent_type = 'SELECT user_type from user';
             db.query(sql_select_user_parent_type, new_parent_user.type, function(err, result){
                 sql_user_parent_id = 'SELECT last_insert_id() as parent_id';
                 db.query(sql_user_parent_id, function(err, result){
+
                     // let parent_id = result[0].parent_id
                     // let child_input_values = [parent_id, ]
                 })

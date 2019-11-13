@@ -185,7 +185,9 @@ function initMap() {
 		}
 		let iContent;
 		let infoTitleLink;
-
+		function getPinMarkers(tags) {
+			return;
+		}
 		function addDetails(infodetail, markersarray) {
 			/* 
 				adds information on window and info window
@@ -226,7 +228,8 @@ function initMap() {
 				coords: {
 					lat: parseFloat(infodetail.lat),
 					lng: parseFloat(infodetail.lng)
-				}
+				},
+				iconImage: getPinMarkers()
 			});
 		}
 
@@ -309,7 +312,8 @@ function initMap() {
 			let marker = new google.maps.Marker({
 				position: props.coords,
 				map: map, //icon:props.iconImage
-				content: props.content
+				content: props.content,
+				icon: props.iconImage
 			});
 
 			// push marker to global gmarker array
