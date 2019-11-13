@@ -66,7 +66,7 @@
                           <div class="modal-dialog">
                               <div class="modal-content">
                                   <div class="modal-header">
-                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                      <button type="button" class="close P-clear" data-dismiss="modal">&times;</button>
                                       <h4 class="modal-title">Create Account</h4>
                                   </div>
                                   <div class="modal-body">
@@ -75,7 +75,7 @@
                                           <p><input type="email" class="register" placeholder="Username/Email address" name="email" id='p_email'></p>
                                           <p><input class="register" placeholder="Phone number"  name="phone" id='p_phone'></p>
                                           <p><input class="register" placeholder="Password"  name="pw" id='p_password'></p>
-                                          <p><input class="register" placeholder="Comfirm Password"  name="confirm_pw" id='p_password2'></p>
+                                          <p><input class="register" placeholder="Comfirm Password"  name="confirm_pw" id='p_confirm_pw'></p>
                                       </div>
                                   </div>
                                   <div class="modal-footer">
@@ -90,7 +90,7 @@
                           <div class="modal-dialog">
                               <div class="modal-content">
                                   <div class="modal-header">
-                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                      <button type="button" class="close P-clear" data-dismiss="modal">&times;</button>
                                       <h4 class="modal-title">Create Account</h4>
                                   </div>
                                   <div class="modal-body">
@@ -121,7 +121,7 @@
                           <div class="modal-dialog modal-lg">
                               <div class="modal-content">
                                   <div class="modal-header">
-                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                      <button type="button" class="close P-clear" data-dismiss="modal">&times;</button>
                                       <h4 class="modal-title">Children Profiles (optional)</h4>
                                       <p>If you wish to create your children's profiles after you have created your account, you can skip this step.</p>
                                       <button type="button" class="submit1" id="P-Skip">Skip</button>
@@ -191,18 +191,38 @@
                           <div class="modal-dialog">
                               <div class="modal-content">
                                   <div class="modal-header">
-                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                      <button type="button" class="close P-clear" data-dismiss="modal">&times;</button>
                                       <h4 class="modal-title">Confirm Account Info</h4>
                                   </div>
                                   <div class="modal-body">
                                       <div class="tab">
                                           <p>Parent Account</p>
+                                          <form class="form-horizontal pf">
+                                                <div class="form-group" style="margin-left:10px">
+                                                    <label class="control-label" >Email Address</label>
+                                                    <div>
+                                                        <p class="form-control-static" id="Parent_Email"></p>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group" style="margin-left:10px">
+                                                    <label class=" control-label" >Phone Number</label>
+                                                    <div class="">
+                                                        <p class="form-control-static" id="Parent_Phone"></p>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group" style="margin-left:10px">
+                                                    <label class="control-label">Relationship to child</label>
+                                                    <div class="">
+                                                        <p class="form-control-static" id="Parent_Role"></p>
+                                                    </div>
+                                                </div>
+                                          </form>
                                           <p>Children list</p>
                                       </div>
                                       <hr class="my-2">
                                       <div class="custom-control custom-checkbox">
-                                          <input type="checkbox" class="custom-control-input" id="customCheck1">
-                                          <label class="custom-control-label" for="customCheck1">I have read and agreed to the Terms & conditions.</label>
+                                          <input type="checkbox" class="custom-control-input" id="Parent_TermCheck">
+                                          <label class="custom-control-label" for="Parent_TermCheck">I have read and agreed to the Terms & conditions.</label>
                                       </div>
                                   </div>
                                   <div class="modal-footer">
@@ -226,7 +246,7 @@
                                       <p>Click the button below to go to Home page</p>
                                   </div>
                                   <div class="modal-footer">
-                                      <button type="button" class="submit1"><a href="/home" style="color: antiquewhite;">Home Page</a></button>
+                                      <button type="button" class="submit1" id="P-Register-complete"><a href="/home" id="toHome" style="color: antiquewhite;">Home Page</a></button>
                                   </div>
                               </div>
                           </div>
@@ -245,7 +265,7 @@
                           <div class="modal-dialog" style="overflow-y: initial !important">
                               <div class="modal-content">
                                   <div class="modal-header">
-                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                      <button type="button" class="close B-clear" data-dismiss="modal">&times;</button>
                                       <h4 class="modal-title">Create Account</h4>
                                   </div>
                                   
@@ -283,11 +303,11 @@
                               <!-- Modal content-->
                               <div class="modal-content">
                                   <div class="modal-header">
-                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                      <button type="button" class="close B-clear" data-dismiss="modal">&times;</button>
                                       <h4 class="modal-title">Confirm Account Info</h4>
                                   </div>
                                   <div class="modal-body" id="B-2" style="max-height: calc(100vh - 200px); overflow-y: auto;">
-                                      <form class="form-horizontal pf"><!---->
+                                      <form class="form-horizontal pf">
                                           <div class="form-group" style="margin-left:10px">
                                               <label class="control-label" >First Name</label>
                                               <div>
@@ -362,7 +382,7 @@
 
                                   </div>
                                   <div class="modal-footer">
-                                      <button type="button" class="submit1" data-dismiss="modal">Close</button>
+                                      <button type="button" class="submit1" id="B-Register-complete" data-dismiss="modal">Close</button>
                                   </div>
                               </div>
                           </div>
