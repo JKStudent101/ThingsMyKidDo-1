@@ -57,7 +57,10 @@ app.get('/', (req, res) => {
 });
 
 app.get('/home', (req, res) => {
-    res.render('home.hbs', {});
+    res.render('home.hbs', {
+        user_type: req.session.user.user_type,
+        vendor_id: req.session.user.user_id
+    });
 });
 app.get('/login', (req, res) => {
     res.render('login.hbs', {});
@@ -221,12 +224,17 @@ app.get('/profile/', (req, res) => {
                             }
                         }
                         res.render('profile.hbs', {
-                            data: data
+                            data: data,
+                            user_type: req.session.user.user_type,
+                            vendor_id: req.session.user.user_id
                         });
                     }
                 });
             }else{
-                res.render('profile.hbs',{});
+                res.render('profile.hbs',{
+                    user_type: req.session.user.user_type,
+                    vendor_id: req.session.user.user_id
+                });
             }
         })
 
@@ -327,7 +335,8 @@ app.get('/vendor/:vendor_id', (req, res) => {
                                 res.render('vendor.hbs', {
                                     data: result,
                                     vendor: vendor_name,
-                                    tags: tags_list
+                                    tags: tags_list,
+                                    vendor_id: req.session.user.user_id
                                 });
                             }
                         });
@@ -400,6 +409,8 @@ app.get('/edit/:event_id', (req, res) => {
                             start_date: result[0].start_date.toISOString().split('T')[0],
                             end_date: result[0].end_date.toISOString().split('T')[0],
                             tags: tags_list,
+                            user_type: req.session.user.user_type,
+                            vendor_id: req.session.user.user_id,
                             isError: 'false',
                             error: ""
                         })
@@ -512,6 +523,8 @@ app.post('/edit/:event_id', (req, res) => {
                         data: form,
                         start_date: req.body.start_date,
                         end_date: req.body.end_date,
+                        user_type: req.session.user.user_type,
+                        vendor_id: req.session.user.user_id,
                         isError: 'true',
                         error: "Please provide correct address."
                     })
@@ -683,7 +696,10 @@ app.get('/send-notification', (req, res) => {
     if (!req.cookies.i || !req.session.user) {
         res.redirect('/login')
     } else {
-        res.render('notification.hbs', {});
+        res.render('notification.hbs', {
+            user_type: req.session.user.user_type,
+            vendor_id: req.session.user.user_id
+        });
     }
 });
 
