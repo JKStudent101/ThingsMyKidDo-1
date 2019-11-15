@@ -55,7 +55,7 @@ hbs.registerHelper('ifCond', function (v1, v2, options) {
 });
 
 app.get('/', (req, res) => {
-    res.redirect('/login');
+    res.redirect('/landing');
 });
 
 app.get('/home', (req, res) => {
@@ -682,6 +682,10 @@ app.get('/test', (req, res) => {
     res.render('admin_user.hbs')
 });
 
+app.get('/landing', (req, res) => {
+    res.render('landing.hbs')
+});
+
 const saveToDatabase = async (subscription, user_id) => {
     // console.log(subscription)
     let inputs = [
@@ -848,6 +852,8 @@ app.get('/logout', (req, res) => {
     res.cookie('i', true, { expires: new Date() });
     res.redirect('/login');
 });
+
+
 
 
 server.listen(port, function (err) {
