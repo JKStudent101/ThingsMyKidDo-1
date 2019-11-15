@@ -10,10 +10,12 @@
         <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
         <link href="css/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/formvalidation/0.6.1/js/formValidation.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/formvalidation/0.6.1/js/framework/bootstrap.min.js"></script>
 
-
+        <script>
+            {{#ifCond errors 'aaaaaa'}}
+                alert("{{errors}}");
+            {{/ifCond}}
+        </script>
     </head>
 
     <body>
@@ -127,10 +129,12 @@
                                       <button type="button" class="submit1" id="P-Skip">Skip</button>
                                   </div>
                                   <div class="modal-body container">
-                                      <div class="tab" id="morekids">
+                                      
                                           {{!-- {{>KidRegister}} --}}
                                          <div class="allInputs1">
-                                            <p>Mykid1
+                                                              
+
+                                            {{!-- <p>Mykid1
                                               <input class="register-kid1" placeholder="Nickname1" id="kidname1" name="nickname1">
                                               is a 
                                             <span class="form-group">
@@ -141,11 +145,10 @@
                                             </span>
                                               who is interested in 
                                               <input class="register-kid1" type="text" name='interest1' id='interest1'>
-                                            </p>
+                                            </p> --}}
                                         {{!-- <input type="button" value="Add a field" class="add" id="add" /> --}}
-                                        <button type="button" class="submit1" id="add">Add more Fields</button>                    
-                                        <button type="button" class="submit1" id="more1">Add more Kids</button>                    
-
+                                        {{!-- <button type="button" class="submit1" id="add">Add more Fields</button>                     --}}    <div class="tab" id="morekids"></div>
+                                             <button type="button" class="submit1" id="more1">Add more Kids</button> 
                                          </div>
                                           
                                           {{!-- <p>
@@ -175,7 +178,7 @@
                                               <input class="register-kid" placeholder="Interest" name="interest3" id="interest3">
                                             </p>  --}}
 
-                                      </div>
+                                      
 
                                   </div>
 
@@ -368,7 +371,7 @@
                   </div>
                 </form>
 
-                  <div class="modal fade" id="Business3" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  {{!-- <div class="modal fade" id="Business3" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                           <div class="modal-dialog">
                               <div class="modal-content">
                                   <div class="modal-header">
@@ -386,7 +389,7 @@
                                   </div>
                               </div>
                           </div>
-                  </div>
+                  </div> --}}
               </form>
             </div>  
 
