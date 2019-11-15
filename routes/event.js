@@ -97,18 +97,20 @@ router.get('/gettags', (req, res) => {
 	db.query(sql, (err, result) => {
 		if (!req.cookies.i) {
 			res.redirect('/login');
-		}
-		if (err) {
-			throw err;
-		} else {
-			var data = [];
-			for (var i = 0; i < result.length; i++) {
-				data.push(result[i]);
-				// console.log(i);
+		}else{
+			if (err) {
+				throw err;
+			} else {
+				var data = [];
+				for (var i = 0; i < result.length; i++) {
+					data.push(result[i]);
+					// console.log(i);
+				}
+	
+				res.send(data);
 			}
-
-			res.send(data);
 		}
+		
 	});
 });
 
