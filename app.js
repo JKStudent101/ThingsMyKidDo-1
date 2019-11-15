@@ -280,6 +280,8 @@ app.get('/admin/event', (req, res) => {
     }
 });
 
+
+
 app.post('/approve-event', (req, res) => {
     if (!req.cookies.i || !req.session.user) {
         res.redirect('/login')
@@ -299,7 +301,55 @@ app.post('/approve-event', (req, res) => {
     }
 });
 
+app.get('/admin/user', (req, res)=>{
+    var sql_user = "select user.user_id, user.user_type, user.email, vendor.name as vendor_name, vendor.contact_name, " +
+        "vendor.address, vendor.phone_num, vendor.website, vendor.isApproved from user\n" +
+        "inner join vendor on user.user_id = vendor.user_id";
 
+    db.query(sql_user, (err, result) => {
+        if (err) {
+            throw err;
+        } else {
+            var vendor_data = result;
+
+            var sql_parent = "select user.user_id, user.user_type, user.email, concat(parent.first_name, \" \", parent.last_name) as name\n" +
+                "from user inner join parent on user.user_id = parent.user_id";
+
+            db.query(sql_parent, (err, result) => {
+                if (err) {
+                    throw err;
+                } else {
+                    res.render('admin_user.hbs', {
+                        vendor_data: vendor_data,
+                        parent_data: result
+                    });
+                }
+            });
+
+
+        }
+    });
+
+});
+
+app.post('/approve-user', (req, res) => {
+    if (!req.cookies.i || !req.session.user) {
+        res.redirect('/login')
+    } else {
+        // console.log('approving')
+        // let event_id = req.body.id
+        // let sql = "UPDATE event SET isApproved = 'Approved', admin_id =? WHERE event_id = ?";
+        // db.query(sql, [req.session.user.user_id,event_id] , async (err, result) => {
+        //     if (err) {
+        //         throw err;
+        //     } else {
+        //         console.log(`Event ${event_id} approved`);
+        //         await newEventNotify(event_id);
+        //         res.json({ message: 'success' });
+        //     }
+        // });
+    }
+});
 
 app.get('/vendor/:vendor_id', (req, res) => {
     if (!req.cookies.i || !req.session.user) {
@@ -540,7 +590,7 @@ app.post('/edit/:event_id', (req, res) => {
 });
 
 app.get('/test', (req, res) => {
-    res.render('admin_event.hbs')
+    res.render('admin_user.hbs')
 });
 
 const saveToDatabase = async (subscription, user_id) => {
