@@ -57,7 +57,10 @@ app.get('/', (req, res) => {
 });
 
 app.get('/home', (req, res) => {
-    res.render('home.hbs', {});
+    res.render('home.hbs', {
+        user_type: req.session.user.user_type,
+        vendor_id: req.session.user.user_id
+    });
 });
 app.get('/login', (req, res) => {
     res.render('login.hbs', {});
@@ -139,17 +142,18 @@ app.post('/registerParent', (req, res) => {
         'email': req.body.p_email,
         'type': req.body.type,
         'password': hash
-        }
-        console.log(new_parent_user)
-    
+
+    }
     sql_user = "INSERT INTO user(user_type, email, pass_hash) VALUES (?,?,?)";
     let input_user_values = [new_parent_user.type, new_parent_user.email, new_parent_user.password]
+    
     db.query(sql_user, input_user_values, function(err, result){
         if(err) throw err; else{
             sql_select_user_parent_type = 'SELECT user_type from user';
             db.query(sql_select_user_parent_type, new_parent_user.type, function(err, result){
                 sql_user_parent_id = 'SELECT last_insert_id() as parent_id';
                 db.query(sql_user_parent_id, function(err, result){
+
                     // let parent_id = result[0].parent_id
                     // let child_input_values = [parent_id, ]
                 })
@@ -221,12 +225,17 @@ app.get('/profile/', (req, res) => {
                             }
                         }
                         res.render('profile.hbs', {
-                            data: data
+                            data: data,
+                            user_type: req.session.user.user_type,
+                            vendor_id: req.session.user.user_id
                         });
                     }
                 });
             }else{
-                res.render('profile.hbs',{});
+                res.render('profile.hbs',{
+                    user_type: req.session.user.user_type,
+                    vendor_id: req.session.user.user_id
+                });
             }
         })
 
@@ -277,8 +286,8 @@ app.post('/approve-event', (req, res) => {
     } else {
         console.log('approving')
         let event_id = req.body.id
-        let sql = "UPDATE event SET isApproved = 'Approved' WHERE event_id = ?";
-        db.query(sql, event_id, async (err, result) => {
+        let sql = "UPDATE event SET isApproved = 'Approved', admin_id =? WHERE event_id = ?";
+        db.query(sql, [req.session.user.user_id,event_id] , async (err, result) => {
             if (err) {
                 throw err;
             } else {
@@ -289,6 +298,8 @@ app.post('/approve-event', (req, res) => {
         });
     }
 });
+
+
 
 app.get('/vendor/:vendor_id', (req, res) => {
     if (!req.cookies.i || !req.session.user) {
@@ -310,8 +321,8 @@ app.get('/vendor/:vendor_id', (req, res) => {
                     } else {
                         var tags_list = result;
 
-                        var sql = 'SELECT a.event_id, d.name as vendor_name, a.description, a.name as event, \n' +
-                            'GROUP_CONCAT(c.name SEPARATOR \', \') as tag_name , date_format(a.start_date, "%Y/%m/%d") as start_date, date_format(a.end_date, "%Y/%m/%d") as end_date, \n' +
+                        var sql = 'SELECT a.event_id, d.name as vendor_name, a.description, a.name as event_name, concat(a.address, \', \', a.city) as address, \n' +
+                            'GROUP_CONCAT(c.name SEPARATOR \', \') as tag_name , concat(a.start_date, \' \', a.start_time) as start_date, concat(a.end_date, \' \', a.end_time) as end_date, \n' +
                             'a.isApproved\n' +
                             'FROM event a\n' +
                             'LEFT JOIN event_tags b ON a.event_id = b.event_id\n' +
@@ -325,7 +336,8 @@ app.get('/vendor/:vendor_id', (req, res) => {
                                 res.render('vendor.hbs', {
                                     data: result,
                                     vendor: vendor_name,
-                                    tags: tags_list
+                                    tags: tags_list,
+                                    vendor_id: req.session.user.user_id
                                 });
                             }
                         });
@@ -343,7 +355,7 @@ app.get('/vendor/:vendor_id', (req, res) => {
 app.get('/delete/:event_id', (req, res) => {
     if (!req.cookies.i || !req.session.user) {
         res.redirect('/logout')
-    } else if (req.session.user.user_type != 'vendor') {
+    } else if ((req.session.user.user_type != 'vendor') && (req.session.user.user_type != 'admin')) {
         res.redirect('/logout')
     } else {
         var sql_delete_tag = 'delete from event_tags where event_id = ?';
@@ -357,7 +369,12 @@ app.get('/delete/:event_id', (req, res) => {
                         throw err;
                     } else {
                         // console.log(req.session.user.user_id);
-                        res.redirect('/vendor/' + req.session.user.user_id);
+                        if (req.session.user.user_type == 'vendor'){
+                            res.redirect('/vendor/' + req.session.user.user_id);
+                        } else if (req.session.user.user_type == 'admin'){
+                            res.redirect('/admin/event');
+                        }
+
                     }
                 });
             }
@@ -368,7 +385,7 @@ app.get('/delete/:event_id', (req, res) => {
 app.get('/edit/:event_id', (req, res) => {
     if (!req.cookies.i || !req.session.user) {
         res.redirect('/logout')
-    } else if (req.session.user.user_type != 'vendor') {
+    } else if ((req.session.user.user_type != 'vendor') && (req.session.user.user_type != 'admin')) {
         res.redirect('/logout')
     } else {
         var sql_tags = 'select name from tags';
@@ -387,12 +404,14 @@ app.get('/edit/:event_id', (req, res) => {
                     if (err) {
                         throw err;
                     } else {
-                        // console.log(result[0].start_time);
+                        // console.log(result[0].start_date.toISOString().split('T')[0]);
                         res.render('editevent.hbs', {
                             data: result[0],
                             start_date: result[0].start_date.toISOString().split('T')[0],
                             end_date: result[0].end_date.toISOString().split('T')[0],
                             tags: tags_list,
+                            user_type: req.session.user.user_type,
+                            vendor_id: req.session.user.user_id,
                             isError: 'false',
                             error: ""
                         })
@@ -469,7 +488,11 @@ app.post('/edit/:event_id', (req, res) => {
                                 if (err) {
                                     throw err;
                                 }else{
-                                    res.redirect('/vendor/' + req.session.user.user_id);
+                                    if (req.session.user.user_type == 'vendor'){
+                                        res.redirect('/vendor/' + req.session.user.user_id);
+                                    } else if (req.session.user.user_type == 'admin'){
+                                        res.redirect('/admin/event');
+                                    }
                                 }
                             })
                         }
@@ -501,6 +524,8 @@ app.post('/edit/:event_id', (req, res) => {
                         data: form,
                         start_date: req.body.start_date,
                         end_date: req.body.end_date,
+                        user_type: req.session.user.user_type,
+                        vendor_id: req.session.user.user_id,
                         isError: 'true',
                         error: "Please provide correct address."
                     })
@@ -515,7 +540,7 @@ app.post('/edit/:event_id', (req, res) => {
 });
 
 app.get('/test', (req, res) => {
-    res.render('admin_home.hbs')
+    res.render('admin_event.hbs')
 });
 
 const saveToDatabase = async (subscription, user_id) => {
@@ -672,7 +697,10 @@ app.get('/send-notification', (req, res) => {
     if (!req.cookies.i || !req.session.user) {
         res.redirect('/login')
     } else {
-        res.render('notification.hbs', {});
+        res.render('notification.hbs', {
+            user_type: req.session.user.user_type,
+            vendor_id: req.session.user.user_id
+        });
     }
 });
 

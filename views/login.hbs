@@ -60,15 +60,15 @@
                           <div class="modal-dialog">
                               <div class="modal-content">
                                   <div class="modal-header">
-                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                      <button type="button" class="close P-clear" data-dismiss="modal">&times;</button>
                                       <h4 class="modal-title">Create Account</h4>
                                   </div>
                                   <div class="modal-body">
                                       <div class="tab">
-                                          <p><input class="register" placeholder="Username/Email address" name="email" id='p_email'></p>
+                                          <p><input class="register" placeholder="Email address" name="email" id='p_email'></p>
                                           <p><input class="register" placeholder="Phone number"  name="phone" id='p_phone'></p>
                                           <p><input class="register" placeholder="Password"  name="pw" id='p_password'></p>
-                                          <p><input class="register" placeholder="Comfirm Password"  name="confirm_pw" id='p_password2'></p>
+                                          <p><input class="register" placeholder="Comfirm Password"  name="confirm_pw" id='p_confirm_pw'></p>
                                       </div>
                                   </div>
                                   <div class="modal-footer">
@@ -82,7 +82,7 @@
                           <div class="modal-dialog">
                               <div class="modal-content">
                                   <div class="modal-header">
-                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                      <button type="button" class="close P-clear" data-dismiss="modal">&times;</button>
                                       <h4 class="modal-title">Create Account</h4>
                                   </div>
                                   <div class="modal-body">
@@ -91,11 +91,12 @@
                                           <p>"I'm an awesome 
                                               <span>
                                                     <form>
-                                                        <select id="Guardian" class="guardian">
-                                                            <option>Mom</option>
-                                                            <option>Dad</option>
-                                                            <option>Relative</option>
-                                                            <option>Caretaker</option>        
+                                                        <select class="guardian" id="Guardian">
+                                                            <option value=""> </option>
+                                                            <option value="Mom">Mom</option>
+                                                            <option value="Dad">Dad</option>
+                                                            <option value="Relative">Relative</option>
+                                                            <option value="Caretaker">Caretaker</option>        
                                                         </select>
                                                     </form>
                                                 </span>."
@@ -114,7 +115,7 @@
                           <div class="modal-dialog modal-lg">
                               <div class="modal-content">
                                   <div class="modal-header">
-                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                      <button type="button" class="close P-clear" data-dismiss="modal">&times;</button>
                                       <h4 class="modal-title">Children Profiles (optional)</h4>
                                       <p>If you wish to create your children's profiles after you have created your account, you can skip this step.</p>
                                       <button type="button" class="submit1" id="P-Skip">Skip</button>
@@ -122,6 +123,7 @@
                                   <div class="modal-body container">
                                       <div class="tab" #id="more_children">
                                           {{!-- {{>KidRegister}} --}}
+                                         
                                           <p>Mykid1
                                               <input class="register-kid" placeholder="Nickname1" id="nickname1">
                                               is a 
@@ -134,6 +136,7 @@
                                               who is interested in 
                                               <input class="register-kid" type="text" name='interest1' id='interest1'>
                                             </p>
+                                            <span style=""><button type="button" class="glyphicon glyphicon-remove" id="delete" name="delete" onclick="DeleteRow()"></button></span>
 
                                           <p>
                                               Mykid2
@@ -175,18 +178,38 @@
                           <div class="modal-dialog">
                               <div class="modal-content">
                                   <div class="modal-header">
-                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                      <button type="button" class="close P-clear" data-dismiss="modal">&times;</button>
                                       <h4 class="modal-title">Confirm Account Info</h4>
                                   </div>
                                   <div class="modal-body">
                                       <div class="tab">
                                           <p>Parent Account</p>
+                                          <form class="form-horizontal pf">
+                                                <div class="form-group" style="margin-left:10px">
+                                                    <label class="control-label" >Email Address</label>
+                                                    <div>
+                                                        <p class="form-control-static" id="Parent_Email"></p>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group" style="margin-left:10px">
+                                                    <label class=" control-label" >Phone Number</label>
+                                                    <div class="">
+                                                        <p class="form-control-static" id="Parent_Phone"></p>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group" style="margin-left:10px">
+                                                    <label class="control-label">Relationship to child</label>
+                                                    <div class="">
+                                                        <p class="form-control-static" id="Parent_Role"></p>
+                                                    </div>
+                                                </div>
+                                          </form>
                                           <p>Children list</p>
                                       </div>
                                       <hr class="my-2">
                                       <div class="custom-control custom-checkbox">
-                                          <input type="checkbox" class="custom-control-input" id="customCheck1">
-                                          <label class="custom-control-label" for="customCheck1">I have read and agreed to the Terms & conditions.</label>
+                                          <input type="checkbox" class="custom-control-input" id="Parent_TermCheck">
+                                          <label class="custom-control-label" for="Parent_TermCheck" id="Parent_TermCheck">I have read and agreed to the Terms & conditions.</label>
                                       </div>
                                   </div>
                                   <div class="modal-footer">
@@ -210,19 +233,19 @@
                                       <p>Click the button below to go to Home page</p>
                                   </div>
                                   <div class="modal-footer">
-                                      <button type="button" class="submit1"><a href="/home" style="color: antiquewhite;">Home Page</a></button>
+                                      <button type="button" class="submit1" id="P-Register-complete"><a href="/home" id="toHome" style="color: antiquewhite;">Home Page</a></button>
                                   </div>
                               </div>
                           </div>
                   </div>
 
               <!-- Business Modal: Method #2 -->
-                <form action="/register" method="POST" >
+                <form id="B-Register" action="/register" method="POST" >
                   <div class="modal fade" id="Business1" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                           <div class="modal-dialog" style="overflow-y: initial !important">
                               <div class="modal-content">
                                   <div class="modal-header">
-                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                      <button type="button" class="close B-clear" data-dismiss="modal">&times;</button>
                                       <h4 class="modal-title">Create Account</h4>
                                   </div>
                                   <div class="modal-body" id="B-1" style="max-height: calc(100vh - 200px); overflow-y: auto;">
@@ -235,7 +258,7 @@
                                           <p><input class="register" id="bus_Email" placeholder="Email address" name="email"></p>
                                           <p><input class="register" id="bus_Website" placeholder="Organization website" name="website"></p>
                                           <p><input class="register" id="bus_PW" placeholder="Password" name="pw"></p>
-                                          <p><input class="register" id="bus_PWconfirm" placeholder="Comfirm Password" name="confirm_pw"></p>
+                                          <p><input class="register" id="bus_PWconfirm" placeholder="Confirm Password" name="confirm_pw"></p>
                                       </div>
                                   </div>
                                   <div class="modal-footer">
@@ -251,11 +274,11 @@
                               <!-- Modal content-->
                               <div class="modal-content">
                                   <div class="modal-header">
-                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                      <button type="button" class="close B-clear" data-dismiss="modal">&times;</button>
                                       <h4 class="modal-title">Confirm Account Info</h4>
                                   </div>
                                   <div class="modal-body" id="B-2" style="max-height: calc(100vh - 200px); overflow-y: auto;">
-                                      <form class="form-horizontal pf"><!---->
+                                      <form class="form-horizontal pf">
                                           <div class="form-group" style="margin-left:10px">
                                               <label class="control-label" >First Name</label>
                                               <div>
@@ -329,7 +352,7 @@
                                       <p>please log in to your account.</p>
                                   </div>
                                   <div class="modal-footer">
-                                      <button type="button" class="submit1" data-dismiss="modal">Close</button>
+                                      <button type="button" class="submit1" id="B-Register-complete" data-dismiss="modal">Close</button>
                                   </div>
                               </div>
                           </div>
@@ -337,263 +360,9 @@
               </form>
             </div>  
 
-        <script>
-        $("#Family").on( "click", function() {
-            $('#Register').modal('hide');
-            $('#Parent1').modal('show');
-        });
-        $("#Vendor").on( "click", function() {
-            $('#Register').modal('hide');
-            $('#Business1').modal('show');
-        });
+        <script src="/scripts/register.js"></script>    
 
-        //Parent Modal
-        //set "Continue" button id on click to hide 1st modal and trigger 2nd modal
-        $("#P-Account").on( "click", function() {
-            $('#Parent1').modal('hide');
-            $('#Parent2').modal('show');
-        });
-        //set "Register" button id on click to load input + hide 2nd modal, and trigger 3rd modal
-        $("#P-Redo-Account").on( "click", function() {
-            $('#Parent2').modal('hide');
-            $('#Parent1').modal('show');
-        });
-        //set "Back" button id on click to hide 3rd modal and trigger 2nd modal
-        $("#P-User").on( "click", function() {
-            $('#Parent2').modal('hide');
-            $('#Parent3').modal('show');
-        });
-        //set "Back" button id on click to hide 2nd modal and trigger 1st modal
-        $("#P-Redo-User").on( "click", function() {
-            $('#Parent3').modal('hide');
-            $('#Parent2').modal('show');
-        });
-        //set "Skip" button id on click to hide 2nd modal and trigger 3rd modal
-        $("#P-Skip").on( "click", function() {
-            $('#Parent3').modal('hide');
-            $('#Parent4').modal('show');
-        });
-        //set "Register" button id on click to load input + hide 2nd modal, and trigger 3rd modal
-        $("#P-Kids").on( "click", function() {
-            $('#Parent3').modal('hide');
-            $('#Parent4').modal('show');
-        });
-        //set "Back" button id on click to hide 3rd modal and trigger 2nd modal
-        $("#P-Redo-Kids").on( "click", function() {
-            $('#Parent4').modal('hide');
-            $('#Parent3').modal('show');
-        });
-        //set "Confirm" button id on click to hide 3rd modal and trigger 4th modal
-        $("#P-Confirm").on( "click", function() {
-            $('#Parent4').modal('hide');
-            $('#Parent5').modal('show');
-        });
-
-        //
-        var count = 1;
-        var ChildProfile;
-        /*
-        $("#add_more").click(function(){
-                var inputs = '<input class="register-kid" type="text" id="nickname'+count+'"> nickname is a <select name="gender" id="gender"><option value="boy">boy</option><option value="girl">girl</option></select> who is interested in <input type="text"> name="interest'+ count+'" id="interest'+ count+'"'     
-                $('#more_children').append(inputs);
-                count ++;
-
-            var childNickname  = $('#nickname\+count').val();
-            var childrenGender = $('#Kid-Gender').find(":selected").text();
-
-            var interests = $('#interest\+count').val()(','); // separate user input of interest into array
-
-
-            ChildProfile = {
-                'nickname': childNickname,
-                'gender': childrenGender,
-                'interests': interests
-            }
-
-            //console.log(ChildProfile)
-
-        })
-
-        */
-
-
-        //Register Modal
-        //set "Continue" button id on click to hide 1st modal and trigger 2nd modal
-        //$("#B-Register-info").on( "click",  function Summary_Bus()); 
-        $('#P-Confirm').on('click', function(){
-            
-            if ($("#customCheck1").is(':checked')){
-                let pEmail = $('#p_email').val();
-                let pPhone = $('#p_phone').val();
-                let pPassword = $('#p_password').val();
-                let pPassword2 = $('#p_password2').val();
-                var ParentRole = $('#Guardian').find(":selected").text();
-
-            
-            
-
-            var childNickname1  = $('#nickname1').val();
-            var childrenGender1 = $('#gender1').find(":selected").text();
-            var interests1 = $('#interest1').val();
-
-            ChildProfile1 = {
-                'nickname': childNickname1,
-                'gender': childrenGender1,
-                'interests': interests1
-            }
-
-            var childNickname2  = $('#nickname2').val();
-            var childrenGender2 = $('#gender2').find(":selected").text();
-            var interests2 = $('#interest2').val();
-
-             ChildProfile2 = {
-                'nickname': childNickname2,
-                'gender': childrenGender2,
-                'interests': interests2
-            }
-
-            var childNickname3  = $('#nickname3').val();
-            var childrenGender3 = $('#gender3').find(":selected").text();
-            var interests3 = $('#interest3').val();
-
-             ChildProfile3 = {
-                'nickname': childNickname3,
-                'gender': childrenGender3,
-                'interests': interests3
-            }
-
-            let allchild = [ChildProfile1, ChildProfile2, ChildProfile3];
-
-            $('#P-Skip').click(function(){
-                $(this).data('clicked', true)
-            })
-            if($('#P-Skip').data('clicked')){
-                allchild = {
-                    'nickname': '',
-                    'gender': '',
-                    'interests': []
-                };
-            } 
-
-
-            
-            let ParentAccount = {
-                'p_email': pEmail,
-                'p_phone': pPhone,
-                'p_pass': pPassword,
-                'p_pass2': pPassword2,
-                'p_role': ParentRole,
-                'childProfile': allchild,
-                'type': 'parent'    
-                }            
-            ParentDetail = JSON.stringify(ParentAccount);
-            console.log(ParentDetail)
-            $.ajax({
-                    url: 'registerParent',
-                    type: 'POST',
-                    contentType: 'application/json; charset=utf-8',
-                    dataType:'json',
-                    data: ParentDetail,
-                    success: function(result) {
-                        console.log(result)
-                    }
-                })
-/*
-
-*/
-            }else{
-                alert("Please argee to our Terms & Conditions.")
-            } 
-        });
-        $("#B-Register-info").on( "click",  function() {
-            
-            var b_Fname = $("#bus_Fname").val();
-            var b_Lname = $("#bus_Lname").val();
-            var b_Org = $("#bus_Orgname").val();
-            var b_Address = $("#bus_Address").val();
-            var b_Phone = $("#bus_Phone").val();
-            var b_Email = $("#bus_Email").val();
-            var b_Website = $("#bus_Website").val();
-            var b_PW = $("#bus_PW").val();
-            var b_PWconfirm = $("#bus_PWconfirm").val();            
-
-            if (b_PW != b_PWconfirm) {
-                alert("Passwords do not match!")
-            } else if((b_Phone.length < 10 )|| (b_Phone.length > 10)){
-                alert('incorrect phone number')
-            } else{
-            
-        
-                $('#Business1').modal('hide');
-                $('#Business2').modal('show');
-                $("#Vendor_Fname").text(b_Fname);
-                $("#Vendor_Lname").html(b_Lname);
-                $("#Vendor_Org").html(b_Org);
-                $("#Vendor_Address").html(b_Address);
-                $("#Vendor_Phone").html(b_Phone);
-                $("#Vendor_Email").html(b_Email); 
-                $("#Vendor_Website").html(b_Website);
-            }
-
-            
-        });
-        //set "Back" button id on click to hide 2nd modal and trigger 1st modal
-        //jquery: .empty() might be redundant
-        $("#B-Redo-info").on( "click", function() {
-            $("#Vendor_Fname").empty();
-            $("#Vendor_Lname").empty();
-            $("#Vendor_Org").empty();
-            $("#Vendor_Address").empty();
-            $("#Vendor_Phone").empty();
-            $("#Vendor_Email").empty();
-            $("#Vendor_Website").empty();
-
-            $('#Business2').modal('hide');
-            $('#Business1').modal('show');
-        });
-        //set "Confirm" button id on click to hide 2nd modal and trigger 3rd modal
-        $("#B-Confirm-info").on( "click", function() {
-
-            if ($("#bus_TermCheck").is(':checked')){
-
-                Bus_Account = {
-                    
-                    "FirstName": $("#bus_Fname").val(),
-                    "LastName": $("#bus_Lname").val(),
-                    "Oraganization": $("#bus_Orgname").val(),
-                    "PhoneNumber": $("#bus_Phone").val(),
-                     'BusAddress' : $("#bus_Address").val(),
-                    "EmailAddress": $("#bus_Email").val(),
-                    "Website": $("#bus_Website").val(),
-                    "Password1": $("#bus_PW").val(),
-                    "Password2": $("#bus_PWconfirm").val(),
-                    'type': 'vendor'
-                }; 
-                let Vendor_Account = JSON.stringify(Bus_Account);
-               // console.log(Vendor_Account);
-                $('#Business2').modal('hide');
-                $('#Business3').modal('show');
-
-                
-                $.ajax({
-                    url: 'registerVendor',
-                    type: 'POST',
-                    contentType: 'application/json; charset=utf-8',
-                    dataType:'json',
-                    data: Vendor_Account,
-                    success: function(result) {
-                        console.log(result)
-                    }
-                })
-
-            }
-
-            else{
-                alert("Please argee to our Terms & Conditions.")
-            }   
-        });
-
-    </script>    
+       
         
         
         

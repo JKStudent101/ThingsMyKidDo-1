@@ -10,25 +10,25 @@
 
     <body>
 
-        {{> menu}}
+        {{> menu_admin}}
 
         <div class="col-md-12">
             <p class="form_text">Welcome Admin! </p>
             <div class="row">
-                <div class="col-md-12">
+                <div class="table-responsive col-md-12">
                     <table class="table table-bordered table-hover">
                         <thead>
                         <tr>
-                            <td>Event ID</td>
+                            <td class="col-md-1">Event ID</td>
                             <td>Vendor</td>
                             <td>Vendor Contact</td>
                             <td>Event</td>
-                            <td>Event Description</td>
+                            <td class="col-md-2">Event Description</td>
                             <td>Start Date</td>
                             <td>End Date</td>
                             <td>Tags</td>
                             <td>Address</td>
-                            <td>Approval status</td>
+                            <td>Approval Status</td>
                             <td>Actions</td>
                         </tr>
                         </thead>
@@ -47,13 +47,13 @@
                             <td>{{isApproved}}</td>
                             <td>
                                 {{#ifCond isApproved "Pending"}}
-                                    <button onclick="approve({{event_id}})" class="btn btn-info">Approve</button>
-                                    <button href="#" class="btn btn-info">Edit</button>
+                                    <a onclick="approve({{event_id}})" class="btn btn-info">Approve</a>
+                                    <a href="/edit/{{event_id}}" class="btn btn-info">Edit</a>
                                 {{else}}
-                                    <button class="btn btn-info disabled">Approve</button>
-                                    <button class="btn btn-info disabled">Edit</button>
+                                    <a class="btn btn-info disabled">Approve</a>
+                                    <a class="btn btn-info disabled">Edit</a>
                                 {{/ifCond}}
-                                <button href="#" class="btn btn-danger">Delete</button>
+                                <a href="/delete/{{event_id}}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete?')">Delete</a>
                             </td>
                         </tr>
                         {{/each}}

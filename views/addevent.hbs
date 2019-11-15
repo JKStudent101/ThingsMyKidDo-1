@@ -6,19 +6,19 @@
     <link href="/css/menu.css" type="text/css" rel="stylesheet" />
     <link href="/css/vendor.css" type="text/css" rel="stylesheet" />
 
-    <script src="/scripts/vendor.js"></script>
+
 
 
 </head>
 
 <body>
 
-{{> menu}}
+{{> menu_vendor}}
 
 <div class="col-md-12">
 
 <p class="text-center form_text">Event Form</p>
-<form name = "add-form" class="form-horizontal" method="POST" action="/addevent" onsubmit="return add_validatation()">
+<form name = "add-form" class="form-horizontal" method="POST" action="/addevent" onsubmit="return add_validation()">
   <div class="form-group">
     <label class="col-xs-3 control-label"><b>Event Name</b></label>
     <div class="col-xs-7">
@@ -52,7 +52,7 @@
   <div class="form-group">
     <label class="col-xs-3 control-label"><b>Tags</b></label>
     <div class="col-xs-7">
-        <select class="form-control" name="tag">
+        <select class="form-control" name="tag" required>
             <option value="" disabled selected>Select Event Tags</option>
         {{#each tags}}
             <option values="{{name}}">{{name}}</option>
@@ -113,5 +113,5 @@
 </form>
 </div>
 </body>
-
-
+</html>
+<script src="/scripts/vendor.js"></script>
