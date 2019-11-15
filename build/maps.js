@@ -11,7 +11,7 @@ let gmarkers = [];
 let filteroption = '';
 let tags = [];
 let tagsisclicked = [];
-let user_id = null;
+let child_name ={};
 $.ajax({
 	url: '/event/gettags',
 	type: 'GET',
@@ -23,7 +23,60 @@ $.ajax({
 		}
 	}
 });
+$.ajax({
+	url: '/event/getnames',
+	type: 'GET',
+	async: false,
+	dataType: 'json',
+	success: (data) => {
+		for (var i = 0; i < data.length; i++) {
+			child_name[data[i].child_nickname] = data[i].child_nickname;
+		}
+	}
+});
+async function selectchildname(){
+		
+		const { value: name } = await Swal.fire({
+			title: 'This event is for',
+			input: 'select',
+			inputOptions: child_name,
+			icon: 'info',
+			inputPlaceholder: 'Select a child',
+			showCancelButton: true,
+			inputValidator: (value) => {
+				console.log(value)
+				return new Promise((resolve) => {
+					
+				if (value === '') {
+					resolve('You need to select a child :)')
+				}else{
+					resolve()
+				}
+				})
+			}
+			})
+		return name
+}
 
+function submitForm(event_id) {
+	document.getElementById(event_id).submit()
+}
+
+function openpopupwindow(id){
+	if(Object.keys(child_name).length < 1){
+		Swal.fire({
+			icon: 'error',
+			title: 'Oops...',
+			text: 'You need create child profile first to use wishlist function',
+			footer: 'Why do I have this issue?'
+		  })
+	}else{
+		document.getElementById(id).click()
+	}
+}
+function changevalue(id, name){
+	document.getElementById(id).value= name;
+}
 function initMap() {
 	// Map options
 	let options = {
@@ -185,7 +238,6 @@ function initMap() {
 		}
 		let iContent;
 		let infoTitleLink;
-
 		function addDetails(infodetail, markersarray) {
 			/* 
 				adds information on window and info window
@@ -198,7 +250,7 @@ function initMap() {
 			iContent = infoTitleLink + '<p>' + infodetail.description + '</p>';
 			$('#events').append(
 				'<div id="details" >' +
-					"<form action='/savewishlist' method='post'><span>" +
+					`<form action='/savewishlist' method='post' id = ${infodetail.event_id}><span>` +
 					'<h3>' +
 					// v.name
 					infoTitleLink +
@@ -218,7 +270,19 @@ function initMap() {
 					infodetail.end_date +
 					'</p>' +
 					'</span>' +
-					"<button type='submit'>add to wishlist </button></form>" +
+					
+					`<input class= "invis" value ="submit" name="childname" id ="input${infodetail.event_id}"
+						onclick="{
+						selectchildname().then((result)=> {
+							changevalue('input${infodetail.event_id}', result)
+						}).then(()=> {
+							submitForm('${infodetail.event_id}')
+						});
+					}"></input>` +
+					'</form>' +
+					`<input type="button" onclick="{
+						openpopupwindow('input${infodetail.event_id}')
+					}" value="Add to Wishlist"></input>` +
 					'</div>'
 			);
 			markersarray.push({
@@ -228,7 +292,11 @@ function initMap() {
 					lng: parseFloat(infodetail.lng)
 				}
 			});
+			
+		
 		}
+
+		
 
 		$.ajax({
 			url: requestAll, //event/getall route

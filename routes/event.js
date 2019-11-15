@@ -86,4 +86,28 @@ router.get('/gettags', (req, res) => {
 	});
 });
 
+router.get('/getnames', (req, res) => {
+	let user_id = req.session.user.user_id;
+	let sql =
+		'SELECT DISTINCT child_nickname  \n' +
+		'FROM child \n' +
+		'WHERE parent_id =' + user_id ;
+	db.query(sql, (err, result) => {
+		if (!req.cookies.i) {
+			res.redirect('/login');
+		}
+		if (err) {
+			throw err;
+		} else {
+			var data = [];
+			for (var i = 0; i < result.length; i++) {
+				data.push(result[i]);
+				// console.log(i);
+			}
+
+			res.send(data);
+		}
+	});
+});
+
 module.exports = router;
