@@ -302,34 +302,40 @@ app.post('/approve-event', (req, res) => {
 });
 
 app.get('/admin/user', (req, res)=>{
-    var sql_user = "select user.user_id, user.user_type, user.email, vendor.name as vendor_name, vendor.contact_name, " +
-        "vendor.address, vendor.phone_num, vendor.website, vendor.isApproved from user\n" +
-        "inner join vendor on user.user_id = vendor.user_id";
+    if (!req.cookies.i || !req.session.user) {
+        res.redirect('/logout')
+    } else if (req.session.user.user_type != 'admin') {
+        res.redirect('/logout')
+    } else {
 
-    db.query(sql_user, (err, result) => {
-        if (err) {
-            throw err;
-        } else {
-            var vendor_data = result;
+        var sql_user = "select user.user_id, user.user_type, user.email, vendor.name as vendor_name, vendor.contact_name, " +
+            "vendor.address, vendor.phone_num, vendor.website, vendor.isApproved from user\n" +
+            "inner join vendor on user.user_id = vendor.user_id";
 
-            var sql_parent = "select user.user_id, user.user_type, user.email, concat(parent.first_name, \" \", parent.last_name) as name\n" +
-                "from user inner join parent on user.user_id = parent.user_id";
+        db.query(sql_user, (err, result) => {
+            if (err) {
+                throw err;
+            } else {
+                var vendor_data = result;
 
-            db.query(sql_parent, (err, result) => {
-                if (err) {
-                    throw err;
-                } else {
-                    res.render('admin_user.hbs', {
-                        vendor_data: vendor_data,
-                        parent_data: result
-                    });
-                }
-            });
+                var sql_parent = "select user.user_id, user.user_type, user.email, concat(parent.first_name, \" \", parent.last_name) as name\n" +
+                    "from user inner join parent on user.user_id = parent.user_id";
+
+                db.query(sql_parent, (err, result) => {
+                    if (err) {
+                        throw err;
+                    } else {
+                        res.render('admin_user.hbs', {
+                            vendor_data: vendor_data,
+                            parent_data: result
+                        });
+                    }
+                });
 
 
-        }
-    });
-
+            }
+        });
+    }
 });
 
 app.post('/approve-user', (req, res) => {
