@@ -252,40 +252,6 @@ $('#P-Confirm').on('click', function(){
 		$('#Business1').modal('show');
 	});
 	//set "Confirm" button id on click to hide 2nd modal and trigger 3rd modal
-	$('#B-Confirm-info').on('click', function() {
-		if ($('#bus_TermCheck').is(':checked')) {
-			Bus_Account = {
-				FirstName: $('#bus_Fname').val(),
-				LastName: $('#bus_Lname').val(),
-				Oraganization: $('#bus_Orgname').val(),
-				PhoneNumber: $('#bus_Phone').val(),
-				BusAddress: $('#bus_Address').val(),
-				EmailAddress: $('#bus_Email').val(),
-				Website: $('#bus_Website').val(),
-				Password1: $('#bus_PW').val(),
-				Password2: $('#bus_PWconfirm').val(),
-				type: 'vendor'
-			};
-			let Vendor_Account = JSON.stringify(Bus_Account);
-			// console.log(Vendor_Account);
-			$('#Business2').modal('hide');
-			$('#Business3').modal('show');
-
-			$.ajax({
-				url: 'registerVendor',
-				type: 'POST',
-				contentType: 'application/json; charset=utf-8',
-				dataType: 'json',
-				data: Vendor_Account,
-				success: function(result) {
-					console.log(result);
-				}
-			});
-		} else {
-			alert('Please argee to our Terms & Conditions.');
-		}
-	});
-
 });
 //set "Back" button id on click to hide 2nd modal and trigger 1st modal
 //jquery: .empty() might be redundant
