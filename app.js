@@ -18,7 +18,8 @@ const request = require('request');
 // import event routes
 const event = require('./routes/event');
 const addevent = require('./routes/addevent');
-const wishlist = require('./routes/wishlist')
+const wishlist = require('./routes/wishlist');
+const profile = require('./routes/profilepage')
 var db = require('./routes/database').init();
 
 app.set('view engine', 'hbs');
@@ -42,6 +43,7 @@ app.use(
 app.use('/event', event);
 app.use('/addevent', addevent);
 app.use('/savewishlist', wishlist);
+app.use('/profile', profile)
 const server = require('http').createServer(app);
 hbs.registerPartials(__dirname + '/views/partials');
 
@@ -111,6 +113,7 @@ app.post('/registerParent', (req, res) => {
     var salt = bcrypt.genSaltSync(saltRounds);
     var hash = bcrypt.hashSync(req.body.p_pass, salt);
 
+<<<<<<< HEAD
     console.log(req.body)
         // res.render('not finished')
 
@@ -135,10 +138,15 @@ app.post('/registerParent', (req, res) => {
         'interest': multiple_interests3
     }
 
+=======
+    // console.log(req.body)
+    // res.render('not finished')
+>>>>>>> 2918a481a7127b9b00ed2727526f0af9ae6cc842
     let new_parent_user = {
-        'email': req.body.p_email,
         'type': req.body.type,
+        'email': req.body.p_email,
         'password': hash
+<<<<<<< HEAD
     }
     console.log(new_parent_user)
 
@@ -147,12 +155,126 @@ app.post('/registerParent', (req, res) => {
     db.query(sql_user, input_user_values, function(err, result) {
         if (err) throw err;
         else {
+=======
+    }    
+    let childprofile = req.body.childProfile
+    // console.log(childprofile)
+    // console.log(new_parent_user);
+    sql_user = "INSERT INTO user(user_type, email, pass_hash) VALUES (?,?,?)";
+    let input_user_values = [new_parent_user.type, new_parent_user.email, new_parent_user.password]
+    
+    db.query(sql_user, input_user_values, function(err, result){
+        if(err) throw err; else{
+>>>>>>> 2918a481a7127b9b00ed2727526f0af9ae6cc842
             sql_select_user_parent_type = 'SELECT user_type from user';
             db.query(sql_select_user_parent_type, new_parent_user.type, function(err, result) {
                 sql_user_parent_id = 'SELECT last_insert_id() as parent_id';
+<<<<<<< HEAD
                 db.query(sql_user_parent_id, function(err, result) {
                     // let parent_id = result[0].parent_id
                     // let child_input_values = [parent_id, ]
+=======
+                db.query(sql_user_parent_id, function(err, result){
+                    let count = 1
+                    let parent_id = result[0].parent_id //54
+                    let child_user = {}; // child1:
+
+                    let index = new_parent_user.email.indexOf('@');
+                    let email = new_parent_user.email.substring(0,index);
+                    // console.log(email)
+                    let sql_parent_tabl_insert = 'INSERT INTO parent(user_id, first_name) VALUES (?, ?)';
+                    db.query(sql_parent_tabl_insert, [parent_id, email], function(err, result){
+                        if(err) {
+                            console.log(err)
+                        } else {
+                            db.query('select user_id from parent', function(err, result){
+                                sql_parent_parent_id = 'SELECT last_insert_id() as user_parent_id';
+                                // console.log(parent_id)
+                                // db.query(sql_user_parent_id, function(err, result){
+                                    if(err){
+                                        console.log(err)
+                                    } else {
+                                        // let child_id = result[0].user_parent_id //54
+                                        let child_nickname = []
+                                        for (let key in childprofile) {
+                                            let value = childprofile[key];
+
+                                            child_nickname.push(value[0])
+                                            }
+                                        //   let parent_id = result[0].parent_id //54
+                                        //   console.log(child_nickname)
+                                        // console.log(child_/id)
+                                        let sql_child_table = 'INSERT INTO child(child_nickname ) VALUES (?)';
+                                        let sql_child_values = [ parent_id, child_nickname[0] ]// 54, child + 1
+                                        // db.query(sql_child_table, sql_child_values, function(err, result){
+                                                
+                                        //             console.log(parent_id)
+                                                    
+                                        //         })
+
+                                        for(let i=0; i < child_nickname.length; i++){
+                                        //     // console.log(child_id)
+                                        //     console.log(child_nickname[i])
+                                            let sql_child_table = 'INSERT INTO child(parent_id, child_nickname ) VALUES (?, ?)';
+                                            let sql_child_values = [ parent_id, child_nickname[i] ]// 54, child + 1
+                                            
+                                            setTimeout(() => { 
+                                                db.query(sql_child_table, sql_child_values, function(err, result){
+                                                
+                                                    console.log(parent_id)
+                                                    
+                                                })
+                                              }, 1000);
+
+                                        }
+                                        db.query()
+                                    }
+                                })
+                            // })
+                        }
+
+                        // db.query('select user_id from parent', function(err, result){
+                        //     if((Object.keys(childprofile).length) > 1){
+                        //         // console.log('exist')
+                        //         //  child_user['nickname' + count] = childprofile
+                                
+                        //          // console.log(new_parent_user.childProfile[0])
+                        //         // let kidobject= childprofile.kid.Child;
+                        //         let child_nickname = []
+                        //         for (let key in childprofile) {
+                        //             let value = childprofile[key];
+        
+                        //             child_nickname.push(value[0])
+                        //           }
+                        //         //   let parent_id = result[0].parent_id //54
+                        //         //   console.log(child_nickname)
+                        //         for(let i=0; i < child_nickname.length; i++){
+                        //             console.log(parent_id)
+                        //             console.log(child_nickname[i])
+                        //             let sql_child_table = 'INSERT INTO child(child_nickname ) VALUES (?) WHERE parent_id = ?';
+                        //             // let sql_child_values = [ child_nickname[i ],   ]// 54, child + 1
+                                    
+                        //             // db.query(sql_child_table, sql_child_values, function(err, result){
+                        //             //     if(err) throw err;
+                        //             //     console.log('worked')
+                                        
+                        //             // })
+        
+                        //         }
+                        //         //  console.log(childprofile.kid)
+                        //         //  db.query(sql_child_table, sql_child_values, function(err, result){
+                        //         //      if(err) throw err;
+                        //         //      console.log('inserted');
+                        //         //  })             
+                        //     }
+                        // })
+                           
+                    })
+                    // console.log((Object.keys(childprofile).length))
+                    // console.log(Object.keys(childprofile).length)
+                    // console.log(childprofile)
+                    
+>>>>>>> 2918a481a7127b9b00ed2727526f0af9ae6cc842
                 })
             })
 
@@ -172,6 +294,53 @@ app.post('/registerVendor', (req, res) => {
         // db.query()
     let sql_insert_vendor_users = 'INSERT INTO user(user_type, email, pass_hash) VALUES (?, ?, ?)'
     let user_values = [new_vendor.type, new_vendor.email, new_vendor.password];
+    let sql_email_exist = "SELECT COUNT(*) as email_count FROM user WHERE email = ?";
+    if(req.body.Password1.length < 4){
+        errors.push({text: 'Password must be longer than 4'})
+    }
+    if(req.body.Password1 != req.body.Password2){
+        errors.push({text: 'Password do not match'})
+
+    }
+    console.log(errors)
+    db.query(sql_email_exist, new_vendor.email, function(err, result){
+        if(err){
+            console.log(err)
+        } else{
+            if(result[0].email_count > 0){
+                errors.push({text: 'email exist'})
+            }
+            if(errors.length > 0){
+                console.log(result[0])
+                console.log(errors)
+                res.render('login.hbs', {
+                    errors: 'errors'
+                })
+                // res.send(errors)
+            } else{
+                db.query(sql_insert_vendor_users, user_values, function(err, result) {
+                    if(err) throw err;      
+                    let sql_select_user = 'SELECT type from user';
+                    db.query(sql_select_user, user_values.type, function(err, result){
+                        let sql_user_id = "SELECT last_insert_id() as user_id";
+                        db.query(sql_user_id, function(err, result){
+                            // console.log(result[0].last_insert_id())
+                            let user_id = result[0].user_id
+        
+                            let sql_insert_vendor = 'INSERT INTO vendor (user_id, name, contact_name, address, phone_num, website) VALUES (?,?,?,?,?,?) ';
+                            
+                            let insert_user_values = [user_id, new_vendor.org, new_vendor.firstname + ' ' + new_vendor.lastname, new_vendor.address , new_vendor.phonenum, new_vendor.website]
+                                
+                            db.query(sql_insert_vendor, insert_user_values, function(err, result){
+                                if(err) throw err;
+                                res.redirect('/register.hbs')
+                            } )
+                        })
+                    })
+                })
+            }
+        }
+
 
     db.query(sql_insert_vendor_users, user_values, function(err, result) {
         if (err) throw err;
@@ -193,9 +362,11 @@ app.post('/registerVendor', (req, res) => {
             })
         })
     })
+})
 
 });
 
+<<<<<<< HEAD
 app.get('/profile/', (req, res) => {
     if (!req.cookies.i) {
         res.redirect('/login')
@@ -240,6 +411,9 @@ app.get('/profile/', (req, res) => {
 });
 
 app.get('/admin', (req, res) => {
+=======
+app.get('/admin', (req,res)=>{
+>>>>>>> 2918a481a7127b9b00ed2727526f0af9ae6cc842
     if (!req.cookies.i || !req.session.user) {
         res.redirect('/logout')
     } else if (req.session.user.user_type != 'admin') {
@@ -277,6 +451,8 @@ app.get('/admin/event', (req, res) => {
     }
 });
 
+
+
 app.post('/approve-event', (req, res) => {
     if (!req.cookies.i || !req.session.user) {
         res.redirect('/login')
@@ -296,7 +472,61 @@ app.post('/approve-event', (req, res) => {
     }
 });
 
+app.get('/admin/user', (req, res)=>{
+    if (!req.cookies.i || !req.session.user) {
+        res.redirect('/logout')
+    } else if (req.session.user.user_type != 'admin') {
+        res.redirect('/logout')
+    } else {
 
+        var sql_user = "select user.user_id, user.user_type, user.email, vendor.name as vendor_name, vendor.contact_name, " +
+            "vendor.address, vendor.phone_num, vendor.website, vendor.isApproved from user\n" +
+            "inner join vendor on user.user_id = vendor.user_id";
+
+        db.query(sql_user, (err, result) => {
+            if (err) {
+                throw err;
+            } else {
+                var vendor_data = result;
+
+                var sql_parent = "select user.user_id, user.user_type, user.email, concat(parent.first_name, \" \", parent.last_name) as name\n" +
+                    "from user inner join parent on user.user_id = parent.user_id";
+
+                db.query(sql_parent, (err, result) => {
+                    if (err) {
+                        throw err;
+                    } else {
+                        res.render('admin_user.hbs', {
+                            vendor_data: vendor_data,
+                            parent_data: result
+                        });
+                    }
+                });
+
+
+            }
+        });
+    }
+});
+
+app.post('/approve-user', (req, res) => {
+    if (!req.cookies.i || !req.session.user) {
+        res.redirect('/login')
+    } else {
+        // console.log('approving')
+        // let event_id = req.body.id
+        // let sql = "UPDATE event SET isApproved = 'Approved', admin_id =? WHERE event_id = ?";
+        // db.query(sql, [req.session.user.user_id,event_id] , async (err, result) => {
+        //     if (err) {
+        //         throw err;
+        //     } else {
+        //         console.log(`Event ${event_id} approved`);
+        //         await newEventNotify(event_id);
+        //         res.json({ message: 'success' });
+        //     }
+        // });
+    }
+});
 
 app.get('/vendor/:vendor_id', (req, res) => {
     if (!req.cookies.i || !req.session.user) {
@@ -536,7 +766,7 @@ app.post('/edit/:event_id', (req, res) => {
 });
 
 app.get('/test', (req, res) => {
-    res.render('admin_event.hbs')
+    res.render('admin_user.hbs')
 });
 
 app.get('/landing', (req, res) => {
