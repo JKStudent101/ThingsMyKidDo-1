@@ -540,8 +540,14 @@ app.post('/edit/:event_id', (req, res) => {
     }
 });
 
+
+
 app.get('/test', (req, res) => {
     res.render('admin_event.hbs')
+});
+
+app.get('/landing', (req, res) => {
+    res.render('landing.hbs')
 });
 
 const saveToDatabase = async (subscription, user_id) => {

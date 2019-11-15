@@ -11,7 +11,7 @@ let gmarkers = [];
 let filteroption = '';
 let tags = [];
 let tagsisclicked = [];
-let user_id = null;
+let child_name ={};
 $.ajax({
 	url: '/event/gettags',
 	type: 'GET',
@@ -23,7 +23,60 @@ $.ajax({
 		}
 	}
 });
+$.ajax({
+	url: '/event/getnames',
+	type: 'GET',
+	async: false,
+	dataType: 'json',
+	success: (data) => {
+		for (var i = 0; i < data.length; i++) {
+			child_name[data[i].child_nickname] = data[i].child_nickname;
+		}
+	}
+});
+async function selectchildname(){
+		
+		const { value: name } = await Swal.fire({
+			title: 'This event is for',
+			input: 'select',
+			inputOptions: child_name,
+			icon: 'info',
+			inputPlaceholder: 'Select a child',
+			showCancelButton: true,
+			inputValidator: (value) => {
+				console.log(value)
+				return new Promise((resolve) => {
+					
+				if (value === '') {
+					resolve('You need to select a child :)')
+				}else{
+					resolve()
+				}
+				})
+			}
+			})
+		return name
+}
 
+function submitForm(event_id) {
+	document.getElementById(event_id).submit()
+}
+
+function openpopupwindow(id){
+	if(Object.keys(child_name).length < 1){
+		Swal.fire({
+			icon: 'error',
+			title: 'Oops...',
+			text: 'You need create child profile first to use wishlist function',
+			footer: 'Why do I have this issue?'
+		  })
+	}else{
+		document.getElementById(id).click()
+	}
+}
+function changevalue(id, name){
+	document.getElementById(id).value= name;
+}
 function initMap() {
 	// Map options
 	let options = {
@@ -148,6 +201,7 @@ function initMap() {
 
 	// New map
 	let map = new google.maps.Map(document.getElementById('map'), options);
+	let scaledSize = new google.maps.Size(30, 40); // scaled size
 
 	// info initialize
 	infoWindow = new google.maps.InfoWindow({});
@@ -185,27 +239,31 @@ function initMap() {
 		}
 		let iContent;
 		let infoTitleLink;
-		function getPinMarkers(tags) {
-			return;
-		}
-		function addDetails(infodetail, markersarray) {
-			/* 
+
+
+		const getCustomMarkers = (tags) => {
+			return '/src/customIcons/' + tags.toLowerCase() + '_pin.png';
+		};
+
+		function addDetails(infodetail) {
+
+      /* 
 				adds information on window and info window
 				arguments:
 					infodetails : event object from data
 					markers: adds properties to the markers for display
 			*/
-			infoTitleLink =
-				'<a href="' + infodetail.link + ' " target="_blank">' + infodetail.name + '</a>';
+			infoTitleLink = '<a href="' + infodetail.link + ' " target="_blank"></a>';
 			iContent = infoTitleLink + '<p>' + infodetail.description + '</p>';
 			$('#events').append(
 				'<div id="details" >' +
-					"<form action='/savewishlist' method='post'><span>" +
+					`<form action='/savewishlist' method='post' id = ${infodetail.event_id}><span>` +
 					'<h3>' +
+					infodetail.name +
+					'</h3>' +
 					// v.name
 					infoTitleLink +
-					'</h3>' +
-					"<input class='invis' name='eventid' type='text' value=" +
+					+"<input class='invis' name='eventid' type='text' value=" +
 					infodetail.event_id +
 					'>' +
 					'<p>' +
@@ -220,18 +278,25 @@ function initMap() {
 					infodetail.end_date +
 					'</p>' +
 					'</span>' +
-					"<button type='submit'>add to wishlist </button></form>" +
+					
+					`<input class= "invis" value ="submit" name="childname" id ="input${infodetail.event_id}"
+						onclick="{
+						selectchildname().then((result)=> {
+							changevalue('input${infodetail.event_id}', result)
+						}).then(()=> {
+							submitForm('${infodetail.event_id}')
+						});
+					}"></input>` +
+					'</form>' +
+					`<input type="button" onclick="{
+						openpopupwindow('input${infodetail.event_id}')
+					}" value="Add to Wishlist"></input>` +
 					'</div>'
 			);
-			markersarray.push({
-				content: iContent,
-				coords: {
-					lat: parseFloat(infodetail.lat),
-					lng: parseFloat(infodetail.lng)
-				},
-				iconImage: getPinMarkers()
-			});
+
 		}
+
+		
 
 		$.ajax({
 			url: requestAll, //event/getall route
@@ -246,7 +311,16 @@ function initMap() {
 					}
 					$.map(data, function(value, i) {
 						// push event vlaues into the markers
-						addDetails(value, markers);
+						addDetails(value);
+						markers.push({
+							content: iContent,
+							coords: {
+								lat: parseFloat(value.lat),
+								lng: parseFloat(value.lng)
+							}
+							// iconImage: geticons(tag)
+							// iconImage: '/src/customIcons/arena_pin.png'
+						});
 					});
 				} else if (filteroption == 'getOneTag') {
 					if (gmarkers.length > 0) {
@@ -255,7 +329,16 @@ function initMap() {
 					$.map(data, function(value, i) {
 						for (var i = 0; i < tagsisclicked.length; i++) {
 							if (tagsisclicked[i] == value.category) {
-								addDetails(value, markers);
+								addDetails(value);
+								markers.push({
+									content: iContent,
+									coords: {
+										lat: parseFloat(value.lat),
+										lng: parseFloat(value.lng)
+									}
+
+									// iconImage: getPinMarkers(value.category.toLowerCase())
+								});
 							}
 						}
 					});
@@ -265,7 +348,15 @@ function initMap() {
 					}
 					$.map(data, function(value, i) {
 						if (value.name.toLowerCase().includes(userInput)) {
-							addDetails(value, markers);
+							addDetails(value);
+							markers.push({
+								content: iContent,
+								coords: {
+									lat: parseFloat(value.lat),
+									lng: parseFloat(value.lng)
+								}
+								// iconImage: getPinMarkers(value.category.toLowerCase())
+							});
 						}
 					});
 				} else {
@@ -278,7 +369,15 @@ function initMap() {
 								tagsisclicked[i] == value.category &&
 								value.name.toLowerCase().includes(userInput)
 							) {
-								addDetails(value, markers);
+								addDetails(value);
+								markers.push({
+									content: iContent,
+									coords: {
+										lat: parseFloat(value.lat),
+										lng: parseFloat(value.lng)
+									}
+									// iconImage: getPinMarkers(value.category.toLowerCase())
+								});
 								// add all events to the marker
 							}
 						}
@@ -307,13 +406,25 @@ function initMap() {
 		}
 
 		// Add Marker Function
+
+		function geticons(tag) {
+			let url = '/src/customIcons/' + tag.toLowerCase() + '_pin.png';
+			return url; // url
+		}
 		function addMarker(props) {
 			// console.log(props);
+
+			var icon = {
+				// url: props.iconImage,
+				url: '/src/customIcons/arena_pin.png', // url
+				scaledSize: new google.maps.Size(30, 40) // scaled size
+			};
+
 			let marker = new google.maps.Marker({
 				position: props.coords,
 				map: map, //icon:props.iconImage
 				content: props.content,
-				icon: props.iconImage
+				icon: icon
 			});
 
 			// push marker to global gmarker array
