@@ -621,7 +621,7 @@ const newEventNotify = async (event_id) => {
                 console.log(err)
                 reject(err)
             } else if (result.length == 0) {
-                // console.log("No subscriptions found for " + user_id);
+                console.log("No subscriptions found for " + user_id);
                 resolve([])
             } else {
                 resolve(result)
@@ -646,6 +646,57 @@ const newEventNotify = async (event_id) => {
                 title: `New Event for ${results[i].child_nickname}!\n${results[i].name}`,
                 message: results[i].description,
                 url: `/event/display/${results[i].event_id}`
+            }
+            // console.log(payload.url);
+            webpush.sendNotification(subscription, JSON.stringify(payload));
+            // console.log("Sent!");
+        }
+    } catch (err) {
+        console.log("Error sending notifications")
+        console.log(err)
+    }
+    return results
+}
+
+const newVendorNotify = async (vendor_id) => {
+    // console.log("sending notification")
+    let results = await new Promise((resolve, reject) => {
+        let sql = "SELECT v.contact_name, s.user_id, s.endpoint, s.expirationTime, s.p256dh, s.auth " +
+            "FROM subscriptions as s " +
+            "INNER JOIN user as u ON u.user_id = s.user_id " +
+            "INNER JOIN vendor as v ON v.user_id = u.user_id " +
+            "WHERE v.user_id = ? " +
+            "GROUP BY s.user_id, s.endpoint;"
+        db.query(sql, vendor_id, (err, result) => {
+            if (err) {
+                console.log(err)
+                reject(err)
+            } else if (result.length == 0) {
+                console.log("No subscriptions found for " + user_id);
+                resolve([])
+            } else {
+                resolve(result)
+            }
+
+        })
+
+    });
+    // console.log(results)
+    try {
+        for (let i = 0; i < results.length; i++) {
+            let subscription = {
+                endpoint: results[i].endpoint,
+                expirationTime: results[i].expirationTime,
+                keys: {
+                    p256dh: results[i].p256dh,
+                    auth: results[i].auth
+                }
+            }
+            // console.log(subscription)
+            let payload = {
+                title: `Account Approval`,
+                message: `Congratulations ${results[i].contact_name}, your account has been approved!\nStart getting the word out about your events now!`,
+                url: `/vendor/${results[i].user_id}`
             }
             // console.log(payload.url);
             webpush.sendNotification(subscription, JSON.stringify(payload));

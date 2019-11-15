@@ -347,12 +347,14 @@
                                       <h4 class="modal-title">Registration Complete!</h4>
                                   </div>
                                   <div class="modal-body" id="B-3">
-                                      <h1>All done!!!</h1>
+                                      <h1>All done!</h1>
                                       <p></p>
-                                      <p>please log in to your account.</p>
+                                      <p>An admin will now review your account for approval.</p>
+                                      <p>Would you like to receive a notification when your account is approved?</p>
                                   </div>
                                   <div class="modal-footer">
-                                      <button type="button" class="submit1" id="B-Register-complete" data-dismiss="modal">Close</button>
+                                      <button type="button" class="submit1" id="B-Register-complete-no" data-dismiss="modal">No</button>
+                                      <button type="button" class="submit1" id="B-Register-complete-yes" data-dismiss="modal" onclick="openPushSubscription()">Yes</button>
                                   </div>
                               </div>
                           </div>
@@ -361,10 +363,7 @@
             </div>  
 
         <script src="/scripts/register.js"></script>    
-
-       
-        
-        
+        <script src="/scripts/notifications.js"></script>     
         
     </body>
 
