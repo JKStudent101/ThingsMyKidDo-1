@@ -75,12 +75,11 @@
 
                         <div class="card">
                             <img src="/src/img.jpg" alt="John" style="width:100%">
-                            {{#each data}}
-                                <div id="{{nickname}}" class="inv" style="font-size: 30px;">{{nickname}}
-                                <p class="title">Age: </p>
-                                <p>Hobbies: </p>
+                                {{#if nickname}}
+                                <div id="{{nickname}}" style="font-size: 30px;">{{nickname}}
+                                <p>Hobbies: ##Wait for Register function##</p>
                                 </div>
-                            {{/each}}
+                                {{/if}}
                             {{!-- <div id="billy" class="inv" style="font-size: 30px;">Billy
                                 <p class="title">Age: 9</p>
                             <p>Hobbies: Basketball, Volleyball</p>
