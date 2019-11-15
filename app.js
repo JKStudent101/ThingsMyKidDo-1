@@ -19,6 +19,7 @@ const request = require('request');
 const event = require('./routes/event');
 const addevent = require('./routes/addevent');
 const wishlist = require('./routes/wishlist')
+const profile = require('./routes/profilepage');
 var db = require('./routes/database').init();
 
 app.set('view engine', 'hbs');
@@ -42,6 +43,7 @@ app.use(
 app.use('/event', event);
 app.use('/addevent', addevent);
 app.use('/savewishlist', wishlist);
+app.use('/profile', profile);
 const server = require('http').createServer(app);
 hbs.registerPartials(__dirname + '/views/partials');
 
@@ -199,48 +201,6 @@ app.post('/registerVendor', (req, res) => {
 
 });
 
-app.get('/profile/', (req, res) => {
-    if (!req.cookies.i) {
-        res.redirect('/login')
-    } else {
-        let user_id = req.session.user.user_id;
-        var sql_select_wishlist = 'select wishlist from child where parent_id = ?';
-        db.query(sql_select_wishlist, user_id, (err, result) => {
-            if (result.length > 0) {
-                let wishlist_array = result[0].wishlist.split(",")
-                let sql =
-                    'select e.*, t.name as category, v.name as vendorname from event as e \n' +
-                    'inner join event_tags as et on e.event_id = et.event_id \n' +
-                    'inner join vendor as v on e.vendor_id = v.user_id \n' +
-                    'inner join tags as t on et.tag_id = t.tag_id;';
-                db.query(sql, (err, result) => {
-                    if (err) {
-                        throw err;
-                    } else {
-                        var data = [];
-                        for (var i = 0; i < result.length; i++) {
-                            let event_id = result[i].event_id;
-                            if (wishlist_array.includes(String(event_id))) {
-                                data.push(result[i]);
-                            }
-                        }
-                        res.render('profile.hbs', {
-                            data: data,
-                            user_type: req.session.user.user_type,
-                            vendor_id: req.session.user.user_id
-                        });
-                    }
-                });
-            } else {
-                res.render('profile.hbs', {
-                    user_type: req.session.user.user_type,
-                    vendor_id: req.session.user.user_id
-                });
-            }
-        })
-
-    }
-});
 
 app.get('/admin', (req, res) => {
     if (!req.cookies.i || !req.session.user) {
@@ -299,7 +259,61 @@ app.post('/approve-event', (req, res) => {
     }
 });
 
+app.get('/admin/user', (req, res)=>{
+    if (!req.cookies.i || !req.session.user) {
+        res.redirect('/logout')
+    } else if (req.session.user.user_type != 'admin') {
+        res.redirect('/logout')
+    } else {
 
+        var sql_user = "select user.user_id, user.user_type, user.email, vendor.name as vendor_name, vendor.contact_name, " +
+            "vendor.address, vendor.phone_num, vendor.website, vendor.isApproved from user\n" +
+            "inner join vendor on user.user_id = vendor.user_id";
+
+        db.query(sql_user, (err, result) => {
+            if (err) {
+                throw err;
+            } else {
+                var vendor_data = result;
+
+                var sql_parent = "select user.user_id, user.user_type, user.email, concat(parent.first_name, \" \", parent.last_name) as name\n" +
+                    "from user inner join parent on user.user_id = parent.user_id";
+
+                db.query(sql_parent, (err, result) => {
+                    if (err) {
+                        throw err;
+                    } else {
+                        res.render('admin_user.hbs', {
+                            vendor_data: vendor_data,
+                            parent_data: result
+                        });
+                    }
+                });
+
+
+            }
+        });
+    }
+});
+
+app.post('/approve-user', (req, res) => {
+    if (!req.cookies.i || !req.session.user) {
+        res.redirect('/login')
+    } else {
+        // console.log('approving')
+        // let event_id = req.body.id
+        // let sql = "UPDATE event SET isApproved = 'Approved', admin_id =? WHERE event_id = ?";
+        // db.query(sql, [req.session.user.user_id,event_id] , async (err, result) => {
+        //     if (err) {
+        //         throw err;
+        //     } else {
+        //         console.log(`Event ${event_id} approved`);
+        //         await newEventNotify(event_id);
+        //         res.json({ message: 'success' });
+        //     }
+        // });
+    }
+});
 
 app.get('/vendor/:vendor_id', (req, res) => {
     if (!req.cookies.i || !req.session.user) {
