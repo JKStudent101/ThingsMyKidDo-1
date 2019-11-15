@@ -177,8 +177,23 @@ $(document).ready(function() {
 			$('#Parent5').modal('show');
 
 			/*
-
+//set "Confirm" button id on click to hide 3rd modal and trigger 4th modal
+$('#P-Confirm').on('click', function(){
+    
+    if ($("#Parent_TermCheck").is(':checked')){
+/*
+        $('#P-Skip').click(function(){
+            $(this).data('clicked', true)
+        })
+        if($('#P-Skip').data('clicked')){
+            ChildProfile = {
+                'nickname': '',
+                'gender': '',
+                'interests': []
+            };
+        } 
 */
+
 		} else {
 			alert('Please argee to our Terms & Conditions.');
 			num = 'error';
@@ -270,4 +285,102 @@ $(document).ready(function() {
 			alert('Please argee to our Terms & Conditions.');
 		}
 	});
+
+});
+//set "Back" button id on click to hide 2nd modal and trigger 1st modal
+//jquery: .empty() might be redundant
+$("#B-Redo-info").on( "click", function() {
+    $('#Business2').modal('hide');
+    $('#Business1').modal('show');
+});
+//set "Confirm" button id on click to hide 2nd modal and trigger 3rd modal
+$("#B-Confirm-info").on( "click", function() {
+
+    if ($("#bus_TermCheck").is(':checked')){
+
+        Bus_Account = {
+            
+            "FirstName": $("#bus_Fname").val(),
+            "LastName": $("#bus_Lname").val(),
+            "Oraganization": $("#bus_Orgname").val(),
+            "PhoneNumber": $("#bus_Phone").val(),
+            "BusAddress" : $("#bus_Address").val(),
+            "EmailAddress": $("#bus_Email").val(),
+            "Website": $("#bus_Website").val(),
+            "Password1": $("#bus_PW").val(),
+            "Password2": $("#bus_PWconfirm").val(),
+            'type': 'vendor'
+        }; 
+        let Vendor_Account = JSON.stringify(Bus_Account);
+       // console.log(Vendor_Account);
+        $('#Business2').modal('hide');
+        $('#Business3').modal('show');
+
+        
+        $.ajax({
+            url: 'registerVendor',
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            dataType:'json',
+            data: Vendor_Account,
+            success: function(result) {
+                console.log(result)
+            }
+        })
+    }
+    else{
+        alert("Please argee to our Terms & Conditions.")
+    }   
+});
+
+$("#B-Register-complete").on("click", function(){
+    $("#bus_Fname").val("");
+    $("#bus_Lname").val("");
+    $("#bus_Orgname").val("");
+    $("#bus_Address").val("");
+    $("#bus_Phone").val("");
+    $("#bus_Email").val("");
+    $("#bus_Website").val("");
+    $("#bus_PW").val("");
+    $("#bus_PWconfirm").val("");
+    $("#bus_TermCheck").prop('checked',false)
+});
+
+
+$(".B-clear").on("click", function(){
+    $("#bus_Fname").val("");
+    $("#bus_Lname").val("");
+    $("#bus_Orgname").val("");
+    $("#bus_Address").val("");
+    $("#bus_Phone").val("");
+    $("#bus_Email").val("");
+    $("#bus_Website").val("");
+    $("#bus_PW").val("");
+    $("#bus_PWconfirm").val("");
+    $("#bus_TermCheck").prop('checked',false);
+});
+
+/*
+$("#P_Register-complete").on("click", function(){
+    $("#p_email").val("");
+    $("#p_phone").val("");
+    $("#p_password").val("");
+    $("#p_confirm_pw").val("");
+    $(".guardian").val("");
+    $("#Parent_TermCheck").prop('checked',false);
+});
+*/
+
+$(".P-clear").on("click", function(){
+    $("#p_email").val("");
+    $("#p_phone").val("");
+    $("#p_password").val("");
+    $("#p_confirm_pw").val("");
+    $(".guardian").val("");
+    $("#Parent_TermCheck").prop('checked',false);
+});
+
+
+$('#toHome').click(function(){
+    $(".P-clear").click();
 });

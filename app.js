@@ -57,7 +57,10 @@ app.get('/', (req, res) => {
 });
 
 app.get('/home', (req, res) => {
-    res.render('home.hbs', {});
+    res.render('home.hbs', {
+        user_type: req.session.user.user_type,
+        vendor_id: req.session.user.user_id
+    });
 });
 app.get('/login', (req, res) => {
     res.render('login.hbs', {});
@@ -184,8 +187,8 @@ app.post('/registerParent', (req, res) => {
                                         }
                                         db.query()
                                     }
-                                // })
-                            })
+                                })
+                            // })
                         }
 
                         // db.query('select user_id from parent', function(err, result){
@@ -240,7 +243,6 @@ app.post('/registerParent', (req, res) => {
 
 app.post('/registerVendor', (req, res) => {
     // console.log(req.body)
-    let errors = [];
 
     var salt = bcrypt.genSaltSync(saltRounds);
     var hash = bcrypt.hashSync(req.body.Password1, salt);
@@ -296,8 +298,29 @@ app.post('/registerVendor', (req, res) => {
             }
         }
 
-        
+
+    db.query(sql_insert_vendor_users, user_values, function(err, result) {
+        if(err) throw err;
+        let sql_select_user = 'SELECT type from user';
+        db.query(sql_select_user, user_values.type, function(err, result){
+            let sql_user_id = "SELECT last_insert_id() as user_id";
+            db.query(sql_user_id, function(err, result){
+                // console.log(result[0].last_insert_id())
+                let user_id = result[0].user_id
+
+                let sql_insert_vendor = 'INSERT INTO vendor (user_id, name, contact_name, address, phone_num, website) VALUES (?,?,?,?,?,?) ';
+                
+                let insert_user_values = [user_id, new_vendor.org, new_vendor.firstname + ' ' + new_vendor.lastname, new_vendor.address , new_vendor.phonenum, new_vendor.website]
+                       
+                db.query(sql_insert_vendor, insert_user_values, function(err, result){
+                    if(err) throw err;
+                    res.redirect('/register.hbs')
+                } )
+            })
+        })
     })
+})
+
 });
 
 app.get('/profile/', (req, res) => {
@@ -326,12 +349,17 @@ app.get('/profile/', (req, res) => {
                             }
                         }
                         res.render('profile.hbs', {
-                            data: data
+                            data: data,
+                            user_type: req.session.user.user_type,
+                            vendor_id: req.session.user.user_id
                         });
                     }
                 });
             }else{
-                res.render('profile.hbs',{});
+                res.render('profile.hbs',{
+                    user_type: req.session.user.user_type,
+                    vendor_id: req.session.user.user_id
+                });
             }
         })
 
@@ -432,7 +460,8 @@ app.get('/vendor/:vendor_id', (req, res) => {
                                 res.render('vendor.hbs', {
                                     data: result,
                                     vendor: vendor_name,
-                                    tags: tags_list
+                                    tags: tags_list,
+                                    vendor_id: req.session.user.user_id
                                 });
                             }
                         });
@@ -505,6 +534,8 @@ app.get('/edit/:event_id', (req, res) => {
                             start_date: result[0].start_date.toISOString().split('T')[0],
                             end_date: result[0].end_date.toISOString().split('T')[0],
                             tags: tags_list,
+                            user_type: req.session.user.user_type,
+                            vendor_id: req.session.user.user_id,
                             isError: 'false',
                             error: ""
                         })
@@ -617,6 +648,8 @@ app.post('/edit/:event_id', (req, res) => {
                         data: form,
                         start_date: req.body.start_date,
                         end_date: req.body.end_date,
+                        user_type: req.session.user.user_type,
+                        vendor_id: req.session.user.user_id,
                         isError: 'true',
                         error: "Please provide correct address."
                     })
@@ -788,7 +821,10 @@ app.get('/send-notification', (req, res) => {
     if (!req.cookies.i || !req.session.user) {
         res.redirect('/login')
     } else {
-        res.render('notification.hbs', {});
+        res.render('notification.hbs', {
+            user_type: req.session.user.user_type,
+            vendor_id: req.session.user.user_id
+        });
     }
 });
 
