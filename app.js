@@ -45,7 +45,7 @@ app.use('/savewishlist', wishlist);
 const server = require('http').createServer(app);
 hbs.registerPartials(__dirname + '/views/partials');
 
-hbs.registerHelper('ifCond', function (v1, v2, options) {
+hbs.registerHelper('ifCond', function(v1, v2, options) {
     if (v1 === v2) {
         return options.fn(this);
     }
@@ -68,13 +68,13 @@ app.get('/login', (req, res) => {
 
 app.post('/login-form', [
     body('email')
-        .isAlphanumeric()
-        .trim()
-        .not().isEmpty()
-        .escape(),
+    .isAlphanumeric()
+    .trim()
+    .not().isEmpty()
+    .escape(),
     body('password')
-        .not().isEmpty()
-        .escape()
+    .not().isEmpty()
+    .escape()
 ], (req, res) => {
     // console.log(req.body)
     let email = req.body.email;
@@ -94,10 +94,7 @@ app.post('/login-form', [
                 let salt = bcrypt.genSaltSync(saltRounds);
                 res.cookie('i', bcrypt.hashSync(email, salt));
                 req.session.user = result[0];
-                if (result[0].user_type === 'admin') { res.redirect("/admin") }
-                else if (result[0].user_type === 'vendor') { res.redirect(`/vendor/${result[0].user_id}`) }
-                else if (result[0].user_type === 'parent') { res.redirect("/home") }
-                else {
+                if (result[0].user_type === 'admin') { res.redirect("/admin") } else if (result[0].user_type === 'vendor') { res.redirect(`/vendor/${result[0].user_id}`) } else if (result[0].user_type === 'parent') { res.redirect("/home") } else {
                     res.cookie('i', true, { expires: new Date() });
                     res.send("Error: no user type")
                 }
@@ -115,9 +112,9 @@ app.post('/registerParent', (req, res) => {
     var hash = bcrypt.hashSync(req.body.p_pass, salt);
 
     console.log(req.body)
-    // res.render('not finished')
+        // res.render('not finished')
 
-    
+
 
     let multiple_interests1 = (req.body.childProfile[0].interests).split(',');
     let multiple_interests2 = (req.body.childProfile[1].interests).split(',');
@@ -142,26 +139,27 @@ app.post('/registerParent', (req, res) => {
         'email': req.body.p_email,
         'type': req.body.type,
         'password': hash
-        }
-        console.log(new_parent_user)
-    
+    }
+    console.log(new_parent_user)
+
     sql_user = "INSERT INTO user(user_type, email, pass_hash) VALUES (?,?,?)";
     let input_user_values = [new_parent_user.type, new_parent_user.email, new_parent_user.password]
-    db.query(sql_user, input_user_values, function(err, result){
-        if(err) throw err; else{
+    db.query(sql_user, input_user_values, function(err, result) {
+        if (err) throw err;
+        else {
             sql_select_user_parent_type = 'SELECT user_type from user';
-            db.query(sql_select_user_parent_type, new_parent_user.type, function(err, result){
+            db.query(sql_select_user_parent_type, new_parent_user.type, function(err, result) {
                 sql_user_parent_id = 'SELECT last_insert_id() as parent_id';
-                db.query(sql_user_parent_id, function(err, result){
+                db.query(sql_user_parent_id, function(err, result) {
                     // let parent_id = result[0].parent_id
                     // let child_input_values = [parent_id, ]
                 })
             })
-            
+
         }
     })
 
-    
+
 })
 
 app.post('/registerVendor', (req, res) => {
@@ -169,29 +167,29 @@ app.post('/registerVendor', (req, res) => {
 
     var salt = bcrypt.genSaltSync(saltRounds);
     var hash = bcrypt.hashSync(req.body.Password1, salt);
-    let new_vendor = {'firstname': req.body.FirstName, 'lastname': req.body.LastName, 'org': req.body.Oraganization, 'phonenum': req.body.PhoneNumber, 'address': req.body.BusAddress, 'email': req.body.EmailAddress, 'website': req.body.Website, 'password': hash, 'type': req.body.type}
-    // console.log(new_vendor)
-    // db.query()
+    let new_vendor = { 'firstname': req.body.FirstName, 'lastname': req.body.LastName, 'org': req.body.Oraganization, 'phonenum': req.body.PhoneNumber, 'address': req.body.BusAddress, 'email': req.body.EmailAddress, 'website': req.body.Website, 'password': hash, 'type': req.body.type }
+        // console.log(new_vendor)
+        // db.query()
     let sql_insert_vendor_users = 'INSERT INTO user(user_type, email, pass_hash) VALUES (?, ?, ?)'
     let user_values = [new_vendor.type, new_vendor.email, new_vendor.password];
 
     db.query(sql_insert_vendor_users, user_values, function(err, result) {
-        if(err) throw err;
+        if (err) throw err;
         let sql_select_user = 'SELECT type from user';
-        db.query(sql_select_user, user_values.type, function(err, result){
+        db.query(sql_select_user, user_values.type, function(err, result) {
             let sql_user_id = "SELECT last_insert_id() as user_id";
-            db.query(sql_user_id, function(err, result){
+            db.query(sql_user_id, function(err, result) {
                 // console.log(result[0].last_insert_id())
                 let user_id = result[0].user_id
 
                 let sql_insert_vendor = 'INSERT INTO vendor (user_id, name, contact_name, address, phone_num, website) VALUES (?,?,?,?,?,?) ';
-                
-                let insert_user_values = [user_id, new_vendor.org, new_vendor.firstname + ' ' + new_vendor.lastname, new_vendor.address , new_vendor.phonenum, new_vendor.website]
-                       
-                db.query(sql_insert_vendor, insert_user_values, function(err, result){
-                    if(err) throw err;
+
+                let insert_user_values = [user_id, new_vendor.org, new_vendor.firstname + ' ' + new_vendor.lastname, new_vendor.address, new_vendor.phonenum, new_vendor.website]
+
+                db.query(sql_insert_vendor, insert_user_values, function(err, result) {
+                    if (err) throw err;
                     res.redirect('/register.hbs')
-                } )
+                })
             })
         })
     })
@@ -230,8 +228,8 @@ app.get('/profile/', (req, res) => {
                         });
                     }
                 });
-            }else{
-                res.render('profile.hbs',{
+            } else {
+                res.render('profile.hbs', {
                     user_type: req.session.user.user_type,
                     vendor_id: req.session.user.user_id
                 });
@@ -241,7 +239,7 @@ app.get('/profile/', (req, res) => {
     }
 });
 
-app.get('/admin', (req,res)=>{
+app.get('/admin', (req, res) => {
     if (!req.cookies.i || !req.session.user) {
         res.redirect('/logout')
     } else if (req.session.user.user_type != 'admin') {
@@ -264,8 +262,8 @@ app.get('/admin/event', (req, res) => {
             'FROM event a\n' +
             'LEFT JOIN event_tags b ON a.event_id = b.event_id\n' +
             'LEFT JOIN tags c ON b.tag_id = c.tag_id\n' +
-            'LEFT JOIN vendor d ON a.vendor_id = d.user_id\n'+
-            'left join user e on d.user_id = e.user_id\n'+
+            'LEFT JOIN vendor d ON a.vendor_id = d.user_id\n' +
+            'left join user e on d.user_id = e.user_id\n' +
             'ORDER BY vendor_name, a.start_date';
         db.query(sql, (err, result) => {
             if (err) {
@@ -286,7 +284,7 @@ app.post('/approve-event', (req, res) => {
         console.log('approving')
         let event_id = req.body.id
         let sql = "UPDATE event SET isApproved = 'Approved', admin_id =? WHERE event_id = ?";
-        db.query(sql, [req.session.user.user_id,event_id] , async (err, result) => {
+        db.query(sql, [req.session.user.user_id, event_id], async(err, result) => {
             if (err) {
                 throw err;
             } else {
@@ -368,9 +366,9 @@ app.get('/delete/:event_id', (req, res) => {
                         throw err;
                     } else {
                         // console.log(req.session.user.user_id);
-                        if (req.session.user.user_type == 'vendor'){
+                        if (req.session.user.user_type == 'vendor') {
                             res.redirect('/vendor/' + req.session.user.user_id);
-                        } else if (req.session.user.user_type == 'admin'){
+                        } else if (req.session.user.user_type == 'admin') {
                             res.redirect('/admin/event');
                         }
 
@@ -486,10 +484,10 @@ app.post('/edit/:event_id', (req, res) => {
                             db.query(sql_update_event_tag, [tag_id, req.params.event_id], (err, result) => {
                                 if (err) {
                                     throw err;
-                                }else{
-                                    if (req.session.user.user_type == 'vendor'){
+                                } else {
+                                    if (req.session.user.user_type == 'vendor') {
                                         res.redirect('/vendor/' + req.session.user.user_id);
-                                    } else if (req.session.user.user_type == 'admin'){
+                                    } else if (req.session.user.user_type == 'admin') {
                                         res.redirect('/admin/event');
                                     }
                                 }
@@ -498,10 +496,10 @@ app.post('/edit/:event_id', (req, res) => {
                     });
                 }
             })
-        }).catch((error)=>{
+        }).catch((error) => {
             var form = {
                 event_id: req.params.event_id,
-                event_name : req.body.eventname,
+                event_name: req.body.eventname,
                 start_time: req.body.start_time,
                 end_time: req.body.end_time,
                 event_tag: req.body.tag,
@@ -532,8 +530,7 @@ app.post('/edit/:event_id', (req, res) => {
             })
         });
 
-    }
-    catch (err) {
+    } catch (err) {
         console.log(err);
     }
 });
@@ -542,28 +539,32 @@ app.get('/test', (req, res) => {
     res.render('admin_event.hbs')
 });
 
-const saveToDatabase = async (subscription, user_id) => {
+app.get('/landing', (req, res) => {
+    res.render('landing.hbs')
+});
+
+const saveToDatabase = async(subscription, user_id) => {
     // console.log(subscription)
     let inputs = [
-        user_id,
-        subscription.endpoint,
-        subscription.keys.p256dh,
-        subscription.keys.auth
-    ]
-    // console.log(inputs)
+            user_id,
+            subscription.endpoint,
+            subscription.keys.p256dh,
+            subscription.keys.auth
+        ]
+        // console.log(inputs)
     let sql = "INSERT INTO subscriptions (parent_id, endpoint, p256dh, auth) VALUES (?, ?, ?, ?)"
 
     db.query(sql, inputs, (err, result) => {
         if (err) {
             console.log(err)
-            // throw err;
+                // throw err;
         } else {
             console.log("1 subscription added to user " + user_id);
         }
     });
 };
 
-const getSubscriptions = async (user_id) => {
+const getSubscriptions = async(user_id) => {
     let result = await new Promise((resolve, reject) => {
         let sql = "SELECT * FROM subscriptions WHERE parent_id = ?"
         db.query(sql, user_id, (err, result) => {
@@ -600,17 +601,17 @@ const getSubscriptions = async (user_id) => {
     return result
 }
 
-const newEventNotify = async (event_id) => {
+const newEventNotify = async(event_id) => {
     console.log("sending notification")
     let results = await new Promise((resolve, reject) => {
         let sql = "SELECT s.parent_id, s.endpoint, s.expirationTime, s.p256dh, s.auth FROM subscriptions as s\n " +
-        "INNER JOIN parent as p ON p.user_id = s.parent_id\n " +
-        "INNER JOIN child as c ON c.parent_id = p.user_id\n " + 
-        "INNER JOIN child_tags as ct ON ct.parent_id = c.parent_id\n " +
-        "INNER JOIN tags as t ON t.tag_id = ct.tag_id\n " +
-        "INNER JOIN event_tags as et ON et.tag_id = t.tag_id\n " +
-        "WHERE et.event_id = ?\n " +
-        "GROUP BY s.parent_id"
+            "INNER JOIN parent as p ON p.user_id = s.parent_id\n " +
+            "INNER JOIN child as c ON c.parent_id = p.user_id\n " +
+            "INNER JOIN child_tags as ct ON ct.parent_id = c.parent_id\n " +
+            "INNER JOIN tags as t ON t.tag_id = ct.tag_id\n " +
+            "INNER JOIN event_tags as et ON et.tag_id = t.tag_id\n " +
+            "WHERE et.event_id = ?\n " +
+            "GROUP BY s.parent_id"
         db.query(sql, event_id, (err, result) => {
             if (err) {
                 console.log(err)
@@ -648,7 +649,7 @@ const newEventNotify = async (event_id) => {
     return results
 }
 
-app.post('/saveSubscription', async (req, res) => {
+app.post('/saveSubscription', async(req, res) => {
     if (!req.cookies.i || !req.session.user) {
         res.redirect('/login')
     } else {
@@ -666,7 +667,7 @@ const vapidKeys = {
 
 webpush.setVapidDetails('mailto:thingsmykidsdo.bcit@gmail.com', vapidKeys.publicKey, vapidKeys.privateKey);
 
-app.post('/text-me', async (req, res) => {
+app.post('/text-me', async(req, res) => {
     if (!req.cookies.i || !req.session.user) {
         res.redirect('/login')
     } else {
@@ -710,7 +711,7 @@ app.get('/logout', (req, res) => {
 });
 
 
-server.listen(port, function (err) {
+server.listen(port, function(err) {
     if (err) {
         console.log(err);
         return false;
