@@ -263,12 +263,11 @@ function initMap() {
 					'</h3>' +
 					// v.name
 					infoTitleLink +
-					+"<input class='invis' name='eventid' type='text' value=" +
-					infodetail.event_id +
-					'>' +
 					'<p>' +
 					infodetail.description +
 					'</p>' +
+					`<input class="invis" name="eventid" value=${infodetail.event_id}>` +
+					'</input>' +
 					'<p>' +
 					'Start date \n' +
 					infodetail.start_date +
@@ -278,7 +277,6 @@ function initMap() {
 					infodetail.end_date +
 					'</p>' +
 					'</span>' +
-					
 					`<input class= "invis" value ="submit" name="childname" id ="input${infodetail.event_id}"
 						onclick="{
 						selectchildname().then((result)=> {
