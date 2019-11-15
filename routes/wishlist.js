@@ -47,9 +47,11 @@ router.post('/', (req, res) => {
 router.post('/delete', (req, res) => {
     let event_id = req.body.eventid;
     let user_id = req.session.user.user_id;
-    var sql_select_wishlist = 'select wishlist from child where parent_id = ?';
+    let nickname = req.body.nickname;
+    let array = [user_id, nickname]   
+    var sql_select_wishlist = 'select wishlist from child where parent_id = ? AND child_nickname = ?';
     
-    db.query(sql_select_wishlist, user_id, (err, result)=>{
+    db.query(sql_select_wishlist, array, (err, result)=>{
         if (result.length > 0){
             let wishlist_array = result[0].wishlist.split(",");
             let wishlist_array_updated = [];
@@ -59,8 +61,8 @@ router.post('/delete', (req, res) => {
                 }
             }
             let wishlist_string = wishlist_array_updated.toString();
-            let sql_update_wishlist = 'update child set wishlist = ? where parent_id = ?';
-            let update_array = [wishlist_string, user_id]
+            let sql_update_wishlist = 'update child set wishlist = ? where parent_id = ? AND child_nickname = ?';
+            let update_array = [wishlist_string, user_id, nickname]
             db.query(sql_update_wishlist, update_array, (err, result)=>{
                 if(err){
                     console.log(err);

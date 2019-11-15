@@ -77,9 +77,8 @@
                             <img src="/src/img.jpg" alt="John" style="width:100%">
                             {{#each data}}
                                 <div id="{{nickname}}" class="inv" style="font-size: 30px;">{{nickname}}
-                            
-                                <p class="title">Age: 7</p>
-                                <p>Hobbies: Swimming, Dance</p>
+                                <p class="title">Age: </p>
+                                <p>Hobbies: </p>
                                 </div>
                             {{/each}}
                             {{!-- <div id="billy" class="inv" style="font-size: 30px;">Billy
@@ -138,7 +137,7 @@
                     <tr>
                         
                         <td>
-                        <img src="/src/{{category}}Icon.png" id="{{category}}img" style="width:50px;height:50px;border:0;" onerror="this.src='/src/testingIcon.jpg';">
+                        <img src="/src/customIcons/{{category}}_icon.png" id="{{category}}img" style="width:50px;height:50px;border:0;" onerror="this.src='/src/testingIcon.jpg';">
                         </td>
                        
                         
@@ -151,6 +150,7 @@
                             <div>
                                <form action="/savewishlist/delete" method="post">
                                    <input class='invis' name='eventid' type='text' value={{event_id}}>
+                                   <input class='invis' name='nickname' type='text' value={{nickname}}>
                                    <button type='submit' class=" invis btn btn-danger" id="submitbutton"></button> 
                                </form>
                             <button class="btn btn-danger" onclick="
@@ -172,8 +172,7 @@
                         </td>
                         
                     </tr>
-                {{/each}}
-
+                 {{/each}}
 
             </table>
             </div>

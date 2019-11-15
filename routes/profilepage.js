@@ -79,6 +79,7 @@ router.get('/:nickname', (req, res) => {
                                 for (var i = 0; i < result.length; i++) {
                                     let event_id = result[i].event_id;
                                     if (wishlist_array.includes(String(event_id))) {
+                                        result[i].nickname= nickname
                                         events.push(result[i]);
                                     }
                                 }
