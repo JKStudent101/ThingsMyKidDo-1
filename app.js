@@ -116,36 +116,16 @@ app.post('/registerParent', (req, res) => {
     var salt = bcrypt.genSaltSync(saltRounds);
     var hash = bcrypt.hashSync(req.body.p_pass, salt);
 
-    console.log(req.body)
+    // console.log(req.body)
     // res.render('not finished')
-
-    
-
-    let multiple_interests1 = (req.body.childProfile[0].interests).split(',');
-    let multiple_interests2 = (req.body.childProfile[1].interests).split(',');
-    let multiple_interests3 = (req.body.childProfile[2].interests).split(',');
-    let new_child1 = {
-        'nickname1': req.body.childProfile[0].nickname,
-        'gender': req.body.childProfile[0].gender,
-        'interest': multiple_interests1
-    }
-    let new_child2 = {
-        'nickname1': req.body.childProfile[1].nickname,
-        'gender': req.body.childProfile[1].gender,
-        'interest': multiple_interests2
-    }
-    let new_child3 = {
-        'nickname1': req.body.childProfile[2].nickname,
-        'gender': req.body.childProfile[2].gender,
-        'interest': multiple_interests3
-    }
-
     let new_parent_user = {
-        'email': req.body.p_email,
         'type': req.body.type,
+        'email': req.body.p_email,
         'password': hash
-
-    }
+    }    
+    let childprofile = req.body.childProfile
+    // console.log(childprofile)
+    // console.log(new_parent_user);
     sql_user = "INSERT INTO user(user_type, email, pass_hash) VALUES (?,?,?)";
     let input_user_values = [new_parent_user.type, new_parent_user.email, new_parent_user.password]
     
@@ -155,9 +135,105 @@ app.post('/registerParent', (req, res) => {
             db.query(sql_select_user_parent_type, new_parent_user.type, function(err, result){
                 sql_user_parent_id = 'SELECT last_insert_id() as parent_id';
                 db.query(sql_user_parent_id, function(err, result){
+                    let count = 1
+                    let parent_id = result[0].parent_id //54
+                    let child_user = {}; // child1:
 
-                    // let parent_id = result[0].parent_id
-                    // let child_input_values = [parent_id, ]
+                    let index = new_parent_user.email.indexOf('@');
+                    let email = new_parent_user.email.substring(0,index);
+                    // console.log(email)
+                    let sql_parent_tabl_insert = 'INSERT INTO parent(user_id, first_name) VALUES (?, ?)';
+                    db.query(sql_parent_tabl_insert, [parent_id, email], function(err, result){
+                        if(err) {
+                            console.log(err)
+                        } else {
+                            db.query('select user_id from parent', function(err, result){
+                                sql_parent_parent_id = 'SELECT last_insert_id() as user_parent_id';
+                                // console.log(parent_id)
+                                // db.query(sql_user_parent_id, function(err, result){
+                                    if(err){
+                                        console.log(err)
+                                    } else {
+                                        // let child_id = result[0].user_parent_id //54
+                                        let child_nickname = []
+                                        for (let key in childprofile) {
+                                            let value = childprofile[key];
+
+                                            child_nickname.push(value[0])
+                                            }
+                                        //   let parent_id = result[0].parent_id //54
+                                        //   console.log(child_nickname)
+                                        // console.log(child_/id)
+                                        let sql_child_table = 'INSERT INTO child(child_nickname ) VALUES (?)';
+                                        let sql_child_values = [ parent_id, child_nickname[0] ]// 54, child + 1
+                                        // db.query(sql_child_table, sql_child_values, function(err, result){
+                                                
+                                        //             console.log(parent_id)
+                                                    
+                                        //         })
+
+                                        for(let i=0; i < child_nickname.length; i++){
+                                        //     // console.log(child_id)
+                                        //     console.log(child_nickname[i])
+                                            let sql_child_table = 'INSERT INTO child(parent_id, child_nickname ) VALUES (?, ?)';
+                                            let sql_child_values = [ parent_id, child_nickname[i] ]// 54, child + 1
+                                            
+                                            setTimeout(() => { 
+                                                db.query(sql_child_table, sql_child_values, function(err, result){
+                                                
+                                                    console.log(parent_id)
+                                                    
+                                                })
+                                              }, 1000);
+
+                                        }
+                                        db.query()
+                                    }
+                                })
+                            // })
+                        }
+
+                        // db.query('select user_id from parent', function(err, result){
+                        //     if((Object.keys(childprofile).length) > 1){
+                        //         // console.log('exist')
+                        //         //  child_user['nickname' + count] = childprofile
+                                
+                        //          // console.log(new_parent_user.childProfile[0])
+                        //         // let kidobject= childprofile.kid.Child;
+                        //         let child_nickname = []
+                        //         for (let key in childprofile) {
+                        //             let value = childprofile[key];
+        
+                        //             child_nickname.push(value[0])
+                        //           }
+                        //         //   let parent_id = result[0].parent_id //54
+                        //         //   console.log(child_nickname)
+                        //         for(let i=0; i < child_nickname.length; i++){
+                        //             console.log(parent_id)
+                        //             console.log(child_nickname[i])
+                        //             let sql_child_table = 'INSERT INTO child(child_nickname ) VALUES (?) WHERE parent_id = ?';
+                        //             // let sql_child_values = [ child_nickname[i ],   ]// 54, child + 1
+                                    
+                        //             // db.query(sql_child_table, sql_child_values, function(err, result){
+                        //             //     if(err) throw err;
+                        //             //     console.log('worked')
+                                        
+                        //             // })
+        
+                        //         }
+                        //         //  console.log(childprofile.kid)
+                        //         //  db.query(sql_child_table, sql_child_values, function(err, result){
+                        //         //      if(err) throw err;
+                        //         //      console.log('inserted');
+                        //         //  })             
+                        //     }
+                        // })
+                           
+                    })
+                    // console.log((Object.keys(childprofile).length))
+                    // console.log(Object.keys(childprofile).length)
+                    // console.log(childprofile)
+                    
                 })
             })
             
@@ -177,6 +253,53 @@ app.post('/registerVendor', (req, res) => {
     // db.query()
     let sql_insert_vendor_users = 'INSERT INTO user(user_type, email, pass_hash) VALUES (?, ?, ?)'
     let user_values = [new_vendor.type, new_vendor.email, new_vendor.password];
+    let sql_email_exist = "SELECT COUNT(*) as email_count FROM user WHERE email = ?";
+    if(req.body.Password1.length < 4){
+        errors.push({text: 'Password must be longer than 4'})
+    }
+    if(req.body.Password1 != req.body.Password2){
+        errors.push({text: 'Password do not match'})
+
+    }
+    console.log(errors)
+    db.query(sql_email_exist, new_vendor.email, function(err, result){
+        if(err){
+            console.log(err)
+        } else{
+            if(result[0].email_count > 0){
+                errors.push({text: 'email exist'})
+            }
+            if(errors.length > 0){
+                console.log(result[0])
+                console.log(errors)
+                res.render('login.hbs', {
+                    errors: 'errors'
+                })
+                // res.send(errors)
+            } else{
+                db.query(sql_insert_vendor_users, user_values, function(err, result) {
+                    if(err) throw err;      
+                    let sql_select_user = 'SELECT type from user';
+                    db.query(sql_select_user, user_values.type, function(err, result){
+                        let sql_user_id = "SELECT last_insert_id() as user_id";
+                        db.query(sql_user_id, function(err, result){
+                            // console.log(result[0].last_insert_id())
+                            let user_id = result[0].user_id
+        
+                            let sql_insert_vendor = 'INSERT INTO vendor (user_id, name, contact_name, address, phone_num, website) VALUES (?,?,?,?,?,?) ';
+                            
+                            let insert_user_values = [user_id, new_vendor.org, new_vendor.firstname + ' ' + new_vendor.lastname, new_vendor.address , new_vendor.phonenum, new_vendor.website]
+                                
+                            db.query(sql_insert_vendor, insert_user_values, function(err, result){
+                                if(err) throw err;
+                                res.redirect('/register.hbs')
+                            } )
+                        })
+                    })
+                })
+            }
+        }
+
 
     db.query(sql_insert_vendor_users, user_values, function(err, result) {
         if(err) throw err;
@@ -198,6 +321,7 @@ app.post('/registerVendor', (req, res) => {
             })
         })
     })
+})
 
 });
 

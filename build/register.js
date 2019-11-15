@@ -58,15 +58,31 @@ $(document).ready(function() {
 	var count = 0;
 	var ChildProfile;
 	let TotalChilds = {};
+	let tags = [];
 
-	$('#add').click(function() {
+	$.ajax({
+		url: '/event/gettags',
+		type: 'GET',
+		async: false,
+		dataType: 'json',
+		success: (data) => {
+			for (var i = 0; i < data.length; i++) {
+				tags.push(data[i].name);
+			}
+		}
+	});
+
+	// console.log(tags);
+
+	function getinput() {
 		let selectGender =
 			'<select id="gender' +
 			(1 + count) +
 			' " class="register-gender"> <option>Boy</option> <option>Girl</option> </select>';
-
-		input = $(
-			'<div class="allInputs' +
+		let input = '';
+		for (let i = 0; i < tags.length; i++) {
+			input =
+				'<div class="allInputs' +
 				(1 + count) +
 				'" > <input class="register-kid' +
 				(1 + count) +
@@ -76,18 +92,27 @@ $(document).ready(function() {
 				(1 + count) +
 				'">' +
 				selectGender +
-				' <input class="register-kid' +
-				(1 + count) +
-				'" name="interest' +
-				(1 + count) +
-				'" id="interest' +
-				(1 + count) +
-				'"> </div>'
-		);
+				'<select value="' +
+				tags[i] +
+				'" id="' +
+				'"></select>';
 
-		count++;
+			// <select name="" id=""></select>
+			// ' <input class="register-kid' +
+			// (1 + count) +
+			// '" name="interest' +
+			// (1 + count) +
+			// '" id="interest' +
+			// (1 + count) +
+			// '"> '
+		}
+
+		//<button type="button" class="submit1" id="more1">Add more Kids</button>
 
 		$('#morekids').append(input);
+	}
+	$('#more1').click(function() {
+		count++;
 	});
 	let total_kids = [];
 
@@ -105,6 +130,7 @@ $(document).ready(function() {
 				return $(this).val();
 			})
 			.get();
+		getinput();
 
 		TotalChilds['Child' + count] = list;
 		console.log(TotalChilds);
@@ -131,7 +157,8 @@ $(document).ready(function() {
 				p_pass: pPassword,
 				p_pass2: pPassword2,
 				p_role: ParentRole,
-				childProfile: TotalChilds
+				childProfile: TotalChilds,
+				type: 'parent'
 			};
 			ParentDetail = JSON.stringify(ParentAccount);
 			console.log(ParentDetail);
