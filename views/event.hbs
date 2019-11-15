@@ -9,7 +9,17 @@
     </head>
 
     <body>
-        {{> menu}}
+    {{#ifCond user_type "vendor"}}
+        {{> menu_vendor}}
+    {{else}}
+        {{#ifCond user_type "admin"}}
+            {{> menu_admin}}
+        {{else}}
+            {{#ifCond user_type "parent"}}
+                {{> menu_parent}}
+            {{/ifCond}}
+        {{/ifCond}}
+    {{/ifCond}}
         <div class="container col-xs-12">
             <div class="row">
                 <div class="col-xs-6">

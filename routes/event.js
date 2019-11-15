@@ -29,11 +29,15 @@ router.get('/', (req, res) => {
 			if (passedVariable) {
 				res.render('event.hbs', {
 					data: result,
-					message: passedVariable
+					message: passedVariable,
+					user_type: req.session.user.user_type,
+					vendor_id: req.session.user.user_id
 				});
 			} else {
 				res.render('event.hbs', {
-					data: result
+					data: result,
+					user_type: req.session.user.user_type,
+					vendor_id: req.session.user.user_id
 				});
 			}
 		}

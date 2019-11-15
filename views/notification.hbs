@@ -13,7 +13,17 @@
         {{!-- <script>
             main()
         </script> --}}
-        {{> menu}}
+        {{#ifCond user_type "vendor"}}
+            {{> menu_vendor}}
+        {{else}}
+            {{#ifCond user_type "admin"}}
+                {{> menu_admin}}
+            {{else}}
+                {{#ifCond user_type "parent"}}
+                    {{> menu_parent}}
+                {{/ifCond}}
+            {{/ifCond}}
+        {{/ifCond}}
         <div>
             <h1>Notification Test</h1>
             <input id="txt" type="text" placeholder="Type notification text here">
