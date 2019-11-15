@@ -116,48 +116,82 @@ app.post('/registerParent', (req, res) => {
     var salt = bcrypt.genSaltSync(saltRounds);
     var hash = bcrypt.hashSync(req.body.p_pass, salt);
 
-    console.log(req.body)
+    // console.log(req.body)
     // res.render('not finished')
 
-
-
-    let multiple_interests1 = (req.body.childProfile[0].interests).split(',');
-    let multiple_interests2 = (req.body.childProfile[1].interests).split(',');
-    let multiple_interests3 = (req.body.childProfile[2].interests).split(',');
-    let new_child1 = {
-        'nickname1': req.body.childProfile[0].nickname,
-        'gender': req.body.childProfile[0].gender,
-        'interest': multiple_interests1
-    }
-    let new_child2 = {
-        'nickname1': req.body.childProfile[1].nickname,
-        'gender': req.body.childProfile[1].gender,
-        'interest': multiple_interests2
-    }
-    let new_child3 = {
-        'nickname1': req.body.childProfile[2].nickname,
-        'gender': req.body.childProfile[2].gender,
-        'interest': multiple_interests3
-    }
-
     let new_parent_user = {
-        'email': req.body.p_email,
         'type': req.body.type,
+        'email': req.body.p_email,
         'password': hash
-
     }
+    let childprofile = req.body.childProfile
+    // console.log(childprofile)
+    // console.log(new_parent_user);
     sql_user = "INSERT INTO user(user_type, email, pass_hash) VALUES (?,?,?)";
     let input_user_values = [new_parent_user.type, new_parent_user.email, new_parent_user.password]
 
     db.query(sql_user, input_user_values, function (err, result) {
         if (err) throw err; else {
             sql_select_user_parent_type = 'SELECT user_type from user';
-            db.query(sql_select_user_parent_type, new_parent_user.type, function (err, result) {
+            db.query(sql_select_user_parent_type, function (err, result) {
                 sql_user_parent_id = 'SELECT last_insert_id() as parent_id';
                 db.query(sql_user_parent_id, function (err, result) {
+                    let count = 1
+                    let parent_id = result[0].parent_id //54
+                    let child_user = {}; // child1:S
+                    console.log(parent_id)
+                    console.log(result)
+                    let index = new_parent_user.email.indexOf('@');
+                    let email = new_parent_user.email.substring(0, index);
+                    // console.log(email)
+                    let sql_parent_tabl_insert = 'INSERT INTO parent(user_id, first_name) VALUES (?, ?)';
+                    db.query(sql_parent_tabl_insert, [parent_id, new_parent_user.email], function (err, result) {
+                        if (err) {
+                            console.log(err)
+                        } else {
+                            db.query('select user_id from parent', function (err, result) {
+                                // sql_parent_parent_id = 'SELECT last_insert_id() as user_parent_id';
+                                // console.log(parent_id)
+                                // db.query(sql_user_parent_id, function(err, result){
+                                if (err) {
+                                    console.log(err)
+                                } else {
+                                    // let child_id = result[0].user_parent_id //54
+                                    let child_nickname = []
+                                    for (let key in childprofile) {
+                                        let value = childprofile[key];
 
-                    // let parent_id = result[0].parent_id
-                    // let child_input_values = [parent_id, ]
+                                        child_nickname.push(value[0])
+                                    }
+                                    let sql_child_table = 'INSERT INTO child(child_nickname ) VALUES (?)';
+                                    let sql_child_values = [parent_id, child_nickname[0]]// 54, child + 1
+
+                                    for (let i = 0; i < child_nickname.length; i++) {
+
+                                        let sql_child_table = 'INSERT INTO child(parent_id, child_nickname ) VALUES (?, ?)';
+                                        let sql_child_values = [parent_id, child_nickname[i]]// 54, child + 1
+
+                                        setTimeout(() => {
+                                            db.query(sql_child_table, sql_child_values, function (err, result) {
+
+                                                // console.log(parent_id)
+
+                                            })
+                                        }, 1000);
+                                        
+
+                                    }
+                                    result = {
+                                        user_id: parent_id,
+                                        user_type: 'parent'
+                                    }
+                                    req.session.user = result;
+                                    res.redirect('/home')
+                                }
+                            })
+                        }
+                    })
+
                 })
             })
 
@@ -259,7 +293,7 @@ app.post('/approve-event', (req, res) => {
     }
 });
 
-app.get('/admin/user', (req, res)=>{
+app.get('/admin/user', (req, res) => {
     if (!req.cookies.i || !req.session.user) {
         res.redirect('/logout')
     } else if (req.session.user.user_type != 'admin') {

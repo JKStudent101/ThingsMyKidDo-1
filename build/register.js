@@ -1,3 +1,10 @@
+var kidsNum = 1;
+
+const Remove_profile = (k_profile_id) => {
+    $(k_profile_id).remove(); 
+    kidsNum--;
+}
+
 $(document).ready(function() {
 	let num = '';
 	$('#Family').on('click', function() {
@@ -39,6 +46,14 @@ $(document).ready(function() {
 	$('#P-Kids').on('click', function() {
 		$('#Parent3').modal('hide');
 		$('#Parent4').modal('show');
+
+		var k1_nName = $('#kidname1').val();
+        var k1_gender = $('#gender1').val();
+        var k1_hobbies = [];
+
+        $('#K1_Nickname').html(k1_nName);
+        $('#K1_Gender').html(k1_gender);
+
 	});
 	//set "Back" button id on click to hide 3rd modal and trigger 2nd modal
 	$('#P-Redo-Kids').on('click', function() {
@@ -74,7 +89,63 @@ $(document).ready(function() {
 
 	// console.log(tags);
 
-	function getinput() {
+	var count = 2;
+    var ChildProfile;
+
+
+
+    $('#add').click(function() {
+
+        if(kidsNum > 4){
+            alert("Can only create 5 kid profiles during registartion. \n" + 
+            "You can create more after finishing registration.");
+            return false;
+        } 
+
+        var new_kid = 'Kid'+count;
+        var j_new_kid = '#'+new_kid;
+
+        let selectGender =
+            '<select id="gender' +
+            count +
+            ' " class="register-gender"> <option>Boy</option> <option>Girl</option> </select>';
+
+
+
+        let delete_profile =
+            '<input class="Remove_kid" type="button" value="Remove child' + count + '" onClick="Remove_profile(\''+j_new_kid+'\');">'
+
+        input =
+            '<div class="Add_Kids" id="' +
+                new_kid +
+                '" ><p>Kid' + kidsNum +' </p> <input class="register-kid' +
+                count +
+                '" name="nickname' +
+                count +
+                '" id="kidname' +
+                count +
+                '">'+' is a '+
+                selectGender +
+                ' who is interested in '+
+                ' <input class="register-kid' +
+                count +
+                '" name="interest' +
+                count +
+                '" id="interest' +
+                count +
+                '">'+ j_new_kid + delete_profile + 
+                '</div>'
+
+
+        count++;
+        kidsNum++;
+
+        $('#morekids').append(input);
+
+
+    });
+
+/*	function getinput() {
 		let selectGender =
 			'<select id="gender' +
 			(1 + count) +
@@ -114,6 +185,7 @@ $(document).ready(function() {
 	$('#more1').click(function() {
 		count++;
 	});
+	*/
 	let total_kids = [];
 
 	//Register Modal
@@ -121,8 +193,8 @@ $(document).ready(function() {
 	//$("#B-Register-info").on( "click",  function Summary_Bus());
 
 	// Register Child Profile
-	$(document).on('click', '#more1', function(event) {
-		var list = $('.allInputs' + count + '')
+	$(document).on('click', 'P-Kids', function(event) {
+		var list = $('.Add_Kids' + count + '')
 			// var list = $('[class^=allInputs]')
 			.find('input, select')
 			.not('#add :input')
@@ -137,6 +209,7 @@ $(document).ready(function() {
 		// send to server here
 	});
 	count = count + 1;
+
 
 	$('#P-Confirm').on('click', function() {
 		if ($('#Parent_TermCheck').is(':checked')) {
@@ -156,7 +229,7 @@ $(document).ready(function() {
 				p_phone: pPhone,
 				p_pass: pPassword,
 				p_pass2: pPassword2,
-				p_role: ParentRole,
+				p_role: 'parent',
 				childProfile: TotalChilds,
 				type: 'parent'
 			};
