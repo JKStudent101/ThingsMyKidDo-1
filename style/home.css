@@ -117,7 +117,7 @@ body {
     right: 30px;
 } */
 
-#permission-btn {
+.permission-btn {
     position: relative;
     width: 220px;
     left: 35%;

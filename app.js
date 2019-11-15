@@ -117,7 +117,7 @@ app.post('/registerParent', (req, res) => {
     console.log(req.body)
     // res.render('not finished')
 
-    
+
 
     let multiple_interests1 = (req.body.childProfile[0].interests).split(',');
     let multiple_interests2 = (req.body.childProfile[1].interests).split(',');
@@ -146,23 +146,23 @@ app.post('/registerParent', (req, res) => {
     }
     sql_user = "INSERT INTO user(user_type, email, pass_hash) VALUES (?,?,?)";
     let input_user_values = [new_parent_user.type, new_parent_user.email, new_parent_user.password]
-    
-    db.query(sql_user, input_user_values, function(err, result){
-        if(err) throw err; else{
+
+    db.query(sql_user, input_user_values, function (err, result) {
+        if (err) throw err; else {
             sql_select_user_parent_type = 'SELECT user_type from user';
-            db.query(sql_select_user_parent_type, new_parent_user.type, function(err, result){
+            db.query(sql_select_user_parent_type, new_parent_user.type, function (err, result) {
                 sql_user_parent_id = 'SELECT last_insert_id() as parent_id';
-                db.query(sql_user_parent_id, function(err, result){
+                db.query(sql_user_parent_id, function (err, result) {
 
                     // let parent_id = result[0].parent_id
                     // let child_input_values = [parent_id, ]
                 })
             })
-            
+
         }
     })
 
-    
+
 })
 
 app.post('/registerVendor', (req, res) => {
@@ -170,29 +170,29 @@ app.post('/registerVendor', (req, res) => {
 
     var salt = bcrypt.genSaltSync(saltRounds);
     var hash = bcrypt.hashSync(req.body.Password1, salt);
-    let new_vendor = {'firstname': req.body.FirstName, 'lastname': req.body.LastName, 'org': req.body.Oraganization, 'phonenum': req.body.PhoneNumber, 'address': req.body.BusAddress, 'email': req.body.EmailAddress, 'website': req.body.Website, 'password': hash, 'type': req.body.type}
+    let new_vendor = { 'firstname': req.body.FirstName, 'lastname': req.body.LastName, 'org': req.body.Oraganization, 'phonenum': req.body.PhoneNumber, 'address': req.body.BusAddress, 'email': req.body.EmailAddress, 'website': req.body.Website, 'password': hash, 'type': req.body.type }
     // console.log(new_vendor)
     // db.query()
     let sql_insert_vendor_users = 'INSERT INTO user(user_type, email, pass_hash) VALUES (?, ?, ?)'
     let user_values = [new_vendor.type, new_vendor.email, new_vendor.password];
 
-    db.query(sql_insert_vendor_users, user_values, function(err, result) {
-        if(err) throw err;
+    db.query(sql_insert_vendor_users, user_values, function (err, result) {
+        if (err) throw err;
         let sql_select_user = 'SELECT type from user';
-        db.query(sql_select_user, user_values.type, function(err, result){
+        db.query(sql_select_user, user_values.type, function (err, result) {
             let sql_user_id = "SELECT last_insert_id() as user_id";
-            db.query(sql_user_id, function(err, result){
+            db.query(sql_user_id, function (err, result) {
                 // console.log(result[0].last_insert_id())
                 let user_id = result[0].user_id
 
                 let sql_insert_vendor = 'INSERT INTO vendor (user_id, name, contact_name, address, phone_num, website) VALUES (?,?,?,?,?,?) ';
-                
-                let insert_user_values = [user_id, new_vendor.org, new_vendor.firstname + ' ' + new_vendor.lastname, new_vendor.address , new_vendor.phonenum, new_vendor.website]
-                       
-                db.query(sql_insert_vendor, insert_user_values, function(err, result){
-                    if(err) throw err;
+
+                let insert_user_values = [user_id, new_vendor.org, new_vendor.firstname + ' ' + new_vendor.lastname, new_vendor.address, new_vendor.phonenum, new_vendor.website]
+
+                db.query(sql_insert_vendor, insert_user_values, function (err, result) {
+                    if (err) throw err;
                     res.redirect('/register.hbs')
-                } )
+                })
             })
         })
     })
@@ -231,8 +231,8 @@ app.get('/profile/', (req, res) => {
                         });
                     }
                 });
-            }else{
-                res.render('profile.hbs',{
+            } else {
+                res.render('profile.hbs', {
                     user_type: req.session.user.user_type,
                     vendor_id: req.session.user.user_id
                 });
@@ -242,7 +242,7 @@ app.get('/profile/', (req, res) => {
     }
 });
 
-app.get('/admin', (req,res)=>{
+app.get('/admin', (req, res) => {
     if (!req.cookies.i || !req.session.user) {
         res.redirect('/logout')
     } else if (req.session.user.user_type != 'admin') {
@@ -265,9 +265,9 @@ app.get('/admin/event', (req, res) => {
             'FROM event a\n' +
             'LEFT JOIN event_tags b ON a.event_id = b.event_id\n' +
             'LEFT JOIN tags c ON b.tag_id = c.tag_id\n' +
-            'LEFT JOIN vendor d ON a.vendor_id = d.user_id\n'+
-            'left join user e on d.user_id = e.user_id\n'+
-            'ORDER BY vendor_name, a.start_date';
+            'LEFT JOIN vendor d ON a.vendor_id = d.user_id\n' +
+            'left join user e on d.user_id = e.user_id\n' +
+            'ORDER BY a.isApproved DESC, vendor_name, a.start_date';
         db.query(sql, (err, result) => {
             if (err) {
                 throw err;
@@ -284,10 +284,10 @@ app.post('/approve-event', (req, res) => {
     if (!req.cookies.i || !req.session.user) {
         res.redirect('/login')
     } else {
-        console.log('approving')
+        // console.log('approving')
         let event_id = req.body.id
         let sql = "UPDATE event SET isApproved = 'Approved', admin_id =? WHERE event_id = ?";
-        db.query(sql, [req.session.user.user_id,event_id] , async (err, result) => {
+        db.query(sql, [req.session.user.user_id, event_id], async (err, result) => {
             if (err) {
                 throw err;
             } else {
@@ -328,7 +328,7 @@ app.get('/vendor/:vendor_id', (req, res) => {
                             'LEFT JOIN event_tags b ON a.event_id = b.event_id\n' +
                             'LEFT JOIN tags c ON b.tag_id = c.tag_id\n' +
                             'LEFT JOIN vendor d ON a.vendor_id = d.user_id\n' +
-                            'WHERE vendor_id = ? GROUP BY event_id ORDER BY start_date';
+                            'WHERE vendor_id = ? GROUP BY event_id ORDER BY a.isApproved DESC, start_date';
                         db.query(sql, req.params.vendor_id, (err, result) => {
                             if (err) {
                                 throw err;
@@ -368,12 +368,13 @@ app.get('/delete/:event_id', (req, res) => {
                     if (err) {
                         throw err;
                     } else {
+                        res.json({ message: 'success' });
                         // console.log(req.session.user.user_id);
-                        if (req.session.user.user_type == 'vendor'){
-                            res.redirect('/vendor/' + req.session.user.user_id);
-                        } else if (req.session.user.user_type == 'admin'){
-                            res.redirect('/admin/event');
-                        }
+                        // if (req.session.user.user_type == 'vendor') {
+                        //     res.redirect('/vendor/' + req.session.user.user_id);
+                        // } else if (req.session.user.user_type == 'admin') {
+                        //     res.redirect('/admin/event');
+                        // }
 
                     }
                 });
@@ -487,10 +488,10 @@ app.post('/edit/:event_id', (req, res) => {
                             db.query(sql_update_event_tag, [tag_id, req.params.event_id], (err, result) => {
                                 if (err) {
                                     throw err;
-                                }else{
-                                    if (req.session.user.user_type == 'vendor'){
+                                } else {
+                                    if (req.session.user.user_type == 'vendor') {
                                         res.redirect('/vendor/' + req.session.user.user_id);
-                                    } else if (req.session.user.user_type == 'admin'){
+                                    } else if (req.session.user.user_type == 'admin') {
                                         res.redirect('/admin/event');
                                     }
                                 }
@@ -499,10 +500,10 @@ app.post('/edit/:event_id', (req, res) => {
                     });
                 }
             })
-        }).catch((error)=>{
+        }).catch((error) => {
             var form = {
                 event_id: req.params.event_id,
-                event_name : req.body.eventname,
+                event_name: req.body.eventname,
                 start_time: req.body.start_time,
                 end_time: req.body.end_time,
                 event_tag: req.body.tag,
@@ -552,7 +553,7 @@ const saveToDatabase = async (subscription, user_id) => {
         subscription.keys.auth
     ]
     // console.log(inputs)
-    let sql = "INSERT INTO subscriptions (parent_id, endpoint, p256dh, auth) VALUES (?, ?, ?, ?)"
+    let sql = "INSERT INTO subscriptions (user_id, endpoint, p256dh, auth) VALUES (?, ?, ?, ?)"
 
     db.query(sql, inputs, (err, result) => {
         if (err) {
@@ -602,16 +603,19 @@ const getSubscriptions = async (user_id) => {
 }
 
 const newEventNotify = async (event_id) => {
-    console.log("sending notification")
+    // console.log("sending notification")
     let results = await new Promise((resolve, reject) => {
-        let sql = "SELECT s.parent_id, s.endpoint, s.expirationTime, s.p256dh, s.auth FROM subscriptions as s\n " +
-        "INNER JOIN parent as p ON p.user_id = s.parent_id\n " +
-        "INNER JOIN child as c ON c.parent_id = p.user_id\n " + 
-        "INNER JOIN child_tags as ct ON ct.parent_id = c.parent_id\n " +
-        "INNER JOIN tags as t ON t.tag_id = ct.tag_id\n " +
-        "INNER JOIN event_tags as et ON et.tag_id = t.tag_id\n " +
-        "WHERE et.event_id = ?\n " +
-        "GROUP BY s.parent_id"
+        let sql = "SELECT e.event_id, e.description, c.child_nickname, e.name, s.user_id, s.endpoint, s.expirationTime, s.p256dh, s.auth " +
+            "FROM subscriptions as s " +
+            "INNER JOIN user as u ON u.user_id = s.user_id " +
+            "INNER JOIN parent as p ON p.user_id = u.user_id " +
+            "INNER JOIN child as c ON c.parent_id = p.user_id " +
+            "INNER JOIN child_tags as ct ON ct.parent_id = c.parent_id " +
+            "INNER JOIN tags as t ON t.tag_id = ct.tag_id " +
+            "INNER JOIN event_tags as et ON et.tag_id = t.tag_id " +
+            "INNER JOIN event as e ON e.event_id = et.event_id " +
+            "WHERE et.event_id = ? " +
+            "GROUP BY s.user_id, s.endpoint;"
         db.query(sql, event_id, (err, result) => {
             if (err) {
                 console.log(err)
@@ -637,10 +641,15 @@ const newEventNotify = async (event_id) => {
                     auth: results[i].auth
                 }
             }
-            console.log(subscription)
-            message = `Hi ${results[i].parent_id}!\nCheck out this new event!`
-            webpush.sendNotification(subscription, message);
-            console.log("Sent!");
+            // console.log(subscription)
+            let payload = {
+                title: `New Event for ${results[i].child_nickname}!\n${results[i].name}`,
+                message: results[i].description,
+                url: `/event/display/${results[i].event_id}`
+            }
+            // console.log(payload.url);
+            webpush.sendNotification(subscription, JSON.stringify(payload));
+            // console.log("Sent!");
         }
     } catch (err) {
         console.log("Error sending notifications")
@@ -660,6 +669,37 @@ app.post('/saveSubscription', async (req, res) => {
     }
 });
 
+
+const deleteFromDatabase = async (subscription, user_id) => {
+    // console.log(subscription)
+    let inputs = [
+        user_id,
+        subscription.endpoint,
+    ]
+    // console.log(inputs)
+    let sql = "DELETE FROM subscriptions WHERE (user_id = ?) AND (endpoint = ?)"
+
+    db.query(sql, inputs, (err, result) => {
+        if (err) {
+            console.log(err)
+            // throw err;
+        } else {
+            console.log("1 subscription deleted from user " + user_id);
+        }
+    });
+};
+
+app.post('/deleteSubscription', async (req, res) => {
+    if (!req.cookies.i || !req.session.user) {
+        res.redirect('/login')
+    } else {
+        const subscription = req.body;
+        // console.log(subscription)
+        await deleteFromDatabase(subscription, req.session.user.user_id);
+        res.json({ message: 'success' });
+    }
+});
+
 const vapidKeys = {
     publicKey: 'BI01Zbibo97CgCD60S9MO6HhlAbcTtfGOIayxUKG3o5QJbfU3eVMT3v_T-i2r7rK6QH8Zbv1So2VrPsT4FTjaes',
     privateKey: 'MlG2jt47B8g9TXDao9AvxKslCn2zwi9Vhe6qDPByzDg'
@@ -667,42 +707,42 @@ const vapidKeys = {
 
 webpush.setVapidDetails('mailto:thingsmykidsdo.bcit@gmail.com', vapidKeys.publicKey, vapidKeys.privateKey);
 
-app.post('/text-me', async (req, res) => {
-    if (!req.cookies.i || !req.session.user) {
-        res.redirect('/login')
-    } else {
-        // console.log("trying to send...");
-        let subscriptions = await getSubscriptions(req.session.user.user_id);
-        // console.log(subscriptions)
-        if (subscriptions) {
-            // console.log("got subscription")
-            try {
-                for (let i = 0; i < subscriptions.length; i++) {
-                    webpush.sendNotification(subscriptions[i], req.body.message);
-                }
-            } catch (err) {
-                console.log("BIG ERROR SENDING NOTIFICATIONS (Probably MySQL related)");
-                res.json({ message: err });
-            }
-            message = "Sent " + req.body.message + " " + subscriptions.length + " times."
-            console.log(message);
-            res.json({ message: message });
-        } else {
-            res.json({ message: "Unsuccesful" })
-        }
-    }
-});
+// app.post('/text-me', async (req, res) => {
+//     if (!req.cookies.i || !req.session.user) {
+//         res.redirect('/login')
+//     } else {
+//         // console.log("trying to send...");
+//         let subscriptions = await getSubscriptions(req.session.user.user_id);
+//         // console.log(subscriptions)
+//         if (subscriptions) {
+//             // console.log("got subscription")
+//             try {
+//                 for (let i = 0; i < subscriptions.length; i++) {
+//                     webpush.sendNotification(subscriptions[i], req.body.message);
+//                 }
+//             } catch (err) {
+//                 console.log("BIG ERROR SENDING NOTIFICATIONS (Probably MySQL related)");
+//                 res.json({ message: err });
+//             }
+//             message = "Sent " + req.body.message + " " + subscriptions.length + " times."
+//             console.log(message);
+//             res.json({ message: message });
+//         } else {
+//             res.json({ message: "Unsuccesful" })
+//         }
+//     }
+// });
 
-app.get('/send-notification', (req, res) => {
-    if (!req.cookies.i || !req.session.user) {
-        res.redirect('/login')
-    } else {
-        res.render('notification.hbs', {
-            user_type: req.session.user.user_type,
-            vendor_id: req.session.user.user_id
-        });
-    }
-});
+// app.get('/send-notification', (req, res) => {
+//     if (!req.cookies.i || !req.session.user) {
+//         res.redirect('/login')
+//     } else {
+//         res.render('notification.hbs', {
+//             user_type: req.session.user.user_type,
+//             vendor_id: req.session.user.user_id
+//         });
+//     }
+// });
 
 app.get('/logout', (req, res) => {
     req.session.destroy();

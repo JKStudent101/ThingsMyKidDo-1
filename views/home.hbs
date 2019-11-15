@@ -25,7 +25,8 @@
     <div class="container">
         <div class="homeContainer">
             <div class="playText"> <b>Let's Play! </div>
-            <button id="permission-btn" onclick="main()">Turn on Notifications!</button>
+            <button id="permission-btn-yes" class="permission-btn" onclick="openPushSubscription()">Turn on Notifications!</button>
+            <button id="permission-btn-no" class="permission-btn" onclick="closePushSubscription()">Turn off Notifications!</button>
             <div class="play">
                 <a href="/event">
                     <div class="search">Events</div>

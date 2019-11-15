@@ -5,7 +5,30 @@ const db = require('./database').init();
 router.use(cookieParser());
 // to /event
 
+router.get('/display/:id', (req, res) => {
+	let sql = "select name, description, link, isApproved from event where event_id = ?;"
+	db.query(sql, req.params.id, (err, result) => {
+		if (err) {
+			throw err;
+		} else {
+			if (result[0].isApproved === "Approved") {
+				req.session.notification_event = result[0];
+				req.session.loadedOnce = false;
+			}
+			res.redirect('/event')
+		}
+	})
+})
+
 router.get('/', (req, res) => {
+	if (!req.cookies.i) {
+		res.redirect('/login');
+	}
+	if (!req.session.loadedOnce) {
+		req.session.loadedOnce = true
+	} else {
+		delete req.session.notification_event
+	}
 	let sql =
 		'SELECT DISTINCT t.name  \n' +
 		'FROM event e \n' +
@@ -15,9 +38,6 @@ router.get('/', (req, res) => {
 		'ON et.tag_id = t.tag_id \n' +
 		'ORDER BY t.name		';
 	db.query(sql, (err, result) => {
-		if (!req.cookies.i) {
-			res.redirect('/login');
-		}
 		if (err) {
 			throw err;
 		} else {
@@ -31,13 +51,15 @@ router.get('/', (req, res) => {
 					data: result,
 					message: passedVariable,
 					user_type: req.session.user.user_type,
-					vendor_id: req.session.user.user_id
+					vendor_id: req.session.user.user_id,
+					notification_event: req.session.notification_event
 				});
 			} else {
 				res.render('event.hbs', {
 					data: result,
 					user_type: req.session.user.user_type,
-					vendor_id: req.session.user.user_id
+					vendor_id: req.session.user.user_id,
+					notification_event: req.session.notification_event
 				});
 			}
 		}

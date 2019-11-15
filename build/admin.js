@@ -12,3 +12,17 @@ const approve = (event_id) => {
     }
     window.location.reload(true);
 }
+
+const eventDelete = (event_id) => {
+    let isConfirmed = confirm('Are you sure you want to delete?')
+    if (isConfirmed) {
+        let request = new window.XMLHttpRequest();
+        request.open('get', `/delete/${event_id}`, false);
+        request.send();
+        let response = JSON.parse(request.response);
+        if (response.message != 'success') {
+            console.log('Error storing event');
+        }
+        window.location.reload(true);
+    }
+}
