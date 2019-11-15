@@ -11,7 +11,7 @@
 
     <body>
 
-        {{> menu}}
+        {{> menu_vendor}}
 
         <div class="col-md-12">
             <p class="form_text">Welcome {{vendor}}! </p>
@@ -50,7 +50,7 @@
                                 {{else}}
                                     <a href="#" class="btn btn-info disabled">Edit</a>
                                 {{/ifCond}}
-                                <a href="/delete/{{event_id}}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete?');">Delete</a>
+                                <a class="btn btn-danger" onclick="eventDelete({{event_id}})">Delete</a>
                             </td>
                         </tr>
                         {{/each}}

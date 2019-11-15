@@ -18,7 +18,13 @@
 
 <body>
 
-{{> menu}}
+{{#ifCond user_type "vendor"}}
+    {{> menu_vendor}}
+{{else}}
+    {{#ifCond user_type "admin"}}
+        {{> menu_admin}}
+    {{/ifCond}}
+ {{/ifCond}}
 
 <div class="col-md-12">
 

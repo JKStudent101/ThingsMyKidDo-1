@@ -13,7 +13,17 @@
 </head>
 
 <body>
-    {{> menu}}
+{{#ifCond user_type "vendor"}}
+    {{> menu_vendor}}
+{{else}}
+    {{#ifCond user_type "admin"}}
+        {{> menu_admin}}
+    {{else}}
+        {{#ifCond user_type "parent"}}
+            {{> menu_parent}}
+        {{/ifCond}}
+    {{/ifCond}}
+{{/ifCond}}
 
     <div class="container">
         {{!-- <div class="dropdown" style="z-index: -1;">
@@ -65,27 +75,30 @@
 
                         <div class="card">
                             <img src="/src/img.jpg" alt="John" style="width:100%">
-                            <div id="jimmy" class="inv" style="font-size: 30px;">Jimmy
-                                <p class="title">Age: 7</p>
-                            <p>Hobbies: Swimming, Dance</p>
-                            </div>
-                            <div id="billy" class="inv" style="font-size: 30px;">Billy
+                            {{#each data}}
+                                <div id="{{nickname}}" class="inv" style="font-size: 30px;">{{nickname}}
+                                <p class="title">Age: </p>
+                                <p>Hobbies: </p>
+                                </div>
+                            {{/each}}
+                            {{!-- <div id="billy" class="inv" style="font-size: 30px;">Billy
                                 <p class="title">Age: 9</p>
                             <p>Hobbies: Basketball, Volleyball</p>
                             </div>
                             <div id="johnny" class="inv" style="font-size: 30px;">Johnny
                                 <p class="title">Age: 7</p>
                             <p>Hobbies: Volleyball, Church</p>
-                            </div>
+                            </div> --}}
                             
                             
                             {{!-- <div class="dropdown"> --}}
                             {{!-- <p><button class="dropbtn">Change Profile</button> --}}
                             {{!-- <div class="dropdown-content"> --}}
                                 <select id="target" style="font-size:24px;">
-                                <option value="jimmy">Jimmy</option>
-                                <option value="billy">Billy</option>
-                                <option value="johnny">Johnny</option>
+                                    <option value="" disabled selected>Select your child</option>
+                                    {{#each data}}
+                                        <option value="{{nickname}}">{{nickname}}</option>
+                                    {{/each}}
                                 </select>
                                {{!-- </div> --}}
                             {{!-- </div> --}}
@@ -120,11 +133,11 @@
                     <th>Start Date</th>
                     <th width="230">Description</th>
                 </tr>
-                {{#each data}}
+                {{#each events}}
                     <tr>
                         
                         <td>
-                        <img src="/src/{{category}}Icon.png" id="{{category}}img" style="width:50px;height:50px;border:0;" onerror="this.src='/src/testingIcon.jpg';">
+                        <img src="/src/customIcons/{{category}}_icon.png" id="{{category}}img" style="width:50px;height:50px;border:0;" onerror="this.src='/src/testingIcon.jpg';">
                         </td>
                        
                         
@@ -137,6 +150,7 @@
                             <div>
                                <form action="/savewishlist/delete" method="post">
                                    <input class='invis' name='eventid' type='text' value={{event_id}}>
+                                   <input class='invis' name='nickname' type='text' value={{nickname}}>
                                    <button type='submit' class=" invis btn btn-danger" id="submitbutton"></button> 
                                </form>
                             <button class="btn btn-danger" onclick="
@@ -158,8 +172,7 @@
                         </td>
                         
                     </tr>
-                {{/each}}
-
+                 {{/each}}
 
             </table>
             </div>
@@ -171,18 +184,4 @@
 
 </html>
 
-<script>
-document
-    .getElementById('target')
-    .addEventListener('change', function() {
-        'use strict';
-        var vis = document.querySelector('.vis'),
-            target = document.getElementById(this.value);
-        if (vis !== null) {
-            vis.className = 'invis';
-        }
-        if (target !== null) {
-            target.className = 'vis';
-        }
-    });
-</script>
+<script src="/scripts/profile.js"></script>

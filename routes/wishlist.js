@@ -5,10 +5,12 @@ const db = require('./database').init();
 router.post('/', (req, res) => {
     let user_id = req.session.user.user_id;
     let event_id = req.body.eventid;
-    var sql_select_wishlist = 'select wishlist from child where parent_id = ?';
+    let childname = req.body.childname
+    let array = [user_id, childname]     
+    var sql_select_wishlist = 'select wishlist from child where parent_id = ? AND child_nickname = ?';
     
-    db.query(sql_select_wishlist, user_id, (err, result)=>{
-        if (result.length > 0){
+    db.query(sql_select_wishlist, array, (err, result)=>{
+        if (result[0].wishlist != null){
             let wishlist_array = result[0].wishlist.split(",")
             if (wishlist_array.includes(String(event_id))){
                 var string = encodeURIComponent('already in wishlist');
@@ -16,8 +18,8 @@ router.post('/', (req, res) => {
             } else {
                 wishlist_array.push(String(event_id));
                 let wishlist_string = wishlist_array.toString();
-                let update_array = [wishlist_string, user_id]
-                var sql_update_wishlist = 'update child set wishlist = ? where parent_id = ?';
+                let update_array = [wishlist_string, user_id, childname]
+                var sql_update_wishlist = 'update child set wishlist = ? where parent_id = ? and child_nickname = ?';
                 db.query(sql_update_wishlist, update_array, (err, result)=>{
                     if(err){
                         console.log(err);
@@ -27,8 +29,9 @@ router.post('/', (req, res) => {
                 });
             }
         } else {
-            let sql_insert_wishlist = 'insert into child(parent_id, wishlist) values (?,?)';
-            let insert_array = [user_id, event_id]
+            let sql_insert_wishlist = 'update child set wishlist = ? where parent_id = ? and child_nickname = ?';
+            let insert_array = [event_id, user_id, childname]
+            console.log(insert_array)
             db.query(sql_insert_wishlist, insert_array, (err, result) => {
                 if(err){
                     var string = encodeURIComponent('database error');
@@ -44,9 +47,11 @@ router.post('/', (req, res) => {
 router.post('/delete', (req, res) => {
     let event_id = req.body.eventid;
     let user_id = req.session.user.user_id;
-    var sql_select_wishlist = 'select wishlist from child where parent_id = ?';
+    let nickname = req.body.nickname;
+    let array = [user_id, nickname]   
+    var sql_select_wishlist = 'select wishlist from child where parent_id = ? AND child_nickname = ?';
     
-    db.query(sql_select_wishlist, user_id, (err, result)=>{
+    db.query(sql_select_wishlist, array, (err, result)=>{
         if (result.length > 0){
             let wishlist_array = result[0].wishlist.split(",");
             let wishlist_array_updated = [];
@@ -56,8 +61,8 @@ router.post('/delete', (req, res) => {
                 }
             }
             let wishlist_string = wishlist_array_updated.toString();
-            let sql_update_wishlist = 'update child set wishlist = ? where parent_id = ?';
-            let update_array = [wishlist_string, user_id]
+            let sql_update_wishlist = 'update child set wishlist = ? where parent_id = ? AND child_nickname = ?';
+            let update_array = [wishlist_string, user_id, nickname]
             db.query(sql_update_wishlist, update_array, (err, result)=>{
                 if(err){
                     console.log(err);
