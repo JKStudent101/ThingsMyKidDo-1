@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const db = require('./database').init();
+const db = require('../app').db;
 
 router.post('/', (req, res) => {
     let user_id = req.session.user.user_id;
