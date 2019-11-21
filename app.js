@@ -204,7 +204,6 @@ app.post('/registerParent', (req, res) => {
 
 app.post('/registerVendor', (req, res) => {
     // console.log(req.body)
-
     var salt = bcrypt.genSaltSync(saltRounds);
     var hash = bcrypt.hashSync(req.body.Password1, salt);
     let new_vendor = { 'firstname': req.body.FirstName, 'lastname': req.body.LastName, 'org': req.body.Oraganization, 'phonenum': req.body.PhoneNumber, 'address': req.body.BusAddress, 'email': req.body.EmailAddress, 'website': req.body.Website, 'password': hash, 'type': req.body.type }
@@ -228,7 +227,12 @@ app.post('/registerVendor', (req, res) => {
 
                 db.query(sql_insert_vendor, insert_user_values, function (err, result) {
                     if (err) throw err;
-                    res.redirect('/register.hbs')
+                    // console.log(result)
+                    req.session.user = {}
+                    req.session.user.user_id = user_id
+                    // console.log(req.session.user)
+                    res.json({ message: 'success' });
+                    // res.redirect('/register.hbs')
                 })
             })
         })
@@ -624,43 +628,6 @@ const saveToDatabase = async (subscription, user_id) => {
     });
 };
 
-const getSubscriptions = async (user_id) => {
-    let result = await new Promise((resolve, reject) => {
-        let sql = "SELECT * FROM subscriptions WHERE parent_id = ?"
-        db.query(sql, user_id, (err, result) => {
-            if (err) {
-                console.log(err)
-                reject(err)
-            } else if (result.length == 0) {
-                console.log("No subscriptions found for " + user_id);
-                resolve([])
-            } else {
-                let subscriptions = []
-                let temp = {
-                    endpoint: "",
-                    expirationTime: null,
-                    keys: {
-                        p256dh: "",
-                        auth: ""
-                    }
-                }
-                for (let i = 0; i < result.length; i++) {
-                    temp.endpoint = result[i].endpoint;
-                    temp.expirationTime = result[i].expirationTime;
-                    temp.keys.p256dh = result[i].p256dh;
-                    temp.keys.auth = result[i].auth;
-                    subscriptions.push(temp);
-                }
-                resolve(subscriptions)
-            }
-
-        })
-
-    });
-    // console.log(result);
-    return result
-}
-
 const newEventNotify = async (event_id) => {
     // console.log("sending notification")
     let results = await new Promise((resolve, reject) => {
@@ -760,6 +727,7 @@ const newVendorNotify = async (vendor_id) => {
             // console.log(payload.url);
             webpush.sendNotification(subscription, JSON.stringify(payload));
             // console.log("Sent!");
+            deleteFromDatabase(subscription, vendor_id);
         }
     } catch (err) {
         console.log("Error sending notifications")
@@ -769,9 +737,11 @@ const newVendorNotify = async (vendor_id) => {
 }
 
 app.post('/saveSubscription', async (req, res) => {
-    if (!req.cookies.i || !req.session.user) {
+    if (!req.session.user) {
+        // console.log('no req')
         res.redirect('/login')
     } else {
+        // console.log('subscribing')
         const subscription = req.body;
         // console.log(subscription)
         await saveToDatabase(subscription, req.session.user.user_id);
@@ -816,43 +786,6 @@ const vapidKeys = {
 };
 
 webpush.setVapidDetails('mailto:thingsmykidsdo.bcit@gmail.com', vapidKeys.publicKey, vapidKeys.privateKey);
-
-// app.post('/text-me', async (req, res) => {
-//     if (!req.cookies.i || !req.session.user) {
-//         res.redirect('/login')
-//     } else {
-//         // console.log("trying to send...");
-//         let subscriptions = await getSubscriptions(req.session.user.user_id);
-//         // console.log(subscriptions)
-//         if (subscriptions) {
-//             // console.log("got subscription")
-//             try {
-//                 for (let i = 0; i < subscriptions.length; i++) {
-//                     webpush.sendNotification(subscriptions[i], req.body.message);
-//                 }
-//             } catch (err) {
-//                 console.log("BIG ERROR SENDING NOTIFICATIONS (Probably MySQL related)");
-//                 res.json({ message: err });
-//             }
-//             message = "Sent " + req.body.message + " " + subscriptions.length + " times."
-//             console.log(message);
-//             res.json({ message: message });
-//         } else {
-//             res.json({ message: "Unsuccesful" })
-//         }
-//     }
-// });
-
-// app.get('/send-notification', (req, res) => {
-//     if (!req.cookies.i || !req.session.user) {
-//         res.redirect('/login')
-//     } else {
-//         res.render('notification.hbs', {
-//             user_type: req.session.user.user_type,
-//             vendor_id: req.session.user.user_id
-//         });
-//     }
-// });
 
 app.get('/logout', (req, res) => {
     req.session.destroy();
