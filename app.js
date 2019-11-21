@@ -56,15 +56,21 @@ hbs.registerHelper('ifCond', function (v1, v2, options) {
 });
 
 app.get('/', (req, res) => {
-    res.redirect('/landing');
+    res.redirect('/index');
 });
 
 app.get('/home', (req, res) => {
-    res.render('home.hbs', {
-        user_type: req.session.user.user_type,
-        vendor_id: req.session.user.user_id
-    });
+    if (!req.cookies.i || !req.session.user) {
+        res.redirect('/logout')
+    }else{
+        res.render('home.hbs', {
+            user_type: req.session.user.user_type,
+            vendor_id: req.session.user.user_id
+        });
+    }
+
 });
+
 app.get('/login', (req, res) => {
     res.render('login.hbs', {});
 });
@@ -483,8 +489,9 @@ app.post('/edit/:event_id', (req, res) => {
         let address = req.body.address.trim();
         let city = req.body.city.trim();
         let province = req.body.province;
-        let formed_address = address.replace(/ /g, "+");
-        let search_string = "https://maps.googleapis.com/maps/api/geocode/json?address=" + formed_address + ",+" + city + ",+" + province + "&key=AIzaSyAN6q6jOWczlbNgBPd_ljm857YUqpyIoVU";
+        let format_address = address.replace(/ /g, "+");
+        let format_city = city.replace(/ /g, "+");
+        let search_string = "https://maps.googleapis.com/maps/api/geocode/json?address=" + format_address + ",+" + format_city + ",+" + province + "&key=AIzaSyAN6q6jOWczlbNgBPd_ljm857YUqpyIoVU";
         let geocode = new Promise((resolve, reject) => {
             request({
                 url: search_string,
@@ -599,11 +606,7 @@ app.get('/test', (req, res) => {
     res.render('admin_event.hbs')
 });
 
-app.get('/landing', (req, res) => {
-    res.render('landing.hbs')
-});
-
-app.get('/landing', (req, res) => {
+app.get('/index', (req, res) => {
     res.render('landing.hbs')
 });
 
