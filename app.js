@@ -731,7 +731,7 @@ const newVendorNotify = async (vendor_id) => {
                 console.log(err)
                 reject(err)
             } else if (result.length == 0) {
-                console.log("No subscriptions found for " + user_id);
+                console.log("No subscriptions found for " + vendor_id);
                 resolve([])
             } else {
                 resolve(result)
