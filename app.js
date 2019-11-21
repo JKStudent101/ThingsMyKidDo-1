@@ -14,13 +14,14 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const request = require('request');
 
+var db = require('./routes/database').init();
+module.exports.db = db;
 
 // import event routes
 const event = require('./routes/event');
 const addevent = require('./routes/addevent');
 const wishlist = require('./routes/wishlist')
 const profile = require('./routes/profilepage');
-var db = require('./routes/database').init();
 
 app.set('view engine', 'hbs');
 app.use(express.static(__dirname + '/public'));
@@ -335,17 +336,17 @@ app.post('/approve-user', (req, res) => {
         res.redirect('/login')
     } else {
         // console.log('approving')
-        // let event_id = req.body.id
-        // let sql = "UPDATE event SET isApproved = 'Approved', admin_id =? WHERE event_id = ?";
-        // db.query(sql, [req.session.user.user_id,event_id] , async (err, result) => {
-        //     if (err) {
-        //         throw err;
-        //     } else {
-        //         console.log(`Event ${event_id} approved`);
-        //         await newEventNotify(event_id);
-        //         res.json({ message: 'success' });
-        //     }
-        // });
+        let user_id = req.body.id
+        let sql = "UPDATE vendor SET isApproved = 'Approved' WHERE user_id = ?";
+        db.query(sql, user_id , async (err, result) => {
+            if (err) {
+                throw err;
+            } else {
+                console.log(`Vendor ${user_id} approved`);
+                await newVendorNotify(user_id);
+                res.json({ message: 'success' });
+            }
+        });
     }
 });
 
@@ -871,3 +872,5 @@ server.listen(port, function (err) {
     console.log(port + ' is running');
     db;
 });
+
+

@@ -51,7 +51,7 @@
                                     {{#ifCond isApproved "Approved"}}
                                         <a class="btn btn-info disabled">Approve</a>
                                     {{else}}
-                                        <a href="#" class="btn btn-info">Approve</a>
+                                        <a onclick="approveVendor({{user_id}})" class="btn btn-info">Approve</a>
                                     {{/ifCond}}
                                 </td>
                             </tr>
