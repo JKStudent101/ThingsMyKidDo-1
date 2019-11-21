@@ -1,7 +1,7 @@
 const express = require('express');
 const request = require('request');
 const router = express.Router();
-const db = require('./database').init();
+const db = require('../app').db;
 
 router.get('/', (req,res)=> {
         if (!req.cookies.i || !req.session.user) {

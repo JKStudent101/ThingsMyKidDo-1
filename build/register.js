@@ -326,6 +326,7 @@ $("#B-Confirm-info").on("click", function () {
 		$('#Business2').modal('hide');
 		$('#Business3').modal('show');
 
+		// console.log('sending registration')
 
 		$.ajax({
 			url: 'registerVendor',
@@ -333,13 +334,19 @@ $("#B-Confirm-info").on("click", function () {
 			contentType: 'application/json; charset=utf-8',
 			dataType: 'json',
 			data: Vendor_Account,
-			success: function (result) {
-				console.log(result)
+			success: async function (result) {
+				// console.log('success!')
+				// console.log(result)
+				if ($("#notificationPreference").is(':checked')) {
+					// console.log("saving subscription")
+					await openVendorPushSubscription();
+				}
 			}
 		})
+
 	}
 	else {
-		alert("Please argee to our Terms & Conditions.")
+		alert("Please agree to our Terms & Conditions.")
 	}
 });
 
@@ -394,3 +401,33 @@ $(".P-clear").on("click", function () {
 $('#toHome').click(function () {
 	$(".P-clear").click();
 });
+
+async function openVendorPushSubscription() {
+	// console.log("pushing subscription")
+	if ("serviceWorker" in navigator && "PushManager" in window) {
+		let permission = await Notification.requestPermission()
+		if (permission != 'denied') {
+			let register = await registerServiceWorker();
+			let applicationServerKey = urlB64ToUint8Array('BI01Zbibo97CgCD60S9MO6HhlAbcTtfGOIayxUKG3o5QJbfU3eVMT3v_T-i2r7rK6QH8Zbv1So2VrPsT4FTjaes');
+			PushSubscription = await register.pushManager.subscribe({
+				userVisibleOnly: true,
+				applicationServerKey
+			});
+			let SERVER_URL = 'http://localhost:10000/saveSubscription'
+			let response = await fetch(SERVER_URL, {
+				method: 'post',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(PushSubscription),
+			})
+			response.json().then(res => console.log(res.message))
+		} else {
+			getInstruction = confirm("Oops! \nIt looks like you blocked us from sending you notifications. \n" +
+				"Would you like instructions on how to reset your permissions?")
+			if (getInstruction) {
+				window.open('https://support.google.com/chrome/answer/3220216?co=GENIE.Platform%3DDesktop&hl=en')
+			}
+		}
+	}
+}

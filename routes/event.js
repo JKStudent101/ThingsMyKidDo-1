@@ -1,7 +1,7 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const router = express.Router();
-const db = require('./database').init();
+const db = require('../app').db;
 router.use(cookieParser());
 // to /event
 
