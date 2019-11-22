@@ -1,62 +1,77 @@
 var kidsNum = 1;
 
 const Remove_profile = (k_profile_id) => {
-    $(k_profile_id).remove(); 
-    kidsNum--;
+	$(k_profile_id).remove();
+	kidsNum--;
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
 	let num = '';
-	$('#Family').on('click', function() {
+	$('#Family').on('click', function () {
 		$('#Register').modal('hide');
 		$('#Parent1').modal('show');
 	});
-	$('#Vendor').on('click', function() {
+	$('#Vendor').on('click', function () {
 		$('#Register').modal('hide');
 		$('#Business1').modal('show');
 	});
 
 	//Parent Modal
 	//set "Continue" button id on click to hide 1st modal and trigger 2nd modal
-	$('#P-Account').on('click', function() {
+	$('#P-Account').on('click', function () {
 		$('#Parent1').modal('hide');
 		$('#Parent2').modal('show');
 	});
 	//set "Register" button id on click to load input + hide 2nd modal, and trigger 3rd modal
-	$('#P-Redo-Account').on('click', function() {
+	$('#P-Redo-Account').on('click', function () {
 		$('#Parent2').modal('hide');
 		$('#Parent1').modal('show');
 	});
 	//set "Back" button id on click to hide 3rd modal and trigger 2nd modal
-	$('#P-User').on('click', function() {
+	$('#P-User').on('click', function () {
 		$('#Parent2').modal('hide');
 		$('#Parent3').modal('show');
 	});
 	//set "Back" button id on click to hide 2nd modal and trigger 1st modal
-	$('#P-Redo-User').on('click', function() {
+	$('#P-Redo-User').on('click', function () {
 		$('#Parent3').modal('hide');
 		$('#Parent2').modal('show');
 	});
 	//set "Skip" button id on click to hide 2nd modal and trigger 3rd modal
-	$('#P-Skip').on('click', function() {
+	$('#P-Skip').on('click', function () {
 		$('#Parent3').modal('hide');
 		$('#Parent4').modal('show');
 	});
 	//set "Register" button id on click to load input + hide 2nd modal, and trigger 3rd modal
-	$('#P-Kids').on('click', function() {
+	$('#P-Kids').on('click', function () {
 		$('#Parent3').modal('hide');
 		$('#Parent4').modal('show');
 
 		var k1_nName = $('#kidname1').val();
-        var k1_gender = $('#gender1').val();
-        var k1_hobbies = [];
+		var k1_gender = $('#gender1').val();
+		var items = {};
 
-        $('#K1_Nickname').html(k1_nName);
-        $('#K1_Gender').html(k1_gender);
+		// var value = $('[class^=Add_Kids')
+		// 	.find('input, select').not('input[type=button]').map(function (i, item) {
+		// 		// console.log($(this).val())
+		// 		var currentElement = $(this);
+		// 		var value = currentElement.val(); // if it is an input/select/textarea field
+		// 		var cls = this.className;
+		// 		var kidprops = this.id;
+
+		// 		items[cls] = items[cls] || [];
+		// 		items[cls].push(value);
+		// 	})
+		// 	.get();
+		// return items
+
+		$('#K1_Nickname').html(k1_nName);
+		$('#K1_Gender').html(k1_gender);
+
 
 	});
 	//set "Back" button id on click to hide 3rd modal and trigger 2nd modal
-	$('#P-Redo-Kids').on('click', function() {
+	$('#P-Redo-Kids').on('click', function () {
 		$('#Parent4').modal('hide');
 		$('#Parent3').modal('show');
 	});
@@ -71,8 +86,14 @@ $(document).ready(function() {
 
 	//
 	var count = 0;
+
+
+
+	// console.log(tags);
+
+	var count = 1;
 	var ChildProfile;
-	let TotalChilds = {};
+
 	let tags = [];
 
 	$.ajax({
@@ -81,148 +102,98 @@ $(document).ready(function() {
 		async: false,
 		dataType: 'json',
 		success: (data) => {
+			console.log(data)
 			for (var i = 0; i < data.length; i++) {
 				tags.push(data[i].name);
 			}
 		}
 	});
-
-	// console.log(tags);
-
-	var count = 2;
-    var ChildProfile;
+	$('#add').click(function () {
 
 
+		console.log(tags)
 
-    $('#add').click(function() {
-
-        if(kidsNum > 4){
-            alert("Can only create 5 kid profiles during registartion. \n" + 
-            "You can create more after finishing registration.");
-            return false;
-        } 
-
-        var new_kid = 'Kid'+count;
-        var j_new_kid = '#'+new_kid;
-
-        let selectGender =
-            '<select id="gender' +
-            count +
-            ' " class="register-gender"> <option>Boy</option> <option>Girl</option> </select>';
-
-
-
-        let delete_profile =
-            '<input class="Remove_kid" type="button" value="Remove child' + count + '" onClick="Remove_profile(\''+j_new_kid+'\');">'
-
-        input =
-            '<div class="Add_Kids" id="' +
-                new_kid +
-                '" ><p>Kid' + kidsNum +' </p> <input class="register-kid' +
-                count +
-                '" name="nickname' +
-                count +
-                '" id="kidname' +
-                count +
-                '">'+' is a '+
-                selectGender +
-                ' who is interested in '+
-                ' <input class="register-kid' +
-                count +
-                '" name="interest' +
-                count +
-                '" id="interest' +
-                count +
-                '">'+ j_new_kid + delete_profile + 
-                '</div>'
-
-
-        count++;
-        kidsNum++;
-
-        $('#morekids').append(input);
-
-
-    });
-
-/*	function getinput() {
-		let selectGender =
-			'<select id="gender' +
-			(1 + count) +
-			' " class="register-gender"> <option>Boy</option> <option>Girl</option> </select>';
-		let input = '';
-		for (let i = 0; i < tags.length; i++) {
-			input =
-				'<div class="allInputs' +
-				(1 + count) +
-				'" > <input class="register-kid' +
-				(1 + count) +
-				'" name="nickname' +
-				(1 + count) +
-				'" id="kidname' +
-				(1 + count) +
-				'">' +
-				selectGender +
-				'<select value="' +
-				tags[i] +
-				'" id="' +
-				'"></select>';
-
-			// <select name="" id=""></select>
-			// ' <input class="register-kid' +
-			// (1 + count) +
-			// '" name="interest' +
-			// (1 + count) +
-			// '" id="interest' +
-			// (1 + count) +
-			// '"> '
+		if (kidsNum > 4) {
+			alert("Can only create 5 kid profiles during registartion. \n" +
+				"You can create more after finishing registration.");
+			return false;
 		}
 
-		//<button type="button" class="submit1" id="more1">Add more Kids</button>
+		var new_kid = 'Kid' + count;
+		var j_new_kid = '#' + new_kid;
 
-		$('#morekids').append(input);
-	}
-	$('#more1').click(function() {
+		let selectGender =
+			'<select id="gender' +
+			count +
+			' " class="register-kid' + (count + 1) + '"> <option>Boy</option> <option>Girl</option> </select>';
+
+
+
+		let delete_profile =
+			'<input class="Remove_kid" type="button" value="Remove child' + count + '" onClick="Remove_profile(\'' + j_new_kid + '\');">'
+
+		input =
+			'<div class="Add_Kids' + count + '" id="' +
+			new_kid +
+			'" ><p>Kid' + (kidsNum + 1) + ' </p> <input class="register-kid' +
+			(count + 1) +
+			'" name="nickname' +
+			count +
+			'" id="kidname' +
+			count +
+			'"placeholder="Nickname">' + ' is a ' +
+			selectGender +
+			' who is interested in ' +
+			' <input class="register-kid' +
+			(count + 1) +
+			'" name="interest' +
+			count +
+			'" id="interest' +
+			count +
+			'"placeholder="Interests">' + j_new_kid + delete_profile +
+			'</div>'
+
+
 		count++;
-	});
-	*/
-	let total_kids = [];
+		kidsNum++;
+		$(this).data('clicked', true);
 
+		$('.allInputs1').append(input);
+
+
+	});
 	//Register Modal
 	//set "Continue" button id on click to hide 1st modal and trigger 2nd modal
 	//$("#B-Register-info").on( "click",  function Summary_Bus());
 
-	// Register Child Profile
-	$(document).on('click', 'P-Kids', function(event) {
-		var list = $('.Add_Kids' + count + '')
-			// var list = $('[class^=allInputs]')
-			.find('input, select')
-			.not('#add :input')
-			.map(function() {
-				return $(this).val();
-			})
-			.get();
-		getinput();
 
-		TotalChilds['Child' + count] = list;
-		console.log(TotalChilds);
-		// send to server here
-	});
-	count = count + 1;
-
-
-	$('#P-Confirm').on('click', function() {
+	$('#P-Confirm').on('click', function () {
 		if ($('#Parent_TermCheck').is(':checked')) {
 			let pEmail = $('#p_email').val();
 			let pPhone = $('#p_phone').val();
 			let pPassword = $('#p_password').val();
 			let pPassword2 = $('#p_password2').val();
 			var ParentRole = $('#Guardian').find(':selected').text();
-			console.log(TotalChilds);
+			var all_child = {};
+
+			var value = $('[class^=Add_Kids')
+				.find('input, select').not('input[type=button]').map(function (i, item) {
+
+					var currentElement = $(this);
+					var value = currentElement.val(); // if it is an input/select/textarea field
+					var cls = this.className;
+					var kidprops = this.id;
+					all_child[cls] = all_child[cls] || [];
+
+					all_child[cls].push(value);
+				})
+				.get();
 
 			if ($('#P-Skip').data('clicked')) {
-				TotalChilds = {};
+				all_child = {};
 			}
+
+
 
 			let ParentAccount = {
 				p_email: pEmail,
@@ -230,18 +201,18 @@ $(document).ready(function() {
 				p_pass: pPassword,
 				p_pass2: pPassword2,
 				p_role: 'parent',
-				childProfile: TotalChilds,
+				childProfile: all_child,
 				type: 'parent'
 			};
 			ParentDetail = JSON.stringify(ParentAccount);
-			console.log(ParentDetail);
+			console.log(ParentAccount);
 			$.ajax({
 				url: 'registerParent',
 				type: 'POST',
 				contentType: 'application/json; charset=utf-8',
 				dataType: 'json',
 				data: ParentDetail,
-				success: function(result) {
+				success: function (result) {
 					console.log(result);
 				}
 			});
@@ -250,22 +221,22 @@ $(document).ready(function() {
 			$('#Parent5').modal('show');
 
 			/*
-//set "Confirm" button id on click to hide 3rd modal and trigger 4th modal
-$('#P-Confirm').on('click', function(){
-    
-    if ($("#Parent_TermCheck").is(':checked')){
-/*
-        $('#P-Skip').click(function(){
-            $(this).data('clicked', true)
-        })
-        if($('#P-Skip').data('clicked')){
-            ChildProfile = {
-                'nickname': '',
-                'gender': '',
-                'interests': []
-            };
-        } 
-*/
+	//set "Confirm" button id on click to hide 3rd modal and trigger 4th modal
+	$('#P-Confirm').on('click', function(){
+	 
+	if ($("#Parent_TermCheck").is(':checked')){
+	/*
+		$('#P-Skip').click(function(){
+			$(this).data('clicked', true)
+		})
+		if($('#P-Skip').data('clicked')){
+			ChildProfile = {
+				'nickname': '',
+				'gender': '',
+				'interests': []
+			};
+		} 
+	*/
 
 		} else {
 			alert('Please argee to our Terms & Conditions.');
@@ -273,7 +244,7 @@ $('#P-Confirm').on('click', function(){
 		}
 	});
 
-	$('#B-Register-info').on('click', function() {
+	$('#B-Register-info').on('click', function () {
 		var b_Fname = $('#bus_Fname').val();
 		var b_Lname = $('#bus_Lname').val();
 		var b_Org = $('#bus_Orgname').val();
@@ -284,7 +255,7 @@ $('#P-Confirm').on('click', function(){
 		var b_PW = $('#bus_PW').val();
 		var b_PWconfirm = $('#bus_PWconfirm').val();
 		var error_msg = $('#error').val();
-		$('#alertbox').click(function() {
+		$('#alertbox').click(function () {
 			$('#error').html('You Clicked on Click here Button');
 			$('#myModal').modal('show');
 		});
@@ -312,7 +283,7 @@ $('#P-Confirm').on('click', function(){
 	});
 	//set "Back" button id on click to hide 2nd modal and trigger 1st modal
 	//jquery: .empty() might be redundant
-	$('#B-Redo-info').on('click', function() {
+	$('#B-Redo-info').on('click', function () {
 		$('#Vendor_Fname').empty();
 		$('#Vendor_Lname').empty();
 		$('#Vendor_Org').empty();
@@ -328,75 +299,82 @@ $('#P-Confirm').on('click', function(){
 });
 //set "Back" button id on click to hide 2nd modal and trigger 1st modal
 //jquery: .empty() might be redundant
-$("#B-Redo-info").on( "click", function() {
-    $('#Business2').modal('hide');
-    $('#Business1').modal('show');
+$("#B-Redo-info").on("click", function () {
+	$('#Business2').modal('hide');
+	$('#Business1').modal('show');
 });
 //set "Confirm" button id on click to hide 2nd modal and trigger 3rd modal
-$("#B-Confirm-info").on( "click", function() {
+$("#B-Confirm-info").on("click", function () {
 
-    if ($("#bus_TermCheck").is(':checked')){
+	if ($("#bus_TermCheck").is(':checked')) {
 
-        Bus_Account = {
-            
-            "FirstName": $("#bus_Fname").val(),
-            "LastName": $("#bus_Lname").val(),
-            "Oraganization": $("#bus_Orgname").val(),
-            "PhoneNumber": $("#bus_Phone").val(),
-            "BusAddress" : $("#bus_Address").val(),
-            "EmailAddress": $("#bus_Email").val(),
-            "Website": $("#bus_Website").val(),
-            "Password1": $("#bus_PW").val(),
-            "Password2": $("#bus_PWconfirm").val(),
-            'type': 'vendor'
-        }; 
-        let Vendor_Account = JSON.stringify(Bus_Account);
-       // console.log(Vendor_Account);
-        $('#Business2').modal('hide');
-        $('#Business3').modal('show');
+		Bus_Account = {
 
-        
-        $.ajax({
-            url: 'registerVendor',
-            type: 'POST',
-            contentType: 'application/json; charset=utf-8',
-            dataType:'json',
-            data: Vendor_Account,
-            success: function(result) {
-                console.log(result)
-            }
-        })
-    }
-    else{
-        alert("Please argee to our Terms & Conditions.")
-    }   
+			"FirstName": $("#bus_Fname").val(),
+			"LastName": $("#bus_Lname").val(),
+			"Oraganization": $("#bus_Orgname").val(),
+			"PhoneNumber": $("#bus_Phone").val(),
+			"BusAddress": $("#bus_Address").val(),
+			"EmailAddress": $("#bus_Email").val(),
+			"Website": $("#bus_Website").val(),
+			"Password1": $("#bus_PW").val(),
+			"Password2": $("#bus_PWconfirm").val(),
+			'type': 'vendor'
+		};
+		let Vendor_Account = JSON.stringify(Bus_Account);
+		// console.log(Vendor_Account);
+		$('#Business2').modal('hide');
+		$('#Business3').modal('show');
+
+		// console.log('sending registration')
+
+		$.ajax({
+			url: 'registerVendor',
+			type: 'POST',
+			contentType: 'application/json; charset=utf-8',
+			dataType: 'json',
+			data: Vendor_Account,
+			success: async function (result) {
+				// console.log('success!')
+				// console.log(result)
+				if ($("#notificationPreference").is(':checked')) {
+					// console.log("saving subscription")
+					await openVendorPushSubscription();
+				}
+			}
+		})
+
+	}
+	else {
+		alert("Please agree to our Terms & Conditions.")
+	}
 });
 
-$("#B-Register-complete").on("click", function(){
-    $("#bus_Fname").val("");
-    $("#bus_Lname").val("");
-    $("#bus_Orgname").val("");
-    $("#bus_Address").val("");
-    $("#bus_Phone").val("");
-    $("#bus_Email").val("");
-    $("#bus_Website").val("");
-    $("#bus_PW").val("");
-    $("#bus_PWconfirm").val("");
-    $("#bus_TermCheck").prop('checked',false)
+$("#B-Register-complete").on("click", function () {
+	$("#bus_Fname").val("");
+	$("#bus_Lname").val("");
+	$("#bus_Orgname").val("");
+	$("#bus_Address").val("");
+	$("#bus_Phone").val("");
+	$("#bus_Email").val("");
+	$("#bus_Website").val("");
+	$("#bus_PW").val("");
+	$("#bus_PWconfirm").val("");
+	$("#bus_TermCheck").prop('checked', false)
 });
 
 
-$(".B-clear").on("click", function(){
-    $("#bus_Fname").val("");
-    $("#bus_Lname").val("");
-    $("#bus_Orgname").val("");
-    $("#bus_Address").val("");
-    $("#bus_Phone").val("");
-    $("#bus_Email").val("");
-    $("#bus_Website").val("");
-    $("#bus_PW").val("");
-    $("#bus_PWconfirm").val("");
-    $("#bus_TermCheck").prop('checked',false);
+$(".B-clear").on("click", function () {
+	$("#bus_Fname").val("");
+	$("#bus_Lname").val("");
+	$("#bus_Orgname").val("");
+	$("#bus_Address").val("");
+	$("#bus_Phone").val("");
+	$("#bus_Email").val("");
+	$("#bus_Website").val("");
+	$("#bus_PW").val("");
+	$("#bus_PWconfirm").val("");
+	$("#bus_TermCheck").prop('checked', false);
 });
 
 /*
@@ -410,16 +388,46 @@ $("#P_Register-complete").on("click", function(){
 });
 */
 
-$(".P-clear").on("click", function(){
-    $("#p_email").val("");
-    $("#p_phone").val("");
-    $("#p_password").val("");
-    $("#p_confirm_pw").val("");
-    $(".guardian").val("");
-    $("#Parent_TermCheck").prop('checked',false);
+$(".P-clear").on("click", function () {
+	$("#p_email").val("");
+	$("#p_phone").val("");
+	$("#p_password").val("");
+	$("#p_confirm_pw").val("");
+	$(".guardian").val("");
+	$("#Parent_TermCheck").prop('checked', false);
 });
 
 
-$('#toHome').click(function(){
-    $(".P-clear").click();
+$('#toHome').click(function () {
+	$(".P-clear").click();
 });
+
+async function openVendorPushSubscription() {
+	// console.log("pushing subscription")
+	if ("serviceWorker" in navigator && "PushManager" in window) {
+		let permission = await Notification.requestPermission()
+		if (permission != 'denied') {
+			let register = await registerServiceWorker();
+			let applicationServerKey = urlB64ToUint8Array('BI01Zbibo97CgCD60S9MO6HhlAbcTtfGOIayxUKG3o5QJbfU3eVMT3v_T-i2r7rK6QH8Zbv1So2VrPsT4FTjaes');
+			PushSubscription = await register.pushManager.subscribe({
+				userVisibleOnly: true,
+				applicationServerKey
+			});
+			let SERVER_URL = 'http://localhost:10000/saveSubscription'
+			let response = await fetch(SERVER_URL, {
+				method: 'post',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(PushSubscription),
+			})
+			response.json().then(res => console.log(res.message))
+		} else {
+			getInstruction = confirm("Oops! \nIt looks like you blocked us from sending you notifications. \n" +
+				"Would you like instructions on how to reset your permissions?")
+			if (getInstruction) {
+				window.open('https://support.google.com/chrome/answer/3220216?co=GENIE.Platform%3DDesktop&hl=en')
+			}
+		}
+	}
+}
