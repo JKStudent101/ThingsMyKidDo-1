@@ -28,7 +28,6 @@ router.get('/display/:id', (req, res) => {
 router.get('/', (req, res) => {
 	if (!req.session.user) {
 		req.session.url = '/event';
-		console.log(req.session.url)
 		res.redirect('/login')
 	} else {
 		if (!req.session.loadedOnce) {

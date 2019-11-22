@@ -60,6 +60,8 @@ app.get('/', (req, res) => {
 });
 
 app.get('/home', (req, res) => {
+    console.log(req.sessionID)
+
     if (!req.session.user) {
         req.session.url = '/home';
         res.redirect('/login')
@@ -73,6 +75,7 @@ app.get('/home', (req, res) => {
 
 app.get('/login', (req, res) => {
     if (!req.session.user) {
+        // console.log(req.sessionID)
         res.render('login.hbs', {});
     } else if (req.session.user.user_type == 'admin') {
         res.redirect('/admin')
@@ -93,6 +96,7 @@ app.post('/login-form', [
         .not().isEmpty()
         .escape()
 ], (req, res) => {
+    // console.log(req.session.url)
     // console.log(req.body)
     let email = req.body.email;
     let password = req.body.password;
@@ -111,7 +115,7 @@ app.post('/login-form', [
                 // let salt = bcrypt.genSaltSync(saltRounds);
                 // res.cookie('i', bcrypt.hashSync(email, salt));
                 req.session.user = result[0];
-                console.log(req.session.url)
+                // console.log(req.session)
                 if (req.session.url) {
                     let url = req.session.url
                     delete req.session.url

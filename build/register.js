@@ -96,18 +96,18 @@ $(document).ready(function () {
 
 	let tags = [];
 
-	$.ajax({
-		url: '/event/gettags',
-		type: 'GET',
-		async: false,
-		dataType: 'json',
-		success: (data) => {
-			console.log(data)
-			for (var i = 0; i < data.length; i++) {
-				tags.push(data[i].name);
-			}
-		}
-	});
+	// $.ajax({
+	// 	url: '/event/gettags',
+	// 	type: 'GET',
+	// 	async: false,
+	// 	dataType: 'json',
+	// 	success: (data) => {
+	// 		console.log(data)
+	// 		for (var i = 0; i < data.length; i++) {
+	// 			tags.push(data[i].name);
+	// 		}
+	// 	}
+	// });
 	$('#add').click(function () {
 
 
