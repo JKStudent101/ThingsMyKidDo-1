@@ -63,4 +63,4 @@ function openUser(evt, usertype) {
     evt.currentTarget.className += " active";
 }
 
-document.getElementById("defaultOpen").click();
+// document.getElementById("defaultOpen").click();

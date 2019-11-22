@@ -22,58 +22,85 @@ const confirm_add_msg =()=>{
 
      if ((event_name.value == "") || (event_name.value == "null") || (event_name.value == "undefined"))
      {
-         window.alert("Please enter valid event name.");
+         Swal.fire({
+             text: "Please enter valid event name",
+             icon: "error",
+         });
          event_name.focus();
          return false;
      }
 
      if ((address.value == "") || (address.value == "null") || (address.value == "undefined"))
      {
-         window.alert("Please enter valid address.");
+         Swal.fire({
+             text: "Please enter valid address",
+             icon: "error",
+         });
          address.focus();
          return false;
      }
 
      if ((city.value == "") || (city.value == "null") || (city.value == "undefined"))
      {
-         window.alert("Please enter valid city.");
+         Swal.fire({
+             text: "Please enter valid city",
+             icon: "error",
+         });
          city.focus();
          return false;
      }
      if ((link.value == "") || (link.value == "null") || (link.value == "undefined"))
      {
-         window.alert("Please enter valid link.");
+         Swal.fire({
+             text: "Please enter valid link",
+             icon: "error",
+         });
          link.focus();
          return false;
      }
 
      if ((description.value == "") || (description.value == "null") || (description.value == "undefined"))
      {
-         window.alert("Please enter valid description.");
+         Swal.fire({
+             text: "Please enter valid description",
+             icon: "error",
+         });
          description.focus();
          return false;
      }
 
      if (start_date.value<today){
-         window.alert("Please enter valid event date.");
+         Swal.fire({
+             text: "Please enter valid event date",
+             icon: "error",
+         });
          start_date.focus();
          return false;
      }
 
      if ((end_date.value<today)||(end_date.value < start_date.value)){
-         window.alert("Please enter valid event date.");
+         Swal.fire({
+             text: "Please enter valid event date",
+             icon: "error",
+         });
          end_date.focus();
          return false;
      }
 
-     if (!(city.value.match(/^[A-Za-z]+$/))){
-         window.alert("Please enter valid city.");
+     if (!(city.value.match(/^[A-Za-z+ ?]+$/))){
+         Swal.fire({
+             text: "Please enter valid city",
+             icon: "error",
+         });
          city.focus();
          return false;
      }
 
      if (!(link.value.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g))){
-         window.alert("Please enter valid event link.");
+         Swal.fire({
+             text: "Please enter valid event link",
+             icon: "error",
+         });
          link.focus();
          return false;
      }

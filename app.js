@@ -56,7 +56,7 @@ hbs.registerHelper('ifCond', function (v1, v2, options) {
 });
 
 app.get('/', (req, res) => {
-    res.redirect('/landing');
+    res.redirect('/index');
 });
 
 app.get('/home', (req, res) => {
@@ -111,6 +111,7 @@ app.post('/login-form', [
                 // let salt = bcrypt.genSaltSync(saltRounds);
                 // res.cookie('i', bcrypt.hashSync(email, salt));
                 req.session.user = result[0];
+                console.log(req.session.url)
                 if (req.session.url) {
                     let url = req.session.url
                     delete req.session.url
@@ -282,7 +283,7 @@ app.get('/admin/event', (req, res) => {
     } else {
         var sql = 'SELECT a.event_id, d.name as vendor_name, e.email, d.contact_name, a.description, a.name as event_name, a.isApproved, c.name as tag_name, \n' +
             'concat(a.start_date, \' \', a.start_time) as start_date, concat(a.end_date, \' \', a.end_time) as end_date, a.link as event_link, \n' +
-            'concat(a.address, \', \', a.city) as address\n' +
+            'concat(a.address, \', \', a.city) as address, d.website\n' +
             'FROM event a\n' +
             'LEFT JOIN event_tags b ON a.event_id = b.event_id\n' +
             'LEFT JOIN tags c ON b.tag_id = c.tag_id\n' +
@@ -511,8 +512,9 @@ app.post('/edit/:event_id', (req, res) => {
             let address = req.body.address.trim();
             let city = req.body.city.trim();
             let province = req.body.province;
-            let formed_address = address.replace(/ /g, "+");
-            let search_string = "https://maps.googleapis.com/maps/api/geocode/json?address=" + formed_address + ",+" + city + ",+" + province + "&key=AIzaSyAN6q6jOWczlbNgBPd_ljm857YUqpyIoVU";
+            let format_address = address.replace(/ /g, "+");
+            let format_city = city.replace(/ /g, "+");
+            let search_string = "https://maps.googleapis.com/maps/api/geocode/json?address=" + format_address + ",+" + format_city + ",+" + province + "&key=AIzaSyAN6q6jOWczlbNgBPd_ljm857YUqpyIoVU";
             let geocode = new Promise((resolve, reject) => {
                 request({
                     url: search_string,
@@ -622,7 +624,7 @@ app.post('/edit/:event_id', (req, res) => {
     }
 });
 
-app.get('/landing', (req, res) => {
+app.get('/index', (req, res) => {
     res.render('landing.hbs')
 });
 
