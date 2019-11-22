@@ -1,4 +1,4 @@
-var kidsNum = 1;
+var kidsNum = 0;
 
 const Remove_profile = (k_profile_id) => {
 	$(k_profile_id).remove();
@@ -21,6 +21,12 @@ $(document).ready(function () {
 	$('#P-Account').on('click', function () {
 		$('#Parent1').modal('hide');
 		$('#Parent2').modal('show');
+		var pEmail = $('#p_email').val();
+		var pPassword = $('#p_password').val();
+		var pPassword2 = $('#p_password2').val();
+
+		$('#Parent_Email').html(pEmail);
+
 	});
 	//set "Register" button id on click to load input + hide 2nd modal, and trigger 3rd modal
 	$('#P-Redo-Account').on('click', function () {
@@ -31,6 +37,9 @@ $(document).ready(function () {
 	$('#P-User').on('click', function () {
 		$('#Parent2').modal('hide');
 		$('#Parent3').modal('show');
+
+		var ParentRole = $('#Guardian').find(':selected').text();
+		$('#Parent_Role').html(ParentRole);
 	});
 	//set "Back" button id on click to hide 2nd modal and trigger 1st modal
 	$('#P-Redo-User').on('click', function () {
@@ -41,7 +50,11 @@ $(document).ready(function () {
 	$('#P-Skip').on('click', function () {
 		$('#Parent3').modal('hide');
 		$('#Parent4').modal('show');
+
+		$('#K1_Nickname').html('');
+		$('#K1_Gender').html('');
 	});
+
 	//set "Register" button id on click to load input + hide 2nd modal, and trigger 3rd modal
 	$('#P-Kids').on('click', function () {
 		$('#Parent3').modal('hide');
@@ -51,25 +64,11 @@ $(document).ready(function () {
 		var k1_gender = $('#gender1').val();
 		var items = {};
 
-		// var value = $('[class^=Add_Kids')
-		// 	.find('input, select').not('input[type=button]').map(function (i, item) {
-		// 		// console.log($(this).val())
-		// 		var currentElement = $(this);
-		// 		var value = currentElement.val(); // if it is an input/select/textarea field
-		// 		var cls = this.className;
-		// 		var kidprops = this.id;
-
-		// 		items[cls] = items[cls] || [];
-		// 		items[cls].push(value);
-		// 	})
-		// 	.get();
-		// return items
-
 		$('#K1_Nickname').html(k1_nName);
 		$('#K1_Gender').html(k1_gender);
 
-
 	});
+
 	//set "Back" button id on click to hide 3rd modal and trigger 2nd modal
 	$('#P-Redo-Kids').on('click', function () {
 		$('#Parent4').modal('hide');
@@ -85,11 +84,6 @@ $(document).ready(function () {
 	// });
 
 	//
-	var count = 0;
-
-
-
-	// console.log(tags);
 
 	var count = 1;
 	var ChildProfile;
@@ -108,7 +102,22 @@ $(document).ready(function () {
 			}
 		}
 	});
+
 	$('#add').click(function () {
+		let tags = [];
+
+		$.ajax({
+			url: '/event/gettags',
+			type: 'GET',
+			async: false,
+			dataType: 'json',
+			success: (data) => {
+				console.log(data)
+				for (var i = 0; i < data.length; i++) {
+					tags.push(data[i].name);
+				}
+			}
+		});
 
 
 		console.log(tags)
@@ -127,7 +136,10 @@ $(document).ready(function () {
 			count +
 			' " class="register-kid' + (count + 1) + '"> <option>Boy</option> <option>Girl</option> </select>';
 
-
+		let selectInterests =
+			'<select id="Kid-Interests' + count +
+			'" class="multiple_select" multiple="multiple"> {{#each data}} <option>{{name}}</option> {{/each}} </select>'	
+		/*Hard-code the dropdown checkbox. cannot dynamically use handlebars in append (not enough time)*/ 
 
 		let delete_profile =
 			'<input class="Remove_kid" type="button" value="Remove child' + count + '" onClick="Remove_profile(\'' + j_new_kid + '\');">'
@@ -144,13 +156,7 @@ $(document).ready(function () {
 			'"placeholder="Nickname">' + ' is a ' +
 			selectGender +
 			' who is interested in ' +
-			' <input class="register-kid' +
-			(count + 1) +
-			'" name="interest' +
-			count +
-			'" id="interest' +
-			count +
-			'"placeholder="Interests">' + j_new_kid + delete_profile +
+			selectInterests + j_new_kid + delete_profile +
 			'</div>'
 
 
@@ -160,6 +166,14 @@ $(document).ready(function () {
 
 		$('.allInputs1').append(input);
 
+/*		' <input class="register-kid' +
+			(count + 1) +
+			'" name="interest' +
+			count +
+			'" id="interest' +
+			count +
+			'"placeholder="Interests">'
+*/
 
 	});
 	//Register Modal
@@ -170,7 +184,6 @@ $(document).ready(function () {
 	$('#P-Confirm').on('click', function () {
 		if ($('#Parent_TermCheck').is(':checked')) {
 			let pEmail = $('#p_email').val();
-			let pPhone = $('#p_phone').val();
 			let pPassword = $('#p_password').val();
 			let pPassword2 = $('#p_password2').val();
 			var ParentRole = $('#Guardian').find(':selected').text();
@@ -197,7 +210,6 @@ $(document).ready(function () {
 
 			let ParentAccount = {
 				p_email: pEmail,
-				p_phone: pPhone,
 				p_pass: pPassword,
 				p_pass2: pPassword2,
 				p_role: 'parent',
@@ -281,153 +293,163 @@ $(document).ready(function () {
 		$('#Vendor_Website').html(b_Website);
 		// }
 	});
+
 	//set "Back" button id on click to hide 2nd modal and trigger 1st modal
 	//jquery: .empty() might be redundant
 	$('#B-Redo-info').on('click', function () {
-		$('#Vendor_Fname').empty();
-		$('#Vendor_Lname').empty();
-		$('#Vendor_Org').empty();
-		$('#Vendor_Address').empty();
-		$('#Vendor_Phone').empty();
-		$('#Vendor_Email').empty();
-		$('#Vendor_Website').empty();
-
 		$('#Business2').modal('hide');
 		$('#Business1').modal('show');
 	});
 	//set "Confirm" button id on click to hide 2nd modal and trigger 3rd modal
-});
-//set "Back" button id on click to hide 2nd modal and trigger 1st modal
-//jquery: .empty() might be redundant
-$("#B-Redo-info").on("click", function () {
-	$('#Business2').modal('hide');
-	$('#Business1').modal('show');
-});
-//set "Confirm" button id on click to hide 2nd modal and trigger 3rd modal
-$("#B-Confirm-info").on("click", function () {
+	$('#B-Confirm-info').on('click', function () {
+		if ($('#bus_TermCheck').is(':checked')) {
 
-	if ($("#bus_TermCheck").is(':checked')) {
+			Bus_Account = {
+				'FirstName': $('#bus_Fname').val(),
+				'LastName': $('#bus_Lname').val(),
+				'Oraganization': $('#bus_Orgname').val(),
+				'PhoneNumber': $('#bus_Phone').val(),
+				'BusAddress': $('#bus_Address').val(),
+				'EmailAddress': $('#bus_Email').val(),
+				'Website': $("#bus_Website").val(),
+				"Password1": $("#bus_PW").val(),
+				"Password2": $("#bus_PWconfirm").val(),
+				'type': 'vendor'
+			};
+			let Vendor_Account = JSON.stringify(Bus_Account);
+			// console.log(Vendor_Account);
+			$('#Business2').modal('hide');
+			$('#Business3').modal('show');
 
-		Bus_Account = {
+			// console.log('sending registration')
 
-			"FirstName": $("#bus_Fname").val(),
-			"LastName": $("#bus_Lname").val(),
-			"Oraganization": $("#bus_Orgname").val(),
-			"PhoneNumber": $("#bus_Phone").val(),
-			"BusAddress": $("#bus_Address").val(),
-			"EmailAddress": $("#bus_Email").val(),
-			"Website": $("#bus_Website").val(),
-			"Password1": $("#bus_PW").val(),
-			"Password2": $("#bus_PWconfirm").val(),
-			'type': 'vendor'
-		};
-		let Vendor_Account = JSON.stringify(Bus_Account);
-		// console.log(Vendor_Account);
-		$('#Business2').modal('hide');
-		$('#Business3').modal('show');
-
-		// console.log('sending registration')
-
-		$.ajax({
-			url: 'registerVendor',
-			type: 'POST',
-			contentType: 'application/json; charset=utf-8',
-			dataType: 'json',
-			data: Vendor_Account,
-			success: async function (result) {
-				// console.log('success!')
-				// console.log(result)
-				if ($("#notificationPreference").is(':checked')) {
-					// console.log("saving subscription")
-					await openVendorPushSubscription();
+			$.ajax({
+				url: 'registerVendor',
+				type: 'POST',
+				contentType: 'application/json; charset=utf-8',
+				dataType: 'json',
+				data: Vendor_Account,
+				success: async function (result) {
+					// console.log('success!')
+					// console.log(result)
+					if ($("#notificationPreference").is(':checked')) {
+						// console.log("saving subscription")
+						await openVendorPushSubscription();
+					}
 				}
-			}
-		})
-
-	}
-	else {
-		alert("Please agree to our Terms & Conditions.")
-	}
-});
-
-$("#B-Register-complete").on("click", function () {
-	$("#bus_Fname").val("");
-	$("#bus_Lname").val("");
-	$("#bus_Orgname").val("");
-	$("#bus_Address").val("");
-	$("#bus_Phone").val("");
-	$("#bus_Email").val("");
-	$("#bus_Website").val("");
-	$("#bus_PW").val("");
-	$("#bus_PWconfirm").val("");
-	$("#bus_TermCheck").prop('checked', false)
-});
-
-
-$(".B-clear").on("click", function () {
-	$("#bus_Fname").val("");
-	$("#bus_Lname").val("");
-	$("#bus_Orgname").val("");
-	$("#bus_Address").val("");
-	$("#bus_Phone").val("");
-	$("#bus_Email").val("");
-	$("#bus_Website").val("");
-	$("#bus_PW").val("");
-	$("#bus_PWconfirm").val("");
-	$("#bus_TermCheck").prop('checked', false);
-});
-
-/*
-$("#P_Register-complete").on("click", function(){
-    $("#p_email").val("");
-    $("#p_phone").val("");
-    $("#p_password").val("");
-    $("#p_confirm_pw").val("");
-    $(".guardian").val("");
-    $("#Parent_TermCheck").prop('checked',false);
-});
-*/
-
-$(".P-clear").on("click", function () {
-	$("#p_email").val("");
-	$("#p_phone").val("");
-	$("#p_password").val("");
-	$("#p_confirm_pw").val("");
-	$(".guardian").val("");
-	$("#Parent_TermCheck").prop('checked', false);
-});
-
-
-$('#toHome').click(function () {
-	$(".P-clear").click();
-});
-
-async function openVendorPushSubscription() {
-	// console.log("pushing subscription")
-	if ("serviceWorker" in navigator && "PushManager" in window) {
-		let permission = await Notification.requestPermission()
-		if (permission != 'denied') {
-			let register = await registerServiceWorker();
-			let applicationServerKey = urlB64ToUint8Array('BI01Zbibo97CgCD60S9MO6HhlAbcTtfGOIayxUKG3o5QJbfU3eVMT3v_T-i2r7rK6QH8Zbv1So2VrPsT4FTjaes');
-			PushSubscription = await register.pushManager.subscribe({
-				userVisibleOnly: true,
-				applicationServerKey
-			});
-			let SERVER_URL = 'http://localhost:10000/saveSubscription'
-			let response = await fetch(SERVER_URL, {
-				method: 'post',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(PushSubscription),
 			})
-			response.json().then(res => console.log(res.message))
-		} else {
-			getInstruction = confirm("Oops! \nIt looks like you blocked us from sending you notifications. \n" +
-				"Would you like instructions on how to reset your permissions?")
-			if (getInstruction) {
-				window.open('https://support.google.com/chrome/answer/3220216?co=GENIE.Platform%3DDesktop&hl=en')
+
+		}
+		else {
+			alert("Please agree to our Terms & Conditions.")
+		}
+	});
+
+	$("#B-Register-complete").on("click", function () {
+		$("#bus_Fname").val("");
+		$("#bus_Lname").val("");
+		$("#bus_Orgname").val("");
+		$("#bus_Address").val("");
+		$("#bus_Phone").val("");
+		$("#bus_Email").val("");
+		$("#bus_Website").val("");
+		$("#bus_PW").val("");
+		$("#bus_PWconfirm").val("");
+		$("#bus_TermCheck").prop('checked', false)
+	});
+
+
+	$(".B-clear").on("click", function () {
+		$("#bus_Fname").val("");
+		$("#bus_Lname").val("");
+		$("#bus_Orgname").val("");
+		$("#bus_Address").val("");
+		$("#bus_Phone").val("");
+		$("#bus_Email").val("");
+		$("#bus_Website").val("");
+		$("#bus_PW").val("");
+		$("#bus_PWconfirm").val("");
+		$("#bus_TermCheck").prop('checked', false);
+	});
+
+	/*
+	$("#P_Register-complete").on("click", function(){
+		$("#p_email").val("");
+		$("#p_password").val("");
+		$("#p_confirm_pw").val("");
+		$(".guardian").val("");
+		$("#Parent_TermCheck").prop('checked',false);
+	});
+	*/
+
+	$(".P-clear").on("click", function () {
+		$("#p_email").val("");
+		$("#p_password").val("");
+		$("#p_confirm_pw").val("");
+		$(".guardian").val("");
+		$("#Parent_TermCheck").prop('checked', false);
+		$(".Add_Kids").remove();
+	});
+
+
+	$('#toHome').click(function () {
+		$(".P-clear").click();
+	});
+
+	$(".multiple_select").mousedown(function(e) {
+		if (e.target.tagName == "OPTION") 
+		{
+		  return; //don't close dropdown if i select option
+		}
+		$(this).toggleClass('multiple_select_active'); //close dropdown if click inside <select> box
+		});
+		$(".multiple_select").on('blur', function(e) {
+			$(this).removeClass('multiple_select_active'); //close dropdown if click outside <select>
+		});
+		  
+		$('.multiple_select option').mousedown(function(e) { //no ctrl to select multiple
+			e.preventDefault(); 
+			$(this).prop('selected', $(this).prop('selected') ? false : true); //set selected options on click
+			$(this).parent().change(); //trigger change event
+		});
+	
+		
+	$("#Kid-Interests").on('change', function() {
+	/*     var selected = $("#Kid-Interests").val().toString(); //here I get all options and convert to string
+		  var document_style = document.documentElement.style;
+		  if(selected !== "")
+			document_style.setProperty('--text', "'"+selected+"' ");
+		  else
+			document_style.setProperty('--text', "'Hobbies'");
+	*/	});
+
+	async function openVendorPushSubscription() {
+		// console.log("pushing subscription")
+		if ("serviceWorker" in navigator && "PushManager" in window) {
+			let permission = await Notification.requestPermission()
+			if (permission != 'denied') {
+				let register = await registerServiceWorker();
+				let applicationServerKey = urlB64ToUint8Array('BI01Zbibo97CgCD60S9MO6HhlAbcTtfGOIayxUKG3o5QJbfU3eVMT3v_T-i2r7rK6QH8Zbv1So2VrPsT4FTjaes');
+				PushSubscription = await register.pushManager.subscribe({
+					userVisibleOnly: true,
+					applicationServerKey
+				});
+				let SERVER_URL = 'http://localhost:10000/saveSubscription'
+				let response = await fetch(SERVER_URL, {
+					method: 'post',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(PushSubscription),
+				})
+				response.json().then(res => console.log(res.message))
+			} else {
+				getInstruction = confirm("Oops! \nIt looks like you blocked us from sending you notifications. \n" +
+					"Would you like instructions on how to reset your permissions?")
+				if (getInstruction) {
+					window.open('https://support.google.com/chrome/answer/3220216?co=GENIE.Platform%3DDesktop&hl=en')
+				}
 			}
 		}
 	}
-}
+})
