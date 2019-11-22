@@ -28,6 +28,7 @@ router.get('/display/:id', (req, res) => {
 router.get('/', (req, res) => {
 	if (!req.session.user) {
 		req.session.url = '/event';
+		console.log(req.session.url)
 		res.redirect('/login')
 	} else {
 		if (!req.session.loadedOnce) {
@@ -109,20 +110,16 @@ router.get('/gettags', (req, res) => {
 			'ON et.tag_id = t.tag_id \n' +
 			'ORDER BY t.name		';
 		db.query(sql, (err, result) => {
-			if (!req.cookies.i) {
-				res.redirect('/login');
+			if (err) {
+				throw err;
 			} else {
-				if (err) {
-					throw err;
-				} else {
-					var data = [];
-					for (var i = 0; i < result.length; i++) {
-						data.push(result[i]);
-						// console.log(i);
-					}
-
-					res.send(data);
+				var data = [];
+				for (var i = 0; i < result.length; i++) {
+					data.push(result[i]);
+					// console.log(i);
 				}
+
+				res.send(data);
 			}
 
 		});
@@ -139,9 +136,6 @@ router.get('/getnames', (req, res) => {
 			'FROM child \n' +
 			'WHERE parent_id =' + user_id;
 		db.query(sql, (err, result) => {
-			if (!req.cookies.i) {
-				res.redirect('/login');
-			}
 			if (err) {
 				throw err;
 			} else {
