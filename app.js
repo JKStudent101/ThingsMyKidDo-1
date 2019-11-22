@@ -60,8 +60,6 @@ app.get('/', (req, res) => {
 });
 
 app.get('/home', (req, res) => {
-    console.log(req.sessionID)
-
     if (!req.session.user) {
         req.session.url = '/home';
         res.redirect('/login')
