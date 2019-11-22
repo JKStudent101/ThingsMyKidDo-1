@@ -266,7 +266,7 @@ app.get('/admin/event', (req, res) => {
     } else {
         var sql = 'SELECT a.event_id, d.name as vendor_name, e.email, d.contact_name, a.description, a.name as event_name, a.isApproved, c.name as tag_name, \n' +
             'concat(a.start_date, \' \', a.start_time) as start_date, concat(a.end_date, \' \', a.end_time) as end_date, a.link as event_link, \n' +
-            'concat(a.address, \', \', a.city) as address\n' +
+            'concat(a.address, \', \', a.city) as address, d.website\n' +
             'FROM event a\n' +
             'LEFT JOIN event_tags b ON a.event_id = b.event_id\n' +
             'LEFT JOIN tags c ON b.tag_id = c.tag_id\n' +
