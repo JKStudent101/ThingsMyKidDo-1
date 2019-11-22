@@ -100,16 +100,21 @@ async function closePushSubscription() {
 
 const displayYesButton = () => {
     let button = document.getElementById('permission-btn-yes');
-    button.style.display = 'block'
-    button = document.getElementById('permission-btn-no');
-    button.style.display = 'none'
+    if (button) {
+        button.style.display = 'block'
+        button = document.getElementById('permission-btn-no');
+        button.style.display = 'none'
+    }
+
 }
 
 const displayNoButton = () => {
     let button = document.getElementById('permission-btn-no');
-    button.style.display = 'block'
-    button = document.getElementById('permission-btn-yes');
-    button.style.display = 'none'
+    if (button) {
+        button.style.display = 'block'
+        button = document.getElementById('permission-btn-yes');
+        button.style.display = 'none'
+    }
 }
 
 navigator.serviceWorker.ready.then((registration) => {
