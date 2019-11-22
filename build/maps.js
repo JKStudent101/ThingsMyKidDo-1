@@ -12,6 +12,11 @@ let filteroption = '';
 let tags = [];
 let tagsisclicked = [];
 let child_name = {};
+const getCustomMarkers = (tags) => {
+	// imgURLs.push('/src/customIcons/' + tags.toLowerCase() + '_pin.png')
+	return '/src/customIcons/' + tags.toLowerCase() + '_pin.png';
+	// return tags.toLowerCase();
+};
 $.ajax({
 	url: '/event/gettags',
 	type: 'GET',
@@ -303,9 +308,9 @@ function initMap() {
 							coords: {
 								lat: parseFloat(value.lat),
 								lng: parseFloat(value.lng)
-							}
+							},
 							// iconImage: geticons(tag)
-							// iconImage: '/src/customIcons/arena_pin.png'
+							iconImage: getCustomMarkers(value.category)
 						});
 					});
 				} else if (filteroption == 'getOneTag') {
@@ -321,9 +326,8 @@ function initMap() {
 									coords: {
 										lat: parseFloat(value.lat),
 										lng: parseFloat(value.lng)
-									}
-
-									// iconImage: getPinMarkers(value.category.toLowerCase())
+									},
+									iconImage: getCustomMarkers(value.category)
 								});
 							}
 						}
@@ -340,8 +344,8 @@ function initMap() {
 								coords: {
 									lat: parseFloat(value.lat),
 									lng: parseFloat(value.lng)
-								}
-								// iconImage: getPinMarkers(value.category.toLowerCase())
+								},
+								iconImage: getCustomMarkers(value.category)
 							});
 						}
 					});
@@ -361,8 +365,8 @@ function initMap() {
 									coords: {
 										lat: parseFloat(value.lat),
 										lng: parseFloat(value.lng)
-									}
-									// iconImage: getPinMarkers(value.category.toLowerCase())
+									},
+									iconImage: getPinMarkers(value.category.toLowerCase())
 								});
 								// add all events to the marker
 							}
@@ -401,9 +405,11 @@ function initMap() {
 			// console.log(props);
 
 			var icon = {
-				// url: props.iconImage,
-				url: '/src/customIcons/arena_pin.png', // url
-				scaledSize: new google.maps.Size(30, 40) // scaled size
+                url: props.iconImage,
+                // size: new google.maps.Size(50, 50),
+                scaledSize: new google.maps.Size(25, 25)
+                // url: '/src/customIcons/arena_pin.png', // url
+
 			};
 
 			let marker = new google.maps.Marker({
@@ -419,7 +425,7 @@ function initMap() {
 			// Check for customicon
 			if (props.iconImage) {
 				// Set icon image
-				marker.setIcon(props.iconImage);
+				marker.setIcon(icon);
 			}
 
 			// Check content
