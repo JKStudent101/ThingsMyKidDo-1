@@ -5,7 +5,7 @@
     {{> bootstrap}}
     <link href="/css/menu.css" type="text/css" rel="stylesheet" />
     <link href="/css/vendor.css" type="text/css" rel="stylesheet" />
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
 
     <script>
@@ -124,11 +124,29 @@
   </div>
   <div class="form-group">
     <div class="col-xs-offset-3 col-xs-10">
-      <button type="submit" class="btn btn-primary" onclick="return confirm('Are you sure you want to update event?')">Save</button>
+        <button type="submit" class="invis btn btn-primary" id="edit_btn">Save</button>
     </div>
   </div>
   
 </form>
+    <div class="form-group">
+        <div class="col-xs-offset-3 col-xs-10">
+            <button class="btn btn-primary" onclick="
+        Swal.fire({
+            title: 'Are you sure you want to update event?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, update event!'
+            }).then((result) => {
+                if (result.value) {
+                    document.getElementById('edit_btn').click();
+                }
+            })
+         ">Save</button>
+        </div>
+    </div>
 </div>
 </body>
 </html>
