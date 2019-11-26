@@ -99,3 +99,12 @@ input:checked ~ label:after {
 	background-color: #54e0c7;
 	border-color: #54e0c7;
 }
+
+.tag {
+	border: 1px solid turquoise;
+	width: 10%;
+	text-align: center;
+	background-color: lightblue;
+	border-radius: 5px;
+	color: darkslategray;
+}

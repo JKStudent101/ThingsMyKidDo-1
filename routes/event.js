@@ -5,23 +5,50 @@ const db = require('../app').db;
 // router.use(cookieParser());
 // to /event
 
-router.get('/display/:id', (req, res) => {
+router.get('/display/:id', async (req, res) => {
 	if (!req.session.user) {
 		req.session.url = `/event/display/${req.params.id}`;
 		res.redirect('/login')
 	} else {
-		let sql = "select name, description, link, isApproved from event where event_id = ?;"
-		db.query(sql, req.params.id, (err, result) => {
-			if (err) {
-				throw err;
-			} else {
-				if (result[0].isApproved === "Approved") {
-					req.session.notification_event = result[0];
-					req.session.loadedOnce = false;
+		let event = await new Promise((resolve, reject) => {
+			let sql = "select e.name, e.description, e.link, e.isApproved, v.name as 'vendor_name', v.website " +
+				"from event e " +
+				"inner join vendor v on e.vendor_id = v.user_id " +
+				"where event_id = ?;"
+			db.query(sql, req.params.id, (err, result) => {
+				if (err) {
+					reject(err);
+				} else {
+					resolve(result)
 				}
-				res.redirect('/event')
-			}
+			})
 		})
+
+		if (event.length > 0) {
+			if (event[0].isApproved === "Approved") {
+				let sql = "select name from " +
+				"event_tags et " +
+				"inner join tags t on et.tag_id = t.tag_id " +
+				"where et.event_id = 6;"
+				db.query(sql, req.params.id, (err, result) => {
+					if(err) {
+						console.log(err);
+					} else {
+						req.session.display_event = event[0];
+						req.session.display_event.tags = result
+						if (!req.session.display_event.link.includes("https://")){
+							req.session.display_event.link = "https://" + req.session.display_event.link;
+						}
+						if (!req.session.display_event.website.includes("https://")){
+							req.session.display_event.website = "https://" + req.session.display_event.website;
+							// console.log(req.session.display_event.website)
+						}
+						req.session.loadedOnce = false;
+						res.redirect('/event')
+					}
+				})
+			}
+		}
 	}
 });
 
@@ -33,7 +60,7 @@ router.get('/', (req, res) => {
 		if (!req.session.loadedOnce) {
 			req.session.loadedOnce = true
 		} else {
-			delete req.session.notification_event
+			delete req.session.display_event
 		}
 		let sql =
 			'SELECT DISTINCT t.name  \n' +
@@ -58,14 +85,14 @@ router.get('/', (req, res) => {
 						message: passedVariable,
 						user_type: req.session.user.user_type,
 						vendor_id: req.session.user.user_id,
-						notification_event: req.session.notification_event
+						display_event: req.session.display_event
 					});
 				} else {
 					res.render('event.hbs', {
 						data: result,
 						user_type: req.session.user.user_type,
 						vendor_id: req.session.user.user_id,
-						notification_event: req.session.notification_event
+						display_event: req.session.display_event
 					});
 				}
 			}
