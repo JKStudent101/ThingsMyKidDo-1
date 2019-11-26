@@ -200,7 +200,7 @@ body {
   }
 
   .notification-text {
-    font-size: 4vh; 
+    font-size: 115%; 
     margin: auto;
     margin-right: 10px;
   }
