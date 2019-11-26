@@ -79,56 +79,24 @@ async function closePushSubscription() {
 }
 
 if (document.getElementById("notif-check")){
-    console.log('element exists')
+    // console.log('element exists')
     let checkbox = document.getElementById("notif-check");
+    navigator.serviceWorker.ready.then((registration) => {
+        registration.pushManager.getSubscription().then(subscription => {
+            if (subscription === null) {
+                checkbox.checked = false;
+            } else {
+                checkbox.checked = true;
+            }
+        })
+    });
     checkbox.addEventListener( 'change', function() {
         if(this.checked) {
-            console.log('checked');
+            // console.log('checked');
             openPushSubscription();
         } else {
-            console.log('unchecked');
+            // console.log('unchecked');
             closePushSubscription();
         }
     });
 }
-
-
-
-
-
-
-
-/*
-Checks that browser has push notification functionality
-*/
-// const check = () => {
-//     if (!('serviceWorker' in navigator)) {
-//         throw new Error('No Service Worker support!')
-//     }
-//     if (!('PushManager' in window)) {
-//         throw new Error('No Push API Support!')
-//     }
-// }
-
-
-// const main = async () => {
-//     console.log(Notification.permission);
-//     check();
-//     const swRegistration = await registerServiceWorker();
-//     const permission = await requestNotificationPermission();
-// }
-
-/*
-// Asks permission to send notifications
-// */
-// const requestNotificationPermission = async () => {
-//     const permission = await Notification.requestPermission();
-//     // value of permission can be 'granted', 'default', 'denied'
-//     // granted: user has accepted the request
-//     // default: user has dismissed the notification permission popup by clicking on x
-//     // denied: user has denied the request.
-//     if (permission !== 'granted') {
-//         throw new Error('Permission not granted for Notification');
-//     }
-//     // console.log(Notification.permission)
-// }
