@@ -15,7 +15,9 @@
     <div id="bg">
         <nav class="navbar navbar-inverse" id="menuNav">
             <div class="container-fluid">
-                <a href="/index"><div id="logoDiv"></div></a>
+                <a href="/index">
+                    <div id="logoDiv"></div>
+                </a>
                 <div class="navbar-header">
                     <a class="navbar-brand"></a>
                 </div>
@@ -75,7 +77,8 @@
                             <div class="tab">
                                 <p><input class="register" placeholder="Email address" name="email" id='p_email'></p>
                                 <p><input class="register" placeholder="Password" name="pw" id='p_password'></p>
-                                <p><input class="register" placeholder="Comfirm Password"  name="confirm_pw" id='p_confirm_pw'></p>
+                                <p><input class="register" placeholder="Comfirm Password" name="confirm_pw"
+                                        id='p_confirm_pw'></p>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -135,7 +138,7 @@
                             <div class="tab" id="morekids">
                                 {{!-- {{>KidRegister}} --}}
                                 <p>click the "Create Kid profile" button to create a profile for your child.</p>
-                                        <p>you can create a maximum of 5 profiles during registration.</p>
+                                <p>you can create a maximum of 5 profiles during registration.</p>
                                 <div class="allInputs1">
 
                                     <div class="Add_Kids1">
@@ -152,13 +155,13 @@
                                             who is interested in
                                             <span>
                                                 <select id="Kid-Interests" class="multiple_select" multiple="multiple">
-                                                {{#each data}}
-                                                    <option>{{name}}</option>
-                                                {{/each}}
+                                                    {{#each data}}
+                                                    <option class="kid-tag" value={{name}}>{{name}}</option>
+                                                    {{/each}}
                                                 </select>
                                             </span>
                                         </p>
-                                        <button type="button" class="submit1" id="add">Create Kid Profile</button>                                    
+                                        <button type="button" class="submit1" id="add">Create Kid Profile</button>
                                     </div>
 
                                 </div>
@@ -216,12 +219,12 @@
                                 <p>Parent Account</p>
                                 <form class="form-horizontal pf">
                                     <div class="form-group" style="margin-left:10px">
-                                        <label class="control-label" >Email Address</label>
+                                        <label class="control-label">Email Address</label>
                                         <div>
                                             <p class="form-control-static" id="Parent_Email"></p>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="form-group" style="margin-left:10px">
                                         <label class="control-label">Relationship to child</label>
                                         <div class="">
@@ -232,19 +235,19 @@
                                 <p>Children list</p>
                                 <form class="form-horizontal pf">
                                     <div class="form-group" style="margin-left:10px">
-                                            <label class="control-label" >Nickname</label>
-                                            <div>
-                                                <p class="form-control-static" id="K1_Nickname"></p>
-                                            </div>
+                                        <label class="control-label">Nickname</label>
+                                        <div>
+                                            <p class="form-control-static" id="K1_Nickname"></p>
+                                        </div>
                                     </div>
                                     <div class="form-group" style="margin-left:10px">
-                                        <label class=" control-label" >Gender</label>
+                                        <label class=" control-label">Gender</label>
                                         <div class="">
                                             <p class="form-control-static" id="K1_Gender"></p>
                                         </div>
                                     </div>
                                     <div class="form-group" style="margin-left:10px">
-                                        <label class=" control-label" >Interests</label>
+                                        <label class=" control-label">Interests</label>
                                         <div class="" id="K1_interests">
                                             <p class="form-control-static" id="K1_gender"></p>
                                         </div>
@@ -380,8 +383,10 @@
                                 </form>
                                 <hr class="my-2">
                                 <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="notificationPreference" name="notificationPreference" value="Yes">
-                                    <label class="custom-control-label" for="notificationPreference">I want to be notified when my account is approved!</label>
+                                    <input type="checkbox" class="custom-control-input" id="notificationPreference"
+                                        name="notificationPreference" value="Yes">
+                                    <label class="custom-control-label" for="notificationPreference">I want to be
+                                        notified when my account is approved!</label>
                                     <br>
                                     <input type="checkbox" class="custom-control-input" id="bus_TermCheck">
                                     <label class="custom-control-label" for="bus_TermCheck">I have read and agreed to
@@ -399,26 +404,29 @@
                 </div>
             </form>
 
-            <div class="modal fade" id="Business3" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                          <div class="modal-dialog">
-                              <div class="modal-content">
-                                  <div class="modal-header">
-                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                      <h4 class="modal-title">Registration Complete!</h4>
-                                  </div>
-                                  <div class="modal-body" id="B-3">
-                                      <h1>All done!</h1>
-                                      <p></p>
-                                      <p>An admin will now review your account for approval.</p>
-                                      <p>Would you like to receive a notification when your account is approved?</p>
-                                  </div>
-                                  <div class="modal-footer">
-                                      <button type="button" class="submit1" id="B-Register-complete-no" data-dismiss="modal">No</button>
-                                      <button type="button" class="submit1" id="B-Register-complete-yes" data-dismiss="modal" onclick="openPushSubscription()">Yes</button>
-                                  </div>
-                              </div>
-                          </div>
-                  </div>
+            <div class="modal fade" id="Business3" data-keyboard="false" data-backdrop="static" tabindex="-1"
+                role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Registration Complete!</h4>
+                        </div>
+                        <div class="modal-body" id="B-3">
+                            <h1>All done!</h1>
+                            <p></p>
+                            <p>An admin will now review your account for approval.</p>
+                            <p>Would you like to receive a notification when your account is approved?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="submit1" id="B-Register-complete-no"
+                                data-dismiss="modal">No</button>
+                            <button type="button" class="submit1" id="B-Register-complete-yes" data-dismiss="modal"
+                                onclick="openPushSubscription()">Yes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </form>
     </div>
 

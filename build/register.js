@@ -88,26 +88,7 @@ $(document).ready(function () {
 	var count = 1;
 	var ChildProfile;
 
-	let tags = [];
-
 	$('#add').click(function () {
-		let tags = [];
-
-		$.ajax({
-			url: '/event/gettags',
-			type: 'GET',
-			async: false,
-			dataType: 'json',
-			success: (data) => {
-				console.log(data)
-				for (var i = 0; i < data.length; i++) {
-					tags.push(data[i].name);
-				}
-			}
-		});
-
-
-		console.log(tags)
 
 		if (kidsNum > 4) {
 			alert("Can only create 5 kid profiles during registartion. \n" +
@@ -125,16 +106,39 @@ $(document).ready(function () {
 
 		let selectInterests =
 			'<select id="Kid-Interests' + count +
-			'" class="multiple_select" multiple="multiple"> {{#each data}} <option>{{name}}</option> {{/each}} </select>'	
-		/*Hard-code the dropdown checkbox. cannot dynamically use handlebars in append (not enough time)*/ 
+			'" class="multiple_select" multiple="multiple">'
+
+		let kidTags = document.getElementsByClassName('kid-tag');
+		for (let i = 0; i < kidTags.length; i++) {
+			selectInterests += `<option>${kidTags[i].value}</option>`
+		}
+		selectInterests += '</select>'
+		/*Hard-code the dropdown checkbox. cannot dynamically use handlebars in append (not enough time)*/
 
 		let delete_profile =
 			'<input class="Remove_kid" type="button" value="Remove child' + count + '" onClick="Remove_profile(\'' + j_new_kid + '\');">'
 
-		input =
-			'<div class="Add_Kids' + count + '" id="' +
+	// 	input = `<div class="Add_Kids1">
+	// 	<p>Kid ${kidsNum + 1}
+	// 		<input class="register-kid1" placeholder="Nickname" id="kidname${count}"
+	// 			name="nickname1">
+	// 		is a
+	// 		<span class="form-group">
+	// 			<select id="gender${count}" class="register-kid1">
+	// 				<option>Boy</option>
+	// 				<option>Girl</option>
+	// 			</select>
+	// 		</span>
+	// 		who is interested in
+	// 		<span>
+	// 				${selectInterests}
+	// 		</span>
+	// 		${delete_profile}
+	// 	</p>
+	// </div>`
+			input ='<div class="Add_Kids' + count + '" id="' +
 			new_kid +
-			'" ><p>Kid' + (kidsNum + 1) + ' </p> <input class="register-kid' +
+			'" ><p>Kid' + (kidsNum + 1) + ' <input class="register-kid' +
 			(count + 1) +
 			'" name="nickname' +
 			count +
@@ -143,7 +147,8 @@ $(document).ready(function () {
 			'"placeholder="Nickname">' + ' is a ' +
 			selectGender +
 			' who is interested in ' +
-			selectInterests + j_new_kid + delete_profile +
+			'<span>' + selectInterests + '</span><br>' + delete_profile +
+			'</p>' +
 			'</div>'
 
 
@@ -153,16 +158,17 @@ $(document).ready(function () {
 
 		$('.allInputs1').append(input);
 
-/*		' <input class="register-kid' +
-			(count + 1) +
-			'" name="interest' +
-			count +
-			'" id="interest' +
-			count +
-			'"placeholder="Interests">'
-*/
+		/*		' <input class="register-kid' +
+					(count + 1) +
+					'" name="interest' +
+					count +
+					'" id="interest' +
+					count +
+					'"placeholder="Interests">'
+		*/
 
 	});
+
 	//Register Modal
 	//set "Continue" button id on click to hide 1st modal and trigger 2nd modal
 	//$("#B-Register-info").on( "click",  function Summary_Bus());
@@ -383,25 +389,24 @@ $(document).ready(function () {
 		$(".P-clear").click();
 	});
 
-	$(".multiple_select").mousedown(function(e) {
-		if (e.target.tagName == "OPTION") 
-		{
-		  return; //don't close dropdown if i select option
+	$(".multiple_select").mousedown(function (e) {
+		if (e.target.tagName == "OPTION") {
+			return; //don't close dropdown if i select option
 		}
 		$(this).toggleClass('multiple_select_active'); //close dropdown if click inside <select> box
-		});
-		$(".multiple_select").on('blur', function(e) {
-			$(this).removeClass('multiple_select_active'); //close dropdown if click outside <select>
-		});
-		  
-		$('.multiple_select option').mousedown(function(e) { //no ctrl to select multiple
-			e.preventDefault(); 
-			$(this).prop('selected', $(this).prop('selected') ? false : true); //set selected options on click
-			$(this).parent().change(); //trigger change event
-		});
-	
-		
-	$("#Kid-Interests").on('change', function() {
+	});
+	$(".multiple_select").on('blur', function (e) {
+		$(this).removeClass('multiple_select_active'); //close dropdown if click outside <select>
+	});
+
+	$('.multiple_select option').mousedown(function (e) { //no ctrl to select multiple
+		e.preventDefault();
+		$(this).prop('selected', $(this).prop('selected') ? false : true); //set selected options on click
+		$(this).parent().change(); //trigger change event
+	});
+
+
+	$("#Kid-Interests").on('change', function () {
 	/*     var selected = $("#Kid-Interests").val().toString(); //here I get all options and convert to string
 		  var document_style = document.documentElement.style;
 		  if(selected !== "")
