@@ -73,8 +73,25 @@ app.get('/home', (req, res) => {
 
 app.get('/login', (req, res) => {
     if (!req.session.user) {
-        // console.log(req.sessionID)
-        res.render('login.hbs', {});
+        let sql =
+		'SELECT DISTINCT t.name  \n' +
+		'FROM tags t \n' +
+		'ORDER BY t.name		';
+	db.query(sql, (err, result) => {
+		if (err) {
+			throw err;
+		} else {
+			var data = [];
+			for (var i = 0; i < result.length; i++) {
+				data.push(result[i]);
+				// console.log(i);
+			}
+
+			res.render('login.hbs', {
+				data:data
+			});
+		}
+	});
     } else if (req.session.user.user_type == 'admin') {
         res.redirect('/admin')
     } else if (req.session.user.user_type == 'vendor') {
