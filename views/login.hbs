@@ -29,10 +29,11 @@
 
     <div class="main">
         <p class="sign" align="center">Sign in</p>
-        <form class="form1" action="/login-form" method="post">
-            <input id="username" name="email" class="un " type="email" align="center" placeholder="Email">
+        <form onsubmit="sendLogin()" class="form1" action="/login-form" method="post">
+            <input id="email" name="email" class="un " type="email" align="center" placeholder="Email">
             <input id="password" name="password" class="pass" type="password" align="center" placeholder="Password">
             <!--               <a class="submit" align="center" href="/register">Register</a>-->
+            <div id="error" style="color:red; text-align:center; margin-bottom:20px; font-size: 85%;"></div>
             <button type="button" class="submit" align="center" data-toggle="modal"
                 data-target="#Register">Register</button>
             <button class="submit" align="center">Sign in</button>
@@ -432,7 +433,7 @@
 
     <script src="/scripts/notifications.js"></script>
     <script src="/scripts/register.js"></script>
-
+    <script src="/scripts/check.js"></script>
 </body>
 
 </html>

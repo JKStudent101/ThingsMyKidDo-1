@@ -74,24 +74,24 @@ app.get('/home', (req, res) => {
 app.get('/login', (req, res) => {
     if (!req.session.user) {
         let sql =
-		'SELECT DISTINCT t.name  \n' +
-		'FROM tags t \n' +
-		'ORDER BY t.name		';
-	db.query(sql, (err, result) => {
-		if (err) {
-			throw err;
-		} else {
-			var data = [];
-			for (var i = 0; i < result.length; i++) {
-				data.push(result[i]);
-				// console.log(i);
-			}
+            'SELECT DISTINCT t.name  \n' +
+            'FROM tags t \n' +
+            'ORDER BY t.name		';
+        db.query(sql, (err, result) => {
+            if (err) {
+                throw err;
+            } else {
+                var data = [];
+                for (var i = 0; i < result.length; i++) {
+                    data.push(result[i]);
+                    // console.log(i);
+                }
 
-			res.render('login.hbs', {
-				data:data
-			});
-		}
-	});
+                res.render('login.hbs', {
+                    data: data
+                });
+            }
+        });
     } else if (req.session.user.user_type == 'admin') {
         res.redirect('/admin')
     } else if (req.session.user.user_type == 'vendor') {
@@ -687,7 +687,7 @@ const newEventNotify = async (event_id) => {
                 console.log(err)
                 reject(err)
             } else if (result.length == 0) {
-                console.log("No subscriptions found for " + user_id);
+                console.log("No subscriptions found for " + event_id);
                 resolve([])
             } else {
                 resolve(result)
@@ -833,7 +833,25 @@ app.get('/logout', (req, res) => {
     res.redirect('/login');
 });
 
-
+app.post('/checkLogin', (req, res) => {
+    let email = req.body.email;
+    let password = req.body.password;
+    let sql = 'SELECT u.pass_hash FROM thingsKidsDoModified.user as u ' +
+        'WHERE email = ?';
+    db.query(sql, email, (err, result) => {
+        if (err) {
+            throw err;
+        } else {
+            if (result.length === 0) {
+                res.send(true)
+            } else if (bcrypt.compareSync(password, result[0].pass_hash)) {
+                res.send(false)
+            } else {
+                res.send(true)
+            }
+        }
+    });
+});
 
 
 server.listen(port, function (err) {
