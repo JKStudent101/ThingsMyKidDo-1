@@ -68,11 +68,28 @@ app.get('/home', (req, res) => {
             vendor_id: req.session.user.user_id
         });
     }
-
 });
 
 app.get('/login', (req, res) => {
-    res.render('login.hbs', {});
+    let sql =
+		'SELECT DISTINCT t.name  \n' +
+		'FROM tags t \n' +
+		'ORDER BY t.name		';
+	db.query(sql, (err, result) => {
+		if (err) {
+			throw err;
+		} else {
+			var data = [];
+			for (var i = 0; i < result.length; i++) {
+				data.push(result[i]);
+				// console.log(i);
+			}
+
+			res.render('login.hbs', {
+				data:data
+			});
+		}
+	});
 });
 
 app.post('/login-form', [
