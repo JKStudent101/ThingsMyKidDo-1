@@ -22,3 +22,6 @@ a.disabled {
     font-size: 20px;
     font-weight: bold;
 }
+.invis{
+    display: none;
+}
