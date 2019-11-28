@@ -8,6 +8,8 @@ router.get('/', (req,res)=> {
             res.redirect('/logout')
         } else if (req.session.user.user_type != 'vendor') {
             res.redirect('/logout')
+        } else if (req.session.user.isApproved != 'Approved') {
+            res.redirect('/logout')
         } else {
             var sql_tags = 'select name from tags';
             db.query(sql_tags, (err, result) => {
@@ -34,6 +36,8 @@ router.post('/', (req, res) => {
         if (!req.cookies.i || !req.session.user) {
             res.redirect('/logout')
         } else if (req.session.user.user_type != 'vendor') {
+            res.redirect('/logout')
+        } else if (req.session.user.isApproved != 'Approved') {
             res.redirect('/logout')
         } else {
     
