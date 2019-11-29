@@ -120,9 +120,8 @@ $(document).ready(function () {
 		});
 
 
-		console.log(tags)
 
-		if (kidsNum > 4) {
+		if (kidsNum > 3) {
 			alert("Can only create 5 kid profiles during registartion. \n" +
 				"You can create more after finishing registration.");
 			return false;
@@ -142,12 +141,12 @@ $(document).ready(function () {
 		/*Hard-code the dropdown checkbox. cannot dynamically use handlebars in append (not enough time)*/ 
 
 		let delete_profile =
-			'<input class="Remove_kid" type="button" value="Remove child' + count + '" onClick="Remove_profile(\'' + j_new_kid + '\');">'
+			'<input class="Remove_kid submit1" type="button" value="Remove child" onClick="Remove_profile(\'' + j_new_kid + '\');">'
 
 		input =
 			'<div class="Add_Kids' + count + '" id="' +
 			new_kid +
-			'" ><p>Kid' + (kidsNum + 1) + ' </p> <input class="register-kid' +
+			'" ><p>Kid' + (kidsNum + 2) + ' </p> <input class="register-kid' +
 			(count + 1) +
 			'" name="nickname' +
 			count +
@@ -156,7 +155,7 @@ $(document).ready(function () {
 			'"placeholder="Nickname">' + ' is a ' +
 			selectGender +
 			' who is interested in ' +
-			selectInterests + j_new_kid + delete_profile +
+			selectInterests + delete_profile +
 			'</div>'
 
 
