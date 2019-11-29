@@ -118,6 +118,7 @@ router.get('/getall', (req, res) => {
 				for (var i = 0; i < result.length; i++) {
 					data.push(result[i]);
 				}
+				res.send(data);
 			}
 		});
 	}
