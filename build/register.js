@@ -90,7 +90,7 @@ $(document).ready(function () {
 
 	$('#add').click(function () {
 
-		if (kidsNum > 4) {
+		if (kidsNum > 3) {
 			alert("Can only create 5 kid profiles during registartion. \n" +
 				"You can create more after finishing registration.");
 			return false;
@@ -102,54 +102,31 @@ $(document).ready(function () {
 		let selectGender =
 			'<select id="gender' +
 			count +
-			' " class="register-kid' + (count + 1) + '"> <option>Boy</option> <option>Girl</option> </select>';
+			' " class="register-kid' + (count + 1) + ' register-Gender"> <option disabled selected>Select Gender</option> <option>Boy</option> <option>Girl</option> </select>';
 
 		let selectInterests =
 			'<select id="Kid-Interests' + count +
-			'" class="multiple_select" multiple="multiple">'
-
-		let kidTags = document.getElementsByClassName('kid-tag');
-		for (let i = 0; i < kidTags.length; i++) {
-			selectInterests += `<option>${kidTags[i].value}</option>`
-		}
-		selectInterests += '</select>'
-		/*Hard-code the dropdown checkbox. cannot dynamically use handlebars in append (not enough time)*/
+			'" class="multiple_select" multiple="multiple" style="height: 2em; width:10em"> {{#each data}} <option>{{name}}</option> {{/each}} </select>'	
+		/*Hard-code the dropdown checkbox. cannot dynamically use handlebars in append (not enough time)*/ 
 
 		let delete_profile =
-			'<input class="Remove_kid" type="button" value="Remove child' + count + '" onClick="Remove_profile(\'' + j_new_kid + '\');">'
+			'<input class="Remove_kid submit1" type="button" value="Remove child" onClick="Remove_profile(\'' + j_new_kid + '\');">'
 
-	// 	input = `<div class="Add_Kids1">
-	// 	<p>Kid ${kidsNum + 1}
-	// 		<input class="register-kid1" placeholder="Nickname" id="kidname${count}"
-	// 			name="nickname1">
-	// 		is a
-	// 		<span class="form-group">
-	// 			<select id="gender${count}" class="register-kid1">
-	// 				<option>Boy</option>
-	// 				<option>Girl</option>
-	// 			</select>
-	// 		</span>
-	// 		who is interested in
-	// 		<span>
-	// 				${selectInterests}
-	// 		</span>
-	// 		${delete_profile}
-	// 	</p>
-	// </div>`
-			input ='<div class="Add_Kids' + count + '" id="' +
+		input =
+			'<br>' +
+			'<div class="Add_Kids' + count + '" id="' +
 			new_kid +
-			'" ><p>Kid' + (kidsNum + 1) + ' <input class="register-kid' +
+			'" ><p>MyKid' + (kidsNum + 2) + '<input class="register-kid' +
 			(count + 1) +
-			'" name="nickname' +
+			' register-kid" name="nickname' +
 			count +
 			'" id="kidname' +
 			count +
 			'"placeholder="Nickname">' + ' is a ' +
 			selectGender +
 			' who is interested in ' +
-			'<span>' + selectInterests + '</span><br>' + delete_profile +
-			'</p>' +
-			'</div>'
+			selectInterests + delete_profile +
+			'</p></div>'
 
 
 		count++;

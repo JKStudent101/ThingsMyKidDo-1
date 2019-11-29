@@ -12,9 +12,9 @@ router.get('/', (req, res) => {
         db.query(sql_select_wishlist, user_id, (err, result) => {
             if (result.length > 0) {
                 let sql =
-                        'SELECT DISTINCT child_nickname as nickname, interest\n' +
-                        'FROM child \n' +
-                        'WHERE parent_id =' + user_id ;
+                    'SELECT DISTINCT child_nickname as nickname, interest\n' +
+                    'FROM child \n' +
+                    'WHERE parent_id =' + user_id;
                 db.query(sql, (err, result) => {
                     if (err) {
                         throw err;
@@ -30,8 +30,8 @@ router.get('/', (req, res) => {
                         });
                     }
                 });
-            }else{
-                res.render('profile.hbs',{
+            } else {
+                res.render('profile.hbs', {
                     user_type: req.session.user.user_type,
                     vendor_id: req.session.user.user_id
                 });
@@ -55,23 +55,22 @@ router.get('/:nickname', (req, res) => {
         let data = [];
         let events = [];
         let event_sql =
-                'select e.*, t.name as category, v.name as vendorname from event as e \n' +
-                'inner join event_tags as et on e.event_id = et.event_id \n' +
-                'inner join vendor as v on e.vendor_id = v.user_id \n' +
-                'inner join tags as t on et.tag_id = t.tag_id;';
+            'select e.*, t.name as category, v.name as vendorname from event as e \n' +
+            'inner join event_tags as et on e.event_id = et.event_id \n' +
+            'inner join vendor as v on e.vendor_id = v.user_id \n' +
+            'inner join tags as t on et.tag_id = t.tag_id;';
         db.query(sql_select_wishlist, sql_array, (err, result) => {
             if (result[0].wishlist != null) {
                 let wishlist_array = result[0].wishlist.split(",")
-                let interest = result[0].interest
                 let name_sql =
-                        'SELECT DISTINCT child_nickname as nickname\n' +
-                        'FROM child \n' +
-                        'WHERE parent_id =' + user_id ;
+                    'SELECT DISTINCT child_nickname as nickname\n' +
+                    'FROM child \n' +
+                    'WHERE parent_id =' + user_id;
                 db.query(name_sql, (err, result) => {
                     if (err) {
                         throw err;
                     } else {
-                        for (var i = 0; i < result.length; i++) {    
+                        for (var i = 0; i < result.length; i++) {
                             data.push(result[i]);
                         }
 
@@ -82,7 +81,8 @@ router.get('/:nickname', (req, res) => {
                                 for (var i = 0; i < result.length; i++) {
                                     let event_id = result[i].event_id;
                                     if (wishlist_array.includes(String(event_id))) {
-                                        result[i].nickname= nickname
+                                        result[i].nickname = nickname
+                                        result[i].category = result[i].category.toLowerCase()
                                         events.push(result[i]);
                                     }
                                 }
@@ -90,18 +90,36 @@ router.get('/:nickname', (req, res) => {
                                     data: data,
                                     events: events,
                                     nickname: nickname,
-                                    interest: interest,
                                     user_type: req.session.user.user_type,
-					                vendor_id: req.session.user.user_id
+                                    vendor_id: req.session.user.user_id
                                 });
                             }
                         });
-                          
+
                     }
                 });
 
-            }else{
-                res.render('profile.hbs',{});
+            } else {
+                let name_sql =
+                    'SELECT DISTINCT child_nickname as nickname\n' +
+                    'FROM child \n' +
+                    'WHERE parent_id =' + user_id;
+                db.query(name_sql, (err, result) => {
+                    if (err) {
+                        throw err;
+                    } else {
+                        for (var i = 0; i < result.length; i++) {
+                            data.push(result[i]);
+                        }
+                        res.render('profile.hbs', {
+                            data: data,
+                            nickname: nickname,
+                            user_type: req.session.user.user_type,
+                            vendor_id: req.session.user.user_id
+                        });
+
+                    }
+                });
             }
         })
     }

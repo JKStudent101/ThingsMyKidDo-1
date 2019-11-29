@@ -77,9 +77,8 @@
                         <div class="modal-body">
                             <div class="tab">
                                 <p><input class="register" placeholder="Email address" name="email" id='p_email'></p>
-                                <p><input class="register" placeholder="Password" name="pw" id='p_password'></p>
-                                <p><input class="register" placeholder="Comfirm Password" name="confirm_pw"
-                                        id='p_confirm_pw'></p>
+                                <p><input class="register" placeholder="Password" name="pw" id='p_password' type="password"></p>
+                                <p><input class="register" placeholder="Comfirm Password"  name="confirm_pw" id='p_confirm_pw' type="password"></p>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -143,22 +142,23 @@
                                 <div class="allInputs1">
 
                                     <div class="Add_Kids1">
-                                        <p>sample Mykid1
-                                            <input class="register-kid1" placeholder="Nickname" id="kidname1"
+                                        <p>Mykid1
+                                            <input class="register-kid1 register-kid" placeholder="Nickname" id="kidname1"
                                                 name="nickname1">
                                             is a
                                             <span class="form-group">
-                                                <select id="gender1" class="register-kid1">
+                                                <select id="gender1" class="register-kid1 register-Gender">
+                                                    <option disabled selected>Select Gender</option>
                                                     <option>Boy</option>
                                                     <option>Girl</option>
                                                 </select>
-                                            </span>
+                                            </span> 
                                             who is interested in
                                             <span>
-                                                <select id="Kid-Interests" class="multiple_select" multiple="multiple">
-                                                    {{#each data}}
-                                                    <option class="kid-tag" value={{name}}>{{name}}</option>
-                                                    {{/each}}
+                                                <select id="Kid-Interests" class="multiple_select" multiple="multiple" style="height: 2em; width:10em">
+                                                {{#each data}}
+                                                    <option>{{name}}</option>
+                                                {{/each}}
                                                 </select>
                                             </span>
                                         </p>
@@ -315,9 +315,9 @@
                                     </p>
                                     <p><input class="register" id="bus_Website" placeholder="Organization website"
                                             name="website"></p>
-                                    <p><input class="register" id="bus_PW" placeholder="Password" name="pw"></p>
+                                    <p><input class="register" id="bus_PW" placeholder="Password" name="pw"  type="password"></p>
                                     <p><input class="register" id="bus_PWconfirm" placeholder="Confirm Password"
-                                            name="confirm_pw"></p>
+                                            name="confirm_pw" type="password"></p>
                                 </div>
                             </div>
                             <div class="modal-footer">

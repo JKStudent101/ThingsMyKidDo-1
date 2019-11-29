@@ -115,7 +115,7 @@ app.post('/login-form', [
     // console.log(req.body)
     let email = req.body.email;
     let password = req.body.password;
-    let sql = 'SELECT u.user_id, u.user_type, u.email, u.pass_hash FROM thingsKidsDoModified.user as u ' +
+    let sql = 'SELECT u.user_id, u.user_type, u.email, u.pass_hash, isApproved FROM thingsKidsDoModified.user as u left join vendor on u.user_id = vendor.user_id ' +
         'WHERE email = ?';
     db.query(sql, email, (err, result) => {
         if (err) {
@@ -404,12 +404,14 @@ app.get('/vendor/:vendor_id', (req, res) => {
     } else if (req.params.vendor_id != req.session.user.user_id || req.session.user.user_type != 'vendor') {
         res.redirect('/logout')
     } else {
-        var sql_vendor_name = 'select name from vendor where user_id = ?';
+        var sql_vendor_name = 'select * from vendor where user_id = ?';
         db.query(sql_vendor_name, req.session.user.user_id, (err, result) => {
             if (err) {
                 throw err;
             } else {
+                // console.log(req.session.user);
                 var vendor_name = result[0].name;
+                var isApproved = req.session.user.isApproved;
 
                 var sql_tags = 'select name from tags';
                 db.query(sql_tags, (err, result) => {
@@ -434,7 +436,8 @@ app.get('/vendor/:vendor_id', (req, res) => {
                                     data: result,
                                     vendor: vendor_name,
                                     tags: tags_list,
-                                    vendor_id: req.session.user.user_id
+                                    vendor_id: req.session.user.user_id,
+                                    isApproved: isApproved
                                 });
                             }
                         });
@@ -494,7 +497,7 @@ app.get('/edit/:event_id', (req, res) => {
             } else {
                 var tags_list = result;
 
-                var sql_query = 'select a.event_id, a.description, a.name as event_name, a.start_time, a.end_time, a.start_date, a.end_date, a.address, a.city, a.province, a.link, c.name as event_tag\n' +
+                var sql_query = 'select a.event_id, a.vendor_id, a.description, a.name as event_name, a.start_time, a.end_time, a.start_date, a.end_date, a.address, a.city, a.province, a.link, c.name as event_tag\n' +
                     'from event a\n' +
                     'LEFT JOIN event_tags b ON a.event_id = b.event_id\n' +
                     'LEFT JOIN tags c ON b.tag_id = c.tag_id\n' +
@@ -502,6 +505,8 @@ app.get('/edit/:event_id', (req, res) => {
                 db.query(sql_query, req.params.event_id, (err, result) => {
                     if (err) {
                         throw err;
+                    } else if ((req.session.user.user_type=='vendor') &&(result[0].vendor_id != req.session.user.user_id)) {
+                        res.redirect('/logout')
                     } else {
                         // console.log(result[0].start_date.toISOString().split('T')[0]);
                         res.render('editevent.hbs', {

@@ -27,19 +27,19 @@ router.get('/display/:id', async (req, res) => {
 		if (event.length > 0) {
 			if (event[0].isApproved === "Approved") {
 				let sql = "select name from " +
-				"event_tags et " +
-				"inner join tags t on et.tag_id = t.tag_id " +
-				"where et.event_id = 6;"
+					"event_tags et " +
+					"inner join tags t on et.tag_id = t.tag_id " +
+					"where et.event_id = 6;"
 				db.query(sql, req.params.id, (err, result) => {
-					if(err) {
+					if (err) {
 						console.log(err);
 					} else {
 						req.session.display_event = event[0];
 						req.session.display_event.tags = result
-						if (!req.session.display_event.link.includes("https://")){
+						if (!req.session.display_event.link.includes("https://")) {
 							req.session.display_event.link = "https://" + req.session.display_event.link;
 						}
-						if (!req.session.display_event.website.includes("https://")){
+						if (!req.session.display_event.website.includes("https://")) {
 							req.session.display_event.website = "https://" + req.session.display_event.website;
 							// console.log(req.session.display_event.website)
 						}
@@ -108,7 +108,8 @@ router.get('/getall', (req, res) => {
 		let sql =
 			'select e.*, t.name as category from event as e \n' +
 			'inner join event_tags as et on e.event_id = et.event_id \n' +
-			'inner join tags as t on et.tag_id = t.tag_id;';
+			'inner join tags as t on et.tag_id = t.tag_id \n' +
+			'where e.isApproved = "Approved";';
 		db.query(sql, (err, result) => {
 			if (err) {
 				throw err;
@@ -117,7 +118,6 @@ router.get('/getall', (req, res) => {
 				for (var i = 0; i < result.length; i++) {
 					data.push(result[i]);
 				}
-				res.send(data);
 			}
 		});
 	}

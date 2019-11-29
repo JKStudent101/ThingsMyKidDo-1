@@ -14,8 +14,8 @@ body {
 }
 
 #firstRow {
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 1em;
+    padding-right: 1em;
 }
 
 #headerDiv {
@@ -53,6 +53,7 @@ body {
 
 #menuNav {
     background-color: rgba(0, 0, 0, 0.7);
+    background-image: url('/src/Home_background_landing_page_gradient.png');
     border-style: none;
     float: left;
     width: 100vw;
@@ -63,4 +64,10 @@ body {
     padding: 5px 30px 0px 0px;
     font-family: arial;
     font-size: 14pt;
+}
+
+.icon{
+    width:35px;
+    height:35px;
+    border:0;
 }

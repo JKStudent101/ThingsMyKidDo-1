@@ -13,6 +13,7 @@
 
         {{> menu_vendor}}
 
+        {{#ifCond isApproved "Approved"}}
         <div class="col-md-12">
             <p class="form_text">Welcome {{vendor}}! </p>
             <a href="/addevent" class="btn btn-info add_btn">Add Event</a>
@@ -60,6 +61,12 @@
                 </div>
             </div>
         </div>
+        {{else}}
+        <div class="col-md-12">
+            <p class="form_text">Welcome {{vendor}}! </p>
+            <p class="form_text"> Your account is under review. Please come back later. </p>
+        </div>
+        {{/ifCond}}
 
     </body>
 
