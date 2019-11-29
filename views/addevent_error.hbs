@@ -112,11 +112,29 @@
   </div>
   <div class="form-group">
     <div class="col-xs-offset-3 col-xs-10">
-      <button type="submit" class="btn btn-primary" onclick="confirm_add_msg(); ">Add</button>
+        <button type="submit" class="invis btn btn-primary" id="add_btn">Add</button>
     </div>
   </div>
   
 </form>
+    <div class="form-group">
+        <div class="col-xs-offset-3 col-xs-10">
+            <button class="btn btn-primary" onclick="
+        Swal.fire({
+            title: 'Are you sure you want to add event?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, add event!'
+            }).then((result) => {
+                if (result.value) {
+                    document.getElementById('add_btn').click();
+                }
+            })
+         ">Add</button>
+        </div>
+    </div>
 </div>
 </body>
 

@@ -74,10 +74,8 @@
                         <div class="modal-body">
                             <div class="tab">
                                 <p><input class="register" placeholder="Email address" name="email" id='p_email'></p>
-                                <p><input class="register" placeholder="Phone number" name="phone" id='p_phone'></p>
-                                <p><input class="register" placeholder="Password" name="pw" id='p_password'></p>
-                                <p><input class="register" placeholder="Comfirm Password" name="confirm_pw"
-                                        id='p_confirm_pw'></p>
+                                <p><input class="register" placeholder="Password" name="pw" id='p_password' type="password"></p>
+                                <p><input class="register" placeholder="Comfirm Password"  name="confirm_pw" id='p_confirm_pw' type="password"></p>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -136,33 +134,33 @@
                         <div class="modal-body container" style="max-height: calc(100vh - 200px); overflow-y: auto;">
                             <div class="tab" id="morekids">
                                 {{!-- {{>KidRegister}} --}}
+                                <p>click the "Create Kid profile" button to create a profile for your child.</p>
+                                        <p>you can create a maximum of 5 profiles during registration.</p>
                                 <div class="allInputs1">
 
                                     <div class="Add_Kids1">
                                         <p>Mykid1
-                                            <input class="register-kid1" placeholder="Nickname" id="kidname1"
+                                            <input class="register-kid1 register-kid" placeholder="Nickname" id="kidname1"
                                                 name="nickname1">
                                             is a
                                             <span class="form-group">
-                                                <select id="gender1" class="register-kid1">
+                                                <select id="gender1" class="register-kid1 register-Gender">
+                                                    <option disabled selected>Select Gender</option>
                                                     <option>Boy</option>
                                                     <option>Girl</option>
                                                 </select>
-                                            </span>
+                                            </span> 
                                             who is interested in
-                                            <input class="register-kid1" type="text" name='interest1' id='interest1'>
+                                            <span>
+                                                <select id="Kid-Interests" class="multiple_select" multiple="multiple" style="height: 2em; width:10em">
+                                                {{#each data}}
+                                                    <option>{{name}}</option>
+                                                {{/each}}
+                                                </select>
+                                            </span>
                                         </p>
+                                        <button type="button" class="submit1" id="add">Create Kid Profile</button>                                    
                                     </div>
-
-                                    {{!-- <input type="button" value="Add a field" class="add" id="add" /> --}}
-                                    <button type="button" class="submit1" id="add">Add more Fields</button>
-                                    {{!-- <div class="tab" id="morekids"></div>
-                                             <button type="button" class="submit1" id="more1">Add more Kids</button>  --}}
-
-                                    {{!-- <div class="modal-footer">
-                                            <button type="button" class="submit1" id="P-Redo-User">Back</button>                    
-                                            <button type="button" class="submit1" id="P-Kids">Continue</button>
-                                        </div> --}}
 
                                 </div>
 
@@ -214,22 +212,17 @@
                             <button type="button" class="close P-clear" data-dismiss="modal">&times;</button>
                             <h4 class="modal-title">Confirm Account Info</h4>
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
                             <div class="tab">
                                 <p>Parent Account</p>
                                 <form class="form-horizontal pf">
                                     <div class="form-group" style="margin-left:10px">
-                                        <label class="control-label">Email Address</label>
+                                        <label class="control-label" >Email Address</label>
                                         <div>
                                             <p class="form-control-static" id="Parent_Email"></p>
                                         </div>
                                     </div>
-                                    <div class="form-group" style="margin-left:10px">
-                                        <label class=" control-label">Phone Number</label>
-                                        <div class="">
-                                            <p class="form-control-static" id="Parent_Phone"></p>
-                                        </div>
-                                    </div>
+                                    
                                     <div class="form-group" style="margin-left:10px">
                                         <label class="control-label">Relationship to child</label>
                                         <div class="">
@@ -238,6 +231,26 @@
                                     </div>
                                 </form>
                                 <p>Children list</p>
+                                <form class="form-horizontal pf">
+                                    <div class="form-group" style="margin-left:10px">
+                                            <label class="control-label" >Nickname</label>
+                                            <div>
+                                                <p class="form-control-static" id="K1_Nickname"></p>
+                                            </div>
+                                    </div>
+                                    <div class="form-group" style="margin-left:10px">
+                                        <label class=" control-label" >Gender</label>
+                                        <div class="">
+                                            <p class="form-control-static" id="K1_Gender"></p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" style="margin-left:10px">
+                                        <label class=" control-label" >Interests</label>
+                                        <div class="" id="K1_interests">
+                                            <p class="form-control-static" id="K1_gender"></p>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                             <hr class="my-2">
                             <div class="custom-control custom-checkbox">
@@ -299,9 +312,9 @@
                                     </p>
                                     <p><input class="register" id="bus_Website" placeholder="Organization website"
                                             name="website"></p>
-                                    <p><input class="register" id="bus_PW" placeholder="Password" name="pw"></p>
+                                    <p><input class="register" id="bus_PW" placeholder="Password" name="pw"  type="password"></p>
                                     <p><input class="register" id="bus_PWconfirm" placeholder="Confirm Password"
-                                            name="confirm_pw"></p>
+                                            name="confirm_pw" type="password"></p>
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -387,7 +400,7 @@
                 </div>
             </form>
 
-            {{!-- <div class="modal fade" id="Business3" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="Business3" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                           <div class="modal-dialog">
                               <div class="modal-content">
                                   <div class="modal-header">
@@ -406,7 +419,7 @@
                                   </div>
                               </div>
                           </div>
-                  </div> --}}
+                  </div>
         </form>
     </div>
 

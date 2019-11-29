@@ -257,32 +257,32 @@ function initMap() {
 			iContent = infoTitleLink + '<p>' + infodetail.description + '</p>';
 			$('#events').append(
 				'<div id="details" >' +
-				`<form action='/savewishlist' method='post' id = ${infodetail.event_id}><span>` +
-				'<h3>' +
+				`<h3 style="display: inline-block">` +
 				infodetail.name +
 				'</h3>' +
-				// v.name
+				`<input style="display: inline-block; float:right; margin-top:1em; margin-right:1em" type="button" class="btn btn-info " onclick="{
+					openpopupwindow('input${infodetail.event_id}')
+				}" value="Add to Wishlist"></input>` +
 				infoTitleLink +
 				'<p>' +
 				infodetail.description +
 				'</p>' +
+				`<form action='/savewishlist' method='post' id = ${infodetail.event_id}><span>` +
 				`<input class="invis" name="eventid" value=${infodetail.event_id}>` +
 				'</input>' +
 				'<p>' +
-				'Start date \n' +
+				'Start date: \n' +
 				infodetail.start_date +
 				'</p>' +
 				'<p>' +
-				'end date \n' +
+				'End date:  \n' +
 				infodetail.end_date +
 				'</p>' +
 				'</span>' +
 				`<input class= "invis" value="submit" name="childname" id="input${infodetail.event_id}"></input>` +
 				'</form>' +
-				`<input type="button" onclick="{
-						openpopupwindow('input${infodetail.event_id}')
-					}" value="Add to Wishlist"></input>` +
-				'</div>'
+				'</div>'+
+				'<hr>'
 			);
 
 		}
@@ -407,7 +407,7 @@ function initMap() {
 			var icon = {
                 url: props.iconImage,
                 // size: new google.maps.Size(50, 50),
-                scaledSize: new google.maps.Size(25, 25)
+                scaledSize: new google.maps.Size(50, 50)
                 // url: '/src/customIcons/arena_pin.png', // url
 
 			};

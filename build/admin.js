@@ -29,17 +29,38 @@ const approveVendor = (user_id) => {
 }
 
 const eventDelete = (event_id) => {
-    let isConfirmed = confirm('Are you sure you want to delete?')
-    if (isConfirmed) {
-        let request = new window.XMLHttpRequest();
-        request.open('get', `/delete/${event_id}`, false);
-        request.send();
-        let response = JSON.parse(request.response);
-        if (response.message != 'success') {
-            console.log('Error storing event');
+
+    let isConfirmed = Swal.fire({
+        title: 'Are you sure you want to delete?',
+        text: 'You will not be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete event!'
+    }).then((result) => {
+        if (result.value) {
+            let request = new window.XMLHttpRequest();
+            request.open('get', `/delete/${event_id}`, false);
+            request.send();
+            let response = JSON.parse(request.response);
+            if (response.message != 'success') {
+                console.log('Error storing event');
+            }
+            window.location.reload(true);
         }
-        window.location.reload(true);
-    }
+    })
+    // let isConfirmed = confirm('Are you sure you want to delete?')
+    // if (isConfirmed) {
+    //     let request = new window.XMLHttpRequest();
+    //     request.open('get', `/delete/${event_id}`, false);
+    //     request.send();
+    //     let response = JSON.parse(request.response);
+    //     if (response.message != 'success') {
+    //         console.log('Error storing event');
+    //     }
+    //     window.location.reload(true);
+    // }
 }
 
 function openUser(evt, usertype) {
@@ -62,5 +83,3 @@ function openUser(evt, usertype) {
     document.getElementById(usertype).style.display = "block";
     evt.currentTarget.className += " active";
 }
-
-// document.getElementById("defaultOpen").click();
