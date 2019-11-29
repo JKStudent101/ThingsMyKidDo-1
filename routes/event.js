@@ -71,7 +71,8 @@ router.get('/getall', (req, res) => {
 	let sql =
 		'select e.*, t.name as category from event as e \n' +
 		'inner join event_tags as et on e.event_id = et.event_id \n' +
-		'inner join tags as t on et.tag_id = t.tag_id;';
+		'inner join tags as t on et.tag_id = t.tag_id \n' +
+		'where e.isApproved = "Approved";';
 	db.query(sql, (err, result) => {
 		if (err) {
 			throw err;
@@ -97,7 +98,7 @@ router.get('/gettags', (req, res) => {
 	db.query(sql, (err, result) => {
 		if (!req.cookies.i) {
 			res.redirect('/login');
-		}else{
+		} else {
 			if (err) {
 				throw err;
 			} else {
@@ -106,11 +107,11 @@ router.get('/gettags', (req, res) => {
 					data.push(result[i]);
 					// console.log(i);
 				}
-	
+
 				res.send(data);
 			}
 		}
-		
+
 	});
 });
 
@@ -119,7 +120,7 @@ router.get('/getnames', (req, res) => {
 	let sql =
 		'SELECT DISTINCT child_nickname  \n' +
 		'FROM child \n' +
-		'WHERE parent_id =' + user_id ;
+		'WHERE parent_id =' + user_id;
 	db.query(sql, (err, result) => {
 		if (!req.cookies.i) {
 			res.redirect('/login');
