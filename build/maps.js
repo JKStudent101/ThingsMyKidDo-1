@@ -254,7 +254,7 @@ function initMap() {
 						  markers: adds properties to the markers for display
 				  */
 			infoTitleLink = '<a href="' + infodetail.link + ' " target="_blank"></a>';
-			iContent = infoTitleLink + '<p>' + infodetail.description + '</p>';
+			iContent = `<p>${infodetail.name}</p>` + '<a href="' + infodetail.link + ' " target="_blank">' + infodetail.link + '</a>' + '<p>' + infodetail.description + '</p>';
 			$('#events').append(
 				'<div id="details" >' +
 				`<h3 style="display: inline-block">` +
@@ -422,11 +422,14 @@ function initMap() {
 			// push marker to global gmarker array
 			gmarkers.push(marker);
 
-			// Check for customicon
-			if (props.iconImage) {
-				// Set icon image
-				marker.setIcon(icon);
-			}
+			var i = new Image();
+            i.src = icon.url;
+            i.onload = function () {
+                marker.setIcon(icon); //If icon found go ahead and show it
+            }
+            i.onerror = function () {
+                marker.setIcon(null); //This displays brick colored standard marker icon in case image is not found.
+            }
 
 			// Check content
 			if (props.content) {

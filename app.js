@@ -122,7 +122,7 @@ app.post('/login-form', [
                 req.session.user = result[0];
                 if (result[0].user_type === 'admin') { res.redirect("/admin") }
                 else if (result[0].user_type === 'vendor') { res.redirect(`/vendor/${result[0].user_id}`) }
-                else if (result[0].user_type === 'parent') { res.redirect("/home") }
+                else if (result[0].user_type === 'parent') { res.redirect("/event") }
                 else {
                     res.cookie('i', true, { expires: new Date() });
                     res.send("Error: no user type")
