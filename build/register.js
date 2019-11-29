@@ -493,25 +493,43 @@ $(document).ready(function () {
 		}
 		$(this).toggleClass('multiple_select_active'); //close dropdown if click inside <select> box
 		});
-		$(".multiple_select").on('blur', function(e) {
+	$(".multiple_select").on('blur', function(e) {
 			$(this).removeClass('multiple_select_active'); //close dropdown if click outside <select>
 		});
 		  
-		$('.multiple_select option').mousedown(function(e) { //no ctrl to select multiple
+	$('.multiple_select option').mousedown(function(e) { //no ctrl to select multiple
 			e.preventDefault(); 
 			$(this).prop('selected', $(this).prop('selected') ? false : true); //set selected options on click
 			$(this).parent().change(); //trigger change event
 		});
 	
 		
-	$("#Kid-Interests").on('change', function() {
-	/*     var selected = $("#Kid-Interests").val().toString(); //here I get all options and convert to string
-		  var document_style = document.documentElement.style;
-		  if(selected !== "")
+	$("#Kid-Interests1").on('change', function() {
+	    var selected = $("#Kid-Interests1").val().toString(); //here I get all options and convert to string
+		var document_style = document.documentElement.style;
+		if(selected !== "")
 			document_style.setProperty('--text', "'"+selected+"' ");
-		  else
+		else
 			document_style.setProperty('--text', "'Hobbies'");
-	*/	});
+		});
+
+	$("#Kid-Interests2").on('change', function() {
+	    var selected = $("#Kid-Interests2").val().toString(); //here I get all options and convert to string
+		var document_style = document.documentElement.style;
+		if(selected !== "")
+			document_style.setProperty('--text', "'"+selected+"' ");
+		else
+			document_style.setProperty('--text', "'Hobbies'");
+		});
+
+	$("#Kid-Interests3").on('change', function() {
+	    var selected = $("#Kid-Interests3").val().toString(); //here I get all options and convert to string
+		var document_style = document.documentElement.style;
+		if(selected !== "")
+			document_style.setProperty('--text', "'"+selected+"' ");
+		else
+			document_style.setProperty('--text', "'Hobbies'");
+		});
 
 	async function openVendorPushSubscription() {
 		// console.log("pushing subscription")
