@@ -64,3 +64,9 @@ body {
     font-family: arial;
     font-size: 14pt;
 }
+
+.icon{
+    width:35px;
+    height:35px;
+    border:0;
+}
