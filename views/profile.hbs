@@ -39,25 +39,31 @@
                         {{/if}}
                     </div>
                 </div>
-                <div class = "col-xs-4"></div>
-                <div class = "col-xs-2" style="text-align: right;">
+                <div class="col-xs-4"></div>
+                <div class="col-xs-2" style="text-align: bottom;">
                     <button id="editbutton"></button>
                 </div>
-                <div class = "col-xs-2" style="text-align: center;">
-                    <button id="switchbutton"></button>
-                    <div style="invis" id="selectdiv">
-                        <select id="target" style="font-size:24px;">
-                            <option value="" disabled selected>Select your child</option>
-                            {{#each data}}
-                            <option value="{{nickname}}">{{nickname}}</option>
-                            {{/each}}
-                        </select>
+                <div class="col-xs-2" style="text-align: bottom;">
+                    <button id="switchbutton" onclick="window.location = '#popup1'"></button>
+                </div>
+                <div id="popup1" class="overlay">
+                    <div class="popup">
+                        <h2>Change to</h2>
+                        <a class="close" href="#">&times;</a>
+                        <div class="content">
+                           <select id="target" style="font-size:24px;">
+                                <option value="" disabled selected>Select your child</option>
+                                {{#each data}}
+                                <option value="{{nickname}}">{{nickname}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
                     </div>
-                    
                 </div>
 
             </div>
         </div>
+
         <div class="row">
             <div class="tableholder">
                 <div class="col-xl-12">
@@ -76,7 +82,7 @@
 
                                 <td>
                                     <img src="/src/customIcons/{{category}}_icon.png" id="{{category}}img"
-                                        style="width:50px;height:50px;border:0;"
+                                        style="width:50px;height:5  0px;border:0;"
                                         onerror="this.src='/src/testingIcon.jpg';">
                                 </td>
 
@@ -85,7 +91,9 @@
                                 <td>{{vendorname}}
                                 </td>
                                 <td>{{start_date}}</td>
-                                <td>{{description}}</td>
+                                <td style="width: 25vw;">
+                                    {{description}}
+                                </td>
                                 <td>
                                     <div>
                                         <form action="/savewishlist/delete" method="post">
