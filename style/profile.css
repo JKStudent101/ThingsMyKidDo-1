@@ -166,7 +166,7 @@ th {
 
 .overlay {
     position: fixed;
-    top: 5vh;
+    top: 0;
     bottom: 0;
     left: 0;
     right: 0;
@@ -188,6 +188,7 @@ th {
     background: #fff;
     border-radius: 5px;
     width: 30%;
+    top: 8vh;
     position: relative;
     transition: all 5s ease-in-out;
   }
