@@ -69,15 +69,15 @@ $(document).ready(function () {
 		if ($('#Kid1').hasClass("show") == true){
 
 			
-			var i = 0;
+			var doc = dcoument.getElementById("Kid-Interests1");
 
-			while (i < kidtags.length) {
+			for (let i = 0; i < kidtags.length; i++) {
 				if ($( ".multiple_select option").is(":selected")){
 					
 				}
-				console.log($( ".multiple_select option:selected").val())
+				console.log($( "#Kids1 option:selected").val())
 			//	selectInterests += `<option class="kid-tag">${kidTags[i].value}</option>`
-				i++
+				
 				};
 
 			console.log(hobbies1);
