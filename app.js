@@ -10,7 +10,7 @@ const webpush = require('web-push');
 const bcrypt = require('bcrypt-nodejs');
 const saltRounds = 10;
 const { body, check, validationResult } = require('express-validator');
-const cookieParser = require('cookie-parser');
+// const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const request = require('request');
 
@@ -29,7 +29,7 @@ app.use(express.static(__dirname + '/style'));
 app.use(express.static(__dirname + '/views'));
 app.use('/scripts', express.static('build'));
 app.use('/css', express.static('style'));
-app.use(cookieParser());
+// app.use(cookieParser());
 app.use(session({
     secret: 'love',
     resave: false,
@@ -60,9 +60,10 @@ app.get('/', (req, res) => {
 });
 
 app.get('/home', (req, res) => {
-    if (!req.cookies.i || !req.session.user) {
-        res.redirect('/logout')
-    }else{
+    if (!req.session.user) {
+        req.session.url = '/home';
+        res.redirect('/login')
+    } else {
         res.render('home.hbs', {
             user_type: req.session.user.user_type,
             vendor_id: req.session.user.user_id
@@ -71,25 +72,33 @@ app.get('/home', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-    let sql =
-		'SELECT DISTINCT t.name  \n' +
-		'FROM tags t \n' +
-		'ORDER BY t.name		';
-	db.query(sql, (err, result) => {
-		if (err) {
-			throw err;
-		} else {
-			var data = [];
-			for (var i = 0; i < result.length; i++) {
-				data.push(result[i]);
-				// console.log(i);
-			}
+    if (!req.session.user) {
+        let sql =
+            'SELECT DISTINCT t.name  \n' +
+            'FROM tags t \n' +
+            'ORDER BY t.name		';
+        db.query(sql, (err, result) => {
+            if (err) {
+                throw err;
+            } else {
+                var data = [];
+                for (var i = 0; i < result.length; i++) {
+                    data.push(result[i]);
+                    // console.log(i);
+                }
 
-			res.render('login.hbs', {
-				data:data
-			});
-		}
-	});
+                res.render('login.hbs', {
+                    data: data
+                });
+            }
+        });
+    } else if (req.session.user.user_type == 'admin') {
+        res.redirect('/admin')
+    } else if (req.session.user.user_type == 'vendor') {
+        res.redirect(`/vendor/${req.session.user.user_id}`)
+    } else {
+        res.redirect('/home')
+    }
 });
 
 app.post('/login-form', [
@@ -102,6 +111,7 @@ app.post('/login-form', [
         .not().isEmpty()
         .escape()
 ], (req, res) => {
+    // console.log(req.session.url)
     // console.log(req.body)
     let email = req.body.email;
     let password = req.body.password;
@@ -117,15 +127,22 @@ app.post('/login-form', [
             if (result.length === 0) {
                 res.send("User not found")
             } else if (bcrypt.compareSync(password, result[0].pass_hash)) {
-                let salt = bcrypt.genSaltSync(saltRounds);
-                res.cookie('i', bcrypt.hashSync(email, salt));
+                // let salt = bcrypt.genSaltSync(saltRounds);
+                // res.cookie('i', bcrypt.hashSync(email, salt));
                 req.session.user = result[0];
-                if (result[0].user_type === 'admin') { res.redirect("/admin") }
-                else if (result[0].user_type === 'vendor') { res.redirect(`/vendor/${result[0].user_id}`) }
-                else if (result[0].user_type === 'parent') { res.redirect("/home") }
-                else {
-                    res.cookie('i', true, { expires: new Date() });
-                    res.send("Error: no user type")
+                // console.log(req.session)
+                if (req.session.url) {
+                    let url = req.session.url
+                    delete req.session.url
+                    res.redirect(url);
+                } else {
+                    if (result[0].user_type === 'admin') { res.redirect("/admin") }
+                    else if (result[0].user_type === 'vendor') { res.redirect(`/vendor/${result[0].user_id}`) }
+                    else if (result[0].user_type === 'parent') { res.redirect("/home") }
+                    else {
+                        // res.cookie('i', true, { expires: new Date() });
+                        res.send("Error: no user type")
+                    }
                 }
             } else {
                 res.send("Incorrect password")
@@ -202,7 +219,7 @@ app.post('/registerParent', (req, res) => {
 
                                             })
                                         }, 1000);
-                                        
+
 
                                     }
                                     result = {
@@ -210,7 +227,7 @@ app.post('/registerParent', (req, res) => {
                                         user_type: 'parent'
                                     }
                                     req.session.user = result;
-                                    res.redirect('/home')
+                                    res.json({ message: 'success' });
                                 }
                             })
                         }
@@ -265,8 +282,9 @@ app.post('/registerVendor', (req, res) => {
 
 
 app.get('/admin', (req, res) => {
-    if (!req.cookies.i || !req.session.user) {
-        res.redirect('/logout')
+    if (!req.session.user) {
+        req.session.url = '/admin';
+        res.redirect('/login')
     } else if (req.session.user.user_type != 'admin') {
         res.redirect('/logout')
     } else {
@@ -276,8 +294,9 @@ app.get('/admin', (req, res) => {
 
 app.get('/admin/event', (req, res) => {
     // console.log(req.cookies);
-    if (!req.cookies.i || !req.session.user) {
-        res.redirect('/logout')
+    if (!req.session.user) {
+        req.session.url = '/admin/event';
+        res.redirect('/login')
     } else if (req.session.user.user_type != 'admin') {
         res.redirect('/logout')
     } else {
@@ -303,8 +322,8 @@ app.get('/admin/event', (req, res) => {
 });
 
 app.post('/approve-event', (req, res) => {
-    if (!req.cookies.i || !req.session.user) {
-        res.redirect('/login')
+    if (!req.session.user) {
+        res.redirect('/logout')
     } else {
         // console.log('approving')
         let event_id = req.body.id
@@ -322,8 +341,9 @@ app.post('/approve-event', (req, res) => {
 });
 
 app.get('/admin/user', (req, res) => {
-    if (!req.cookies.i || !req.session.user) {
-        res.redirect('/logout')
+    if (!req.session.user) {
+        req.session.url = '/admin/user';
+        res.redirect('/login')
     } else if (req.session.user.user_type != 'admin') {
         res.redirect('/logout')
     } else {
@@ -359,13 +379,13 @@ app.get('/admin/user', (req, res) => {
 });
 
 app.post('/approve-user', (req, res) => {
-    if (!req.cookies.i || !req.session.user) {
-        res.redirect('/login')
+    if (!req.session.user) {
+        res.redirect('/logout')
     } else {
         // console.log('approving')
         let user_id = req.body.id
         let sql = "UPDATE vendor SET isApproved = 'Approved' WHERE user_id = ?";
-        db.query(sql, user_id , async (err, result) => {
+        db.query(sql, user_id, async (err, result) => {
             if (err) {
                 throw err;
             } else {
@@ -378,8 +398,9 @@ app.post('/approve-user', (req, res) => {
 });
 
 app.get('/vendor/:vendor_id', (req, res) => {
-    if (!req.cookies.i || !req.session.user) {
-        res.redirect('/logout')
+    if (!req.session.user) {
+        req.session.url = `/vendor/${req.params.vendor_id}`;
+        res.redirect('/login')
     } else if (req.params.vendor_id != req.session.user.user_id || req.session.user.user_type != 'vendor') {
         res.redirect('/logout')
     } else {
@@ -432,7 +453,7 @@ app.get('/vendor/:vendor_id', (req, res) => {
 
 
 app.get('/delete/:event_id', (req, res) => {
-    if (!req.cookies.i || !req.session.user) {
+    if (!req.session.user) {
         res.redirect('/logout')
     } else if ((req.session.user.user_type != 'vendor') && (req.session.user.user_type != 'admin')) {
         res.redirect('/logout')
@@ -463,8 +484,9 @@ app.get('/delete/:event_id', (req, res) => {
 });
 
 app.get('/edit/:event_id', (req, res) => {
-    if (!req.cookies.i || !req.session.user) {
-        res.redirect('/logout')
+    if (!req.session.user) {
+        req.session.url = `/edit/${req.params.event_id}`;
+        res.redirect('/login')
     } else if ((req.session.user.user_type != 'vendor') && (req.session.user.user_type != 'admin')) {
         res.redirect('/logout')
     } else {
@@ -507,125 +529,123 @@ app.get('/edit/:event_id', (req, res) => {
 
 
 app.post('/edit/:event_id', (req, res) => {
-    try {
-        let address = req.body.address.trim();
-        let city = req.body.city.trim();
-        let province = req.body.province;
-        let format_address = address.replace(/ /g, "+");
-        let format_city = city.replace(/ /g, "+");
-        let search_string = "https://maps.googleapis.com/maps/api/geocode/json?address=" + format_address + ",+" + format_city + ",+" + province + "&key=AIzaSyAN6q6jOWczlbNgBPd_ljm857YUqpyIoVU";
-        let geocode = new Promise((resolve, reject) => {
-            request({
-                url: search_string,
-                json: true
-            }, (error, response, body) => {
-                if (error) {
-                    reject('Cannot connect to Google Maps');
-                } else if (body.status === 'ZERO_RESULTS') {
-                    reject('Cannot find requested address');
-                } else if (body.status === 'OK') {
-                    resolve({
-                        lat: body.results[0].geometry.location.lat,
-                        lng: body.results[0].geometry.location.lng
-                    });
-                }
-            })
-        });
-        geocode.then(geores => {
-            var lat = geores['lat'];
-            var lng = geores['lng'];
+    if (!req.session.user) {
+        res.redirect('/logout')
+    } else {
+        try {
+            let address = req.body.address.trim();
+            let city = req.body.city.trim();
+            let province = req.body.province;
+            let format_address = address.replace(/ /g, "+");
+            let format_city = city.replace(/ /g, "+");
+            let search_string = "https://maps.googleapis.com/maps/api/geocode/json?address=" + format_address + ",+" + format_city + ",+" + province + "&key=AIzaSyAN6q6jOWczlbNgBPd_ljm857YUqpyIoVU";
+            let geocode = new Promise((resolve, reject) => {
+                request({
+                    url: search_string,
+                    json: true
+                }, (error, response, body) => {
+                    if (error) {
+                        reject('Cannot connect to Google Maps');
+                    } else if (body.status === 'ZERO_RESULTS') {
+                        reject('Cannot find requested address');
+                    } else if (body.status === 'OK') {
+                        resolve({
+                            lat: body.results[0].geometry.location.lat,
+                            lng: body.results[0].geometry.location.lng
+                        });
+                    }
+                })
+            });
+            geocode.then(geores => {
+                var lat = geores['lat'];
+                var lng = geores['lng'];
 
-            let inputs = [
-                req.body.description,
-                req.body.eventname,
-                req.body.start_time,
-                req.body.end_time,
-                req.body.start_date,
-                req.body.end_date,
-                lng,
-                lat,
-                req.body.address,
-                req.body.city,
-                req.body.province,
-                req.body.link,
-                req.params.event_id
-            ];
-            // console.log(inputs);
-            var sql_update = 'update event set description=?, name=?, start_time=?, end_time=?, start_date=?, end_date=?, lng=?, lat=?, address=?, city=?, province=?, link=? where event_id=? ';
-            db.query(sql_update, inputs, (err, result) => {
-                if (err) {
-                    throw err;
-                } else {
-                    var sql_tag_id = 'select tag_id from tags where name = ?';
-                    db.query(sql_tag_id, req.body.tag, (err, result) => {
-                        if (err) {
-                            throw err;
-                        } else {
-                            var tag_id = result[0].tag_id;
-                            // console.log(req.body.tag);
-                            // console.log(tag_id);
-                            // console.log(req.params.event_id);
+                let inputs = [
+                    req.body.description,
+                    req.body.eventname,
+                    req.body.start_time,
+                    req.body.end_time,
+                    req.body.start_date,
+                    req.body.end_date,
+                    lng,
+                    lat,
+                    req.body.address,
+                    req.body.city,
+                    req.body.province,
+                    req.body.link,
+                    req.params.event_id
+                ];
+                // console.log(inputs);
+                var sql_update = 'update event set description=?, name=?, start_time=?, end_time=?, start_date=?, end_date=?, lng=?, lat=?, address=?, city=?, province=?, link=? where event_id=? ';
+                db.query(sql_update, inputs, (err, result) => {
+                    if (err) {
+                        throw err;
+                    } else {
+                        var sql_tag_id = 'select tag_id from tags where name = ?';
+                        db.query(sql_tag_id, req.body.tag, (err, result) => {
+                            if (err) {
+                                throw err;
+                            } else {
+                                var tag_id = result[0].tag_id;
+                                // console.log(req.body.tag);
+                                // console.log(tag_id);
+                                // console.log(req.params.event_id);
 
-                            var sql_update_event_tag = 'update event_tags set tag_id = ? where event_id =?';
-                            db.query(sql_update_event_tag, [tag_id, req.params.event_id], (err, result) => {
-                                if (err) {
-                                    throw err;
-                                } else {
-                                    if (req.session.user.user_type == 'vendor') {
-                                        res.redirect('/vendor/' + req.session.user.user_id);
-                                    } else if (req.session.user.user_type == 'admin') {
-                                        res.redirect('/admin/event');
+                                var sql_update_event_tag = 'update event_tags set tag_id = ? where event_id =?';
+                                db.query(sql_update_event_tag, [tag_id, req.params.event_id], (err, result) => {
+                                    if (err) {
+                                        throw err;
+                                    } else {
+                                        if (req.session.user.user_type == 'vendor') {
+                                            res.redirect('/vendor/' + req.session.user.user_id);
+                                        } else if (req.session.user.user_type == 'admin') {
+                                            res.redirect('/admin/event');
+                                        }
                                     }
-                                }
-                            })
-                        }
-                    });
-                }
-            })
-        }).catch((error) => {
-            var form = {
-                event_id: req.params.event_id,
-                event_name: req.body.eventname,
-                start_time: req.body.start_time,
-                end_time: req.body.end_time,
-                event_tag: req.body.tag,
-                link: req.body.link,
-                address: req.body.address,
-                city: req.body.city,
-                province: req.body.province,
-                description: req.body.description
-            };
+                                })
+                            }
+                        });
+                    }
+                })
+            }).catch((error) => {
+                var form = {
+                    event_id: req.params.event_id,
+                    event_name: req.body.eventname,
+                    start_time: req.body.start_time,
+                    end_time: req.body.end_time,
+                    event_tag: req.body.tag,
+                    link: req.body.link,
+                    address: req.body.address,
+                    city: req.body.city,
+                    province: req.body.province,
+                    description: req.body.description
+                };
 
-            var sql_tags = 'select name from tags';
+                var sql_tags = 'select name from tags';
 
-            db.query(sql_tags, (err, result) => {
-                if (err) {
-                    throw err;
-                } else {
-                    res.render('editevent.hbs', {
-                        tags: result,
-                        data: form,
-                        start_date: req.body.start_date,
-                        end_date: req.body.end_date,
-                        user_type: req.session.user.user_type,
-                        vendor_id: req.session.user.user_id,
-                        isError: 'true',
-                        error: "Please provide correct address."
-                    })
-                }
-            })
-        });
+                db.query(sql_tags, (err, result) => {
+                    if (err) {
+                        throw err;
+                    } else {
+                        res.render('editevent.hbs', {
+                            tags: result,
+                            data: form,
+                            start_date: req.body.start_date,
+                            end_date: req.body.end_date,
+                            user_type: req.session.user.user_type,
+                            vendor_id: req.session.user.user_id,
+                            isError: 'true',
+                            error: "Please provide correct address."
+                        })
+                    }
+                })
+            });
 
+        }
+        catch (err) {
+            console.log(err);
+        }
     }
-    catch (err) {
-        console.log(err);
-    }
-});
-
-
-
-app.get('/test', (req, res) => {
-    res.render('admin_event.hbs')
 });
 
 app.get('/index', (req, res) => {
@@ -764,7 +784,7 @@ const newVendorNotify = async (vendor_id) => {
 app.post('/saveSubscription', async (req, res) => {
     if (!req.session.user) {
         // console.log('no req')
-        res.redirect('/login')
+        res.redirect('/logout')
     } else {
         // console.log('subscribing')
         const subscription = req.body;
@@ -795,8 +815,8 @@ const deleteFromDatabase = async (subscription, user_id) => {
 };
 
 app.post('/deleteSubscription', async (req, res) => {
-    if (!req.cookies.i || !req.session.user) {
-        res.redirect('/login')
+    if (!req.session.user) {
+        res.redirect('/logout')
     } else {
         const subscription = req.body;
         // console.log(subscription)
@@ -814,11 +834,29 @@ webpush.setVapidDetails('mailto:thingsmykidsdo.bcit@gmail.com', vapidKeys.public
 
 app.get('/logout', (req, res) => {
     req.session.destroy();
-    res.cookie('i', true, { expires: new Date() });
+    // res.cookie('i', true, { expires: new Date() });
     res.redirect('/login');
 });
 
-
+app.post('/checkLogin', (req, res) => {
+    let email = req.body.email;
+    let password = req.body.password;
+    let sql = 'SELECT u.pass_hash FROM thingsKidsDoModified.user as u ' +
+        'WHERE email = ?';
+    db.query(sql, email, (err, result) => {
+        if (err) {
+            throw err;
+        } else {
+            if (result.length === 0) {
+                res.send(true)
+            } else if (bcrypt.compareSync(password, result[0].pass_hash)) {
+                res.send(false)
+            } else {
+                res.send(true)
+            }
+        }
+    });
+});
 
 
 server.listen(port, function (err) {

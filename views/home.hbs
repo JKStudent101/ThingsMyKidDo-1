@@ -10,23 +10,29 @@
 </head>
 
 <body>
-{{#ifCond user_type "vendor"}}
+    {{#ifCond user_type "vendor"}}
     {{> menu_vendor}}
-{{else}}
-    {{#ifCond user_type "admin"}}
-        {{> menu_admin}}
     {{else}}
-        {{#ifCond user_type "parent"}}
-            {{> menu_parent}}
-        {{/ifCond}}
+    {{#ifCond user_type "admin"}}
+    {{> menu_admin}}
+    {{else}}
+    {{#ifCond user_type "parent"}}
+    {{> menu_parent}}
     {{/ifCond}}
-{{/ifCond}}
+    {{/ifCond}}
+    {{/ifCond}}
 
     <div class="container">
         <div class="homeContainer">
             <div class="playText"> <b>Let's Play! </div>
-            <button id="permission-btn-yes" class="permission-btn" onclick="openPushSubscription()">Turn on Notifications!</button>
-            <button id="permission-btn-no" class="permission-btn" onclick="closePushSubscription()">Turn off Notifications!</button>
+            <div class="notification-container">
+                <span class="notification-text">Notifications</span>
+                <label class="switch">
+                <input type="checkbox" id="notif-check">
+                <span class="slider round"></span>
+            </label>
+            </div>
+            
             <div class="play">
                 <a href="/event">
                     <div class="search">Events</div>

@@ -22,19 +22,30 @@
     {{/ifCond}}
     {{/ifCond}}
     <div class="container col-xs-12">
-        {{#if notification_event}}
+        {{#if display_event}}
         <div id="myModal" class="modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">{{notification_event.name}}</h5>
+                        <h2 class="modal-title">{{display_event.name}}</h2>
+                        <a href={{display_event.website}} target="_blank"
+                            class="modal-title">{{display_event.vendor_name}}</a>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p>{{notification_event.description}}</p>
-                        <a href={{notification_event.link}}>Sign Up Now</a>
+                        <p>{{display_event.description}}</p>
+                        <a href={{display_event.link}} target="_blank">Sign Up Now</a>
+                        <br>
+                        <br>
+                        {{#each display_event.tags}}
+                        <div style="display:inline">
+                            <div class="tag">
+                                {{name}}
+                            </div>
+                        </div>
+                        {{/each}}
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
