@@ -51,8 +51,8 @@ $(document).ready(function () {
 		$('#Parent3').modal('hide');
 		$('#Parent4').modal('show');
 
-		$('#K1_Nickname').html('');
-		$('#K1_Gender').html('');
+		let skipKids = "<p>None</p>"
+		$('.Kids-List').append(skipKids);
 	});
 
 	//set "Register" button id on click to load input + hide 2nd modal, and trigger 3rd modal
@@ -60,12 +60,82 @@ $(document).ready(function () {
 		$('#Parent3').modal('hide');
 		$('#Parent4').modal('show');
 
-		var k1_nName = $('#kidname1').val();
-		var k1_gender = $('#gender1').val();
-		var items = {};
+		var hobbies1 = '';
 
-		$('#K1_Nickname').html(k1_nName);
-		$('#K1_Gender').html(k1_gender);
+		console.log($('#Kid1').hasClass("show"));
+		console.log(data.length);
+
+		if ($('#Kid1').hasClass("show") == true){
+
+			
+
+			input1 = '<div id="K1" class="K1">Kid1' +
+					'<div class="form-group" style="margin-left:10px">' +
+						'<label class="control-label" >Nickname</label>' +
+							'<div><p class="form-control-static" id="K1_Nickname">' +
+								$('#kidname1').val() +
+							'</p></div></div>' +
+					'<div class="form-group" style="margin-left:10px">' +
+						'<label class=" control-label" >Gender</label>' +
+							'<div><p class="form-control-static" id="K1_Gender">' +
+								$('#gender1').val()+
+							'</p></div></div>' +
+					'<div class="form-group" style="margin-left:10px">' +
+					'<label class=" control-label" >Interests</label>' +
+						'<div class="" id="K1_interests">' +
+							'<p class="form-control-static" id="K1_gender">' +
+							'</p></div></div>'+
+					'</div>'
+		}else{				
+			input1 = ""
+		};
+
+		if ($('#Kid2').hasClass("show") == true){
+			input2 = '<div id="K2" class="K2">Kid2' +
+					'<div class="form-group" style="margin-left:10px">' +
+						'<label class="control-label" >Nickname</label>' +
+							'<div><p class="form-control-static" id="K2_Nickname">' +
+								$('#kidname2').val() +
+							'</p></div></div>' +
+					'<div class="form-group" style="margin-left:10px">' +
+						'<label class=" control-label" >Gender</label>' +
+							'<div><p class="form-control-static" id="K2_Gender">' +
+								$('#gender2').val()+
+							'</p></div></div>' +
+					'<div class="form-group" style="margin-left:10px">' +
+					'<label class=" control-label" >Interests</label>' +
+						'<div class="" id="K1_interests">' +
+							'<p class="form-control-static" id="K2_gender">' +
+							'</p></div></div>'+
+					'</div>'
+		}else{				
+			input2 = ""
+		};
+
+		if ($('#Kid3').hasClass("show") == true){
+			input3 = '<div id="K2" class="K3">Kid3' +
+					'<div class="form-group" style="margin-left:10px">' +
+						'<label class="control-label" >Nickname</label>' +
+							'<div><p class="form-control-static" id="K3_Nickname">' +
+								$('#kidname3').val() +
+							'</p></div></div>' +
+					'<div class="form-group" style="margin-left:10px">' +
+						'<label class=" control-label" >Gender</label>' +
+							'<div><p class="form-control-static" id="K3_Gender">' +
+								$('#gender3').val()+
+							'</p></div></div>' +
+					'<div class="form-group" style="margin-left:10px">' +
+					'<label class=" control-label" >Interests</label>' +
+						'<div class="" id="K1_interests">' +
+							'<p class="form-control-static" id="K3_gender">' +
+							'</p></div></div>'+
+					'</div>'
+		}else{				
+			input3 = ""
+		};
+
+
+		$('.Kids-List').append(input1 + input2 + input3);
 
 	});
 
@@ -73,6 +143,8 @@ $(document).ready(function () {
 	$('#P-Redo-Kids').on('click', function () {
 		$('#Parent4').modal('hide');
 		$('#Parent3').modal('show');
+
+		$('.Kids-List').empty();
 	});
 	//set "Confirm" button id on click to hide 3rd modal and trigger 4th modal
 	// $('#P-Confirm').on('click', function() {
@@ -388,6 +460,11 @@ $(document).ready(function () {
 		$("#p_confirm_pw").val("");
 		$(".guardian").val("");
 		$("#Parent_TermCheck").prop('checked', false);
+		$(".register-kid-name").val("");
+		$(".register-kid-gender").val("Boy");
+		$('.add_profile').text("Add kid profile");
+		$('.R_Kid_Profile').removeClass("show");
+		$('.Kids-List').empty();
 		$(".Add_Kids").remove();
 	});
 

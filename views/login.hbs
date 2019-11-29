@@ -139,12 +139,13 @@
                                 <div class="allInputs1">
 
                                     <div class="Add_Kids1">
-                                        <p>sample Mykid1
-                                            <input class="register-kid1" placeholder="Nickname" id="kidname1"
+                                        <button id="S_kid1" class="add_profile submit1" onclick="show_kid1()" style="display:block;">Add kid profile</button>
+                                        <p class = "R_Kid_Profile" id="Kid1" style="display: none;">Mykid1
+                                            <input class="register-kid-name" placeholder="Nickname" id="kidname1"
                                                 name="nickname1">
                                             is a
                                             <span class="form-group">
-                                                <select id="gender1" class="register-kid1">
+                                                <select id="gender1" class="register-kid-gender">
                                                     <option>Boy</option>
                                                     <option>Girl</option>
                                                 </select>
@@ -158,13 +159,52 @@
                                                 </select>
                                             </span>
                                         </p>
-                                        <button type="button" class="submit1" id="add">Create Kid Profile</button>                                    
+                                        <br>
+<!--                                        <button type="button" class="submit1" id="add">Create Kid Profile</button>                                    
+-->                                     <button id="S_kid2" class="add_profile submit1" onclick="show_kid2()" style="display:block;">Add kid profile</button>
+                                        <p class = "R_Kid_Profile" id="Kid2" style="display: none;"> Mykid2
+                                            <input class="register-kid-name" placeholder="Nickname" id="kidname2"
+                                                name="nickname2">
+                                            is a
+                                            <span class="form-group">
+                                                <select id="gender2" class="register-kid-gender">
+                                                    <option>Boy</option>
+                                                    <option>Girl</option>
+                                                </select>
+                                            </span>
+                                            who is interested in
+                                            <span>
+                                                <select id="Kid-Interests" class="multiple_select" multiple="multiple">
+                                                {{#each data}}
+                                                    <option>{{name}}</option>
+                                                {{/each}}
+                                                </select>
+                                            </span>
+                                        </p>                                    
+                                        <br>
+
+                                        <button id="S_kid3" class="add_profile submit1" onclick="show_kid3()" style="display:block;">Add kid profile</button>
+                                        <p class = "R_Kid_Profile" id="Kid3" style="display: none;">Mykid3
+                                            <input class="register-kid-name" placeholder="Nickname" id="kidname3"
+                                                name="nickname3">
+                                            is a
+                                            <span class="form-group">
+                                                <select id="gender3" class="register-kid-gender">
+                                                    <option>Boy</option>
+                                                    <option>Girl</option>
+                                                </select>
+                                            </span>
+                                            who is interested in
+                                            <span>
+                                                <select id="Kid-Interests" class="multiple_select" multiple="multiple">
+                                                {{#each data}}
+                                                    <option>{{name}}</option>
+                                                {{/each}}
+                                                </select>
+                                            </span>
+                                        </p>                                 
                                     </div>
-
                                 </div>
-
-
-
                             </div>
 
                             {{!-- <p>
@@ -213,7 +253,7 @@
                         </div>
                         <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
                             <div class="tab">
-                                <p>Parent Account</p>
+                                <p class="comfirm-account"><b>Parent Account</b></p>
                                 <form class="form-horizontal pf">
                                     <div class="form-group" style="margin-left:10px">
                                         <label class="control-label" >Email Address</label>
@@ -229,9 +269,9 @@
                                         </div>
                                     </div>
                                 </form>
-                                <p>Children list</p>
-                                <form class="form-horizontal pf">
-                                    <div class="form-group" style="margin-left:10px">
+                                <p class="comfirm-kid-list" ><b>Children list</b></p>
+                                <form class="Kids-List form-horizontal pf">
+<!--                                    <div class="form-group" style="margin-left:10px">
                                             <label class="control-label" >Nickname</label>
                                             <div>
                                                 <p class="form-control-static" id="K1_Nickname"></p>
@@ -248,8 +288,8 @@
                                         <div class="" id="K1_interests">
                                             <p class="form-control-static" id="K1_gender"></p>
                                         </div>
-                                    </div>
-                                </form>
+                                    </div>              -->
+                                </form>      
                             </div>
                             <hr class="my-2">
                             <div class="custom-control custom-checkbox">
@@ -424,6 +464,38 @@
 
     <script src="/scripts/notifications.js"></script>
     <script src="/scripts/register.js"></script>
+    <script>
+        function show_kid1(){
+            var b = document.getElementById("S_kid1")
+            var element = document.getElementById("Kid1");
+            element.classList.toggle("show");
+            if (b.innerHTML == "Add kid profile"){
+                b.innerHTML = "Remove profile"
+            }else{
+                b.innerHTML = "Add kid profile"
+            }
+        }
+        function show_kid2(){
+            var b = document.getElementById("S_kid2")
+            var element = document.getElementById("Kid2");
+            element.classList.toggle("show");
+            if (b.innerHTML == "Add kid profile"){
+                b.innerHTML = "Remove profile"
+            }else{
+                b.innerHTML = "Add kid profile"
+            }
+        }
+        function show_kid3(){
+            var b = document.getElementById("S_kid3")
+            var element = document.getElementById("Kid3");
+            element.classList.toggle("show");
+            if (b.innerHTML == "Add kid profile"){
+                b.innerHTML = "Remove profile"
+            }else{
+                b.innerHTML = "Add kid profile"
+            }
+        }
+    </script>
 
 </body>
 
