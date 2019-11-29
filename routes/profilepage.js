@@ -80,6 +80,7 @@ router.get('/:nickname', (req, res) => {
                                     let event_id = result[i].event_id;
                                     if (wishlist_array.includes(String(event_id))) {
                                         result[i].nickname = nickname
+                                        result[i].category = result[i].category.toLowerCase()
                                         events.push(result[i]);
                                     }
                                 }

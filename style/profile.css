@@ -1,6 +1,6 @@
-img.profile-pic {
-    max-width: 100px;
-    max-height: 100px
+#profile-pic {
+    width: 8vw;
+    height: 10vh;
 }
 
 .pf {
@@ -16,14 +16,9 @@ button.remove-event {
 
 .card {
     position: relative;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    max-width: 300px;
     margin: auto;
-    text-align: center;
-    left: 100px;
-    /* border-radius: 3em; */
-    border-color: black;
-    border-style: solid;
+    text-align: left;
+    left: 5vw;
 }
 
 .list-inline {
@@ -61,15 +56,13 @@ a:hover {
 }
 
 .table-events {
-    border: 1px solid;
     border-radius: 10px;
     box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
     margin: 3px;
     overflow: hidden;
-    padding: 10px;
-    right: 100px;
+    padding: 10px;  
     position: relative;
-    top: 20px;
+    top: 1em;
 }
 
 table {
@@ -80,6 +73,7 @@ td,
 th {
     color: #398B93;
     padding: 10px;
+    text-align: center;
 }
 
 .invis {
@@ -133,4 +127,32 @@ th {
 
 .dropdown:hover .dropbtn {
     background-color: black;
+}
+
+.tableholder {
+    overflow:hidden;
+    overflow-y: auto;
+    position: relative;
+    top: 2em;
+    border: 2px solid;
+    border-color: #d1cfcf;
+    box-shadow: 3px 3px 0 #d1cfcf;
+    height: 50vh;
+}
+
+
+#editbutton {
+    background-image: url('./src/Playlist_edit_profile_icon.png');
+    background-size: 100% 100%;
+    background-position: center;
+    height: 5vh;
+    width: 4vw;
+    
+}
+#switchbutton {
+    background-image: url('./src/Playlists_switch_playlists_icon.png');
+    background-size: 100% 100%;
+    background-position: center;
+    height: 5vh;
+    width: 4vw;
 }
