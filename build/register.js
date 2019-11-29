@@ -60,14 +60,27 @@ $(document).ready(function () {
 		$('#Parent3').modal('hide');
 		$('#Parent4').modal('show');
 
-		var hobbies1 = '';
+		var hobbies1 = [];
 
-		console.log($('#Kid1').hasClass("show"));
-		console.log(data.length);
+		let kidtags = document.getElementsByClassName('kidtag1');
+		
+		console.log(kidtags.length);
 
 		if ($('#Kid1').hasClass("show") == true){
 
 			
+			var i = 0;
+
+			while (i < kidtags.length) {
+				if ($( ".multiple_select option").is(":selected")){
+					
+				}
+				console.log($( ".multiple_select option:selected").val())
+			//	selectInterests += `<option class="kid-tag">${kidTags[i].value}</option>`
+				i++
+				};
+
+			console.log(hobbies1);
 
 			input1 = '<div id="K1" class="K1">Kid1' +
 					'<div class="form-group" style="margin-left:10px">' +
