@@ -1,22 +1,4 @@
 /*
-Sends a push notification from the test notifications endpoint texbox
-*/
-const send = () => {
-    // console.log("Sending xml request");
-    var request = new window.XMLHttpRequest();
-    let text = document.getElementById('txt').value;
-    let data = {
-        message: text
-    }
-    request.open('post', '/text-me', false);
-    request.setRequestHeader('Content-Type', 'application/json');
-    request.send(JSON.stringify(data));
-    // console.log("request sent");
-    // let response = JSON.parse(request.response);
-    // console.log(response)
-}
-
-/*
 Registers a service worker
 */
 const registerServiceWorker = async () => {
@@ -63,7 +45,6 @@ async function openPushSubscription() {
                     },
                     body: JSON.stringify(PushSubscription),
                 })
-                displayNoButton();
                 response.json().then(res => console.log(res.message))
             }
         } else {
@@ -89,7 +70,6 @@ async function closePushSubscription() {
             },
             body: JSON.stringify(subscription),
         })
-        displayYesButton();
         response.json().then(res => console.log(res.message))
         // console.log("Unsubscribed", successful);
     } catch (e) {
@@ -98,74 +78,25 @@ async function closePushSubscription() {
     };
 }
 
-const displayYesButton = () => {
-    let button = document.getElementById('permission-btn-yes');
-    if (button) {
-        button.style.display = 'block'
-        button = document.getElementById('permission-btn-no');
-        button.style.display = 'none'
-    }
-
-}
-
-const displayNoButton = () => {
-    let button = document.getElementById('permission-btn-no');
-    if (button) {
-        button.style.display = 'block'
-        button = document.getElementById('permission-btn-yes');
-        button.style.display = 'none'
-    }
-}
-
-navigator.serviceWorker.ready.then((registration) => {
-    registration.pushManager.getSubscription().then(subscription => {
-        if (subscription === null) {
-            displayYesButton();
+if (document.getElementById("notif-check")){
+    // console.log('element exists')
+    let checkbox = document.getElementById("notif-check");
+    navigator.serviceWorker.ready.then((registration) => {
+        registration.pushManager.getSubscription().then(subscription => {
+            if (subscription === null) {
+                checkbox.checked = false;
+            } else {
+                checkbox.checked = true;
+            }
+        })
+    });
+    checkbox.addEventListener( 'change', function() {
+        if(this.checked) {
+            // console.log('checked');
+            openPushSubscription();
         } else {
-            displayNoButton();
+            // console.log('unchecked');
+            closePushSubscription();
         }
-    })
-});
-
-
-
-
-
-
-
-
-
-/*
-Checks that browser has push notification functionality
-*/
-// const check = () => {
-//     if (!('serviceWorker' in navigator)) {
-//         throw new Error('No Service Worker support!')
-//     }
-//     if (!('PushManager' in window)) {
-//         throw new Error('No Push API Support!')
-//     }
-// }
-
-
-// const main = async () => {
-//     console.log(Notification.permission);
-//     check();
-//     const swRegistration = await registerServiceWorker();
-//     const permission = await requestNotificationPermission();
-// }
-
-/*
-// Asks permission to send notifications
-// */
-// const requestNotificationPermission = async () => {
-//     const permission = await Notification.requestPermission();
-//     // value of permission can be 'granted', 'default', 'denied'
-//     // granted: user has accepted the request
-//     // default: user has dismissed the notification permission popup by clicking on x
-//     // denied: user has denied the request.
-//     if (permission !== 'granted') {
-//         throw new Error('Permission not granted for Notification');
-//     }
-//     // console.log(Notification.permission)
-// }
+    });
+}

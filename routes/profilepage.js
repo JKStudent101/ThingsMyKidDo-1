@@ -3,9 +3,10 @@ const router = express.Router();
 const db = require('../app').db;
 
 router.get('/', (req, res) => {
-    if (!req.cookies.i) {
-        res.redirect('/login')
-    } else {
+    if (!req.session.user) {
+		req.session.url = '/profilepage';
+		res.redirect('/login')
+	} else {
         let user_id = req.session.user.user_id;
         var sql_select_wishlist = 'select wishlist from child where parent_id = ?';
         db.query(sql_select_wishlist, user_id, (err, result) => {
@@ -41,9 +42,10 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:nickname', (req, res) => {
-    if (!req.cookies.i || !req.session.user) {
-        res.redirect('/logout')
-    } else if (req.session.user.user_type != 'parent') {
+    if (!req.session.user) {
+		req.session.url = `/profilepage/${req.params.nickname}`;
+		res.redirect('/login')
+	} else if (req.session.user.user_type != 'parent') {
         res.redirect('/logout')
     } else {
         let nickname = req.params.nickname
