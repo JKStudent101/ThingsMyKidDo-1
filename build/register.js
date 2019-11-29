@@ -133,22 +133,23 @@ $(document).ready(function () {
 		let selectGender =
 			'<select id="gender' +
 			count +
-			' " class="register-kid' + (count + 1) + '"> <option>Boy</option> <option>Girl</option> </select>';
+			' " class="register-kid' + (count + 1) + ' register-Gender"> <option disabled selected>Select Gender</option> <option>Boy</option> <option>Girl</option> </select>';
 
 		let selectInterests =
 			'<select id="Kid-Interests' + count +
-			'" class="multiple_select" multiple="multiple"> {{#each data}} <option>{{name}}</option> {{/each}} </select>'	
+			'" class="multiple_select" multiple="multiple" style="height: 2em; width:10em"> {{#each data}} <option>{{name}}</option> {{/each}} </select>'	
 		/*Hard-code the dropdown checkbox. cannot dynamically use handlebars in append (not enough time)*/ 
 
 		let delete_profile =
 			'<input class="Remove_kid submit1" type="button" value="Remove child" onClick="Remove_profile(\'' + j_new_kid + '\');">'
 
 		input =
+			'<br>' +
 			'<div class="Add_Kids' + count + '" id="' +
 			new_kid +
-			'" ><p>Kid' + (kidsNum + 2) + ' </p> <input class="register-kid' +
+			'" ><p>MyKid' + (kidsNum + 2) + '<input class="register-kid' +
 			(count + 1) +
-			'" name="nickname' +
+			' register-kid" name="nickname' +
 			count +
 			'" id="kidname' +
 			count +
@@ -156,7 +157,7 @@ $(document).ready(function () {
 			selectGender +
 			' who is interested in ' +
 			selectInterests + delete_profile +
-			'</div>'
+			'</p></div>'
 
 
 		count++;

@@ -145,13 +145,14 @@
                                             is a
                                             <span class="form-group">
                                                 <select id="gender1" class="register-kid1 register-Gender">
+                                                    <option disabled selected>Select Gender</option>
                                                     <option>Boy</option>
                                                     <option>Girl</option>
                                                 </select>
-                                            </span>
+                                            </span> 
                                             who is interested in
                                             <span>
-                                                <select id="Kid-Interests" class="multiple_select" multiple="multiple">
+                                                <select id="Kid-Interests" class="multiple_select" multiple="multiple" style="height: 2em; width:10em">
                                                 {{#each data}}
                                                     <option>{{name}}</option>
                                                 {{/each}}
