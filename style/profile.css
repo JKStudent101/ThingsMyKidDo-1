@@ -215,3 +215,12 @@ th {
     overflow: auto;
     text-align: center;
   }
+
+#worddiv {
+    position: fixed;
+    width: 100vw;
+    left: 0;
+    height: 28vh;
+    top: 82vh;
+    
+}
