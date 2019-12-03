@@ -221,3 +221,4 @@ form.form1 {
 .multiple_select option:checked::before {
   content: "\2611";
 }  
+
