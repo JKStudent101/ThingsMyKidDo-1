@@ -45,7 +45,7 @@ async function openPushSubscription() {
                     },
                     body: JSON.stringify(PushSubscription),
                 })
-                response.json().then(res => console.log(res.message))
+                // response.json().then(res => console.log(res.message))
             }
         } else {
             getInstruction = confirm("Oops! \nIt looks like you blocked us from sending you notifications. \n" +
@@ -70,7 +70,7 @@ async function closePushSubscription() {
             },
             body: JSON.stringify(subscription),
         })
-        response.json().then(res => console.log(res.message))
+        // response.json().then(res => console.log(res.message))
         // console.log("Unsubscribed", successful);
     } catch (e) {
         // Unsubscription failed

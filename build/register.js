@@ -19,14 +19,58 @@ $(document).ready(function () {
 	//Parent Modal
 	//set "Continue" button id on click to hide 1st modal and trigger 2nd modal
 	$('#P-Account').on('click', function () {
-		$('#Parent1').modal('hide');
-		$('#Parent2').modal('show');
-		var pEmail = $('#p_email').val();
-		var pPassword = $('#p_password').val();
-		var pPassword2 = $('#p_password2').val();
+		let re = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})');
+		let emre = new RegExp('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-_]+\\.[A-Za-z]{2,}')
+		var register = new window.XMLHttpRequest();
+		let email = document.getElementById('p_email').value;
+		let password = document.getElementById('p_password').value;
+		let confirm = document.getElementById('p_confirm_pw').value;
+		let data = { email };
+		register.open('post', "/checkEmail", false);
+		register.setRequestHeader('Content-Type', 'application/json');
+		register.send(JSON.stringify(data));
+		let response = JSON.parse(register.response);
+		// console.log(response)
+		let errorDiv = document.getElementById('p1error');
+		errorDiv.innerHTML = '';
+		let hasErrors = false;
+		if (email.length < 1) {
+			errorDiv.innerHTML += 'No email was entered<br>'
+			hasErrors = true;
+		}
+		// console.log(emre.test(email))
+		if (!emre.test(email)) {
+			errorDiv.innerHTML += 'Invalid Email<br>'
+			hasErrors = true;
+		}
+		if (response.emailExists) {
+			errorDiv.innerHTML += 'Email is already in use<br>';
+			hasErrors = true;
+		}
+		if (password.length < 8) {
+			errorDiv.innerHTML += 'Password must be at least 8 characters long<br>';
+			hasErrors = true;
+		}
+		if (password.search(re) === -1) {
+			errorDiv.innerHTML += 'Password must contain a uppercase letter, lowercase letter, a number and a special character(!@#\\$%\\^&\\*)<br>'
+			hasErrors = true;
+		}
+		if (confirm !== password) {
+			errorDiv.innerHTML += 'Passwords do not match<br>'
+			hasErrors = true;
+		}
+		if (hasErrors) {
+			event.preventDefault();
+			return false
+		} else {
+			$('#Parent1').modal('hide');
+			$('#Parent2').modal('show');
+			var pEmail = $('#p_email').val();
+			var pPassword = $('#p_password').val();
+			var pPassword2 = $('#p_password2').val();
 
-		$('#Parent_Email').html(pEmail);
-
+			$('#Parent_Email').html(pEmail);
+		}
 	});
 	//set "Register" button id on click to load input + hide 2nd modal, and trigger 3rd modal
 	$('#P-Redo-Account').on('click', function () {
@@ -57,6 +101,12 @@ $(document).ready(function () {
 
 	//set "Register" button id on click to load input + hide 2nd modal, and trigger 3rd modal
 	$('#P-Kids').on('click', function () {
+		let nickname = document.getElementById("kidname1").value
+		let gender = document.getElementById("gender1").value
+
+		if (nickname.length > 0) {
+
+		}
 		$('#Parent3').modal('hide');
 		$('#Parent4').modal('show');
 
@@ -106,8 +156,8 @@ $(document).ready(function () {
 
 		let selectInterests =
 			'<select id="Kid-Interests' + count +
-			'" class="multiple_select" multiple="multiple" style="height: 2em; width:10em"> {{#each data}} <option>{{name}}</option> {{/each}} </select>'	
-		/*Hard-code the dropdown checkbox. cannot dynamically use handlebars in append (not enough time)*/ 
+			'" class="multiple_select" multiple="multiple" style="height: 2em; width:10em"> {{#each data}} <option>{{name}}</option> {{/each}} </select>'
+		/*Hard-code the dropdown checkbox. cannot dynamically use handlebars in append (not enough time)*/
 
 		let delete_profile =
 			'<input class="Remove_kid submit1" type="button" value="Remove child" onClick="Remove_profile(\'' + j_new_kid + '\');">'
@@ -156,38 +206,48 @@ $(document).ready(function () {
 			let pEmail = $('#p_email').val();
 			let pPassword = $('#p_password').val();
 			let pPassword2 = $('#p_password2').val();
+			let pFirstName = $('#p_fName').val();
+			let pLastName = $('#p_lName').val();
 			var ParentRole = $('#Guardian').find(':selected').text();
-			var all_child = {};
+			let cName = $('#kidname1').val();
+			let cGender = $('#gender1').val();
+			let cInterests = []
+			let selected = document.querySelectorAll('#Kid-Interests :checked');
+			selected.forEach(item => cInterests.push(item.value));
+			// cInterests.forEach(item => console.log(item))
+			// var all_child = {};
 
-			var value = $('[class^=Add_Kids')
-				.find('input, select').not('input[type=button]').map(function (i, item) {
+			// var value = $('[class^=Add_Kids')
+			// 	.find('input, select').not('input[type=button]').map(function (i, item) {
 
-					var currentElement = $(this);
-					var value = currentElement.val(); // if it is an input/select/textarea field
-					var cls = this.className;
-					var kidprops = this.id;
-					all_child[cls] = all_child[cls] || [];
+			// 		var currentElement = $(this);
+			// 		var value = currentElement.val(); // if it is an input/select/textarea field
+			// 		var cls = this.className;
+			// 		var kidprops = this.id;
+			// 		all_child[cls] = all_child[cls] || [];
 
-					all_child[cls].push(value);
-				})
-				.get();
+			// 		all_child[cls].push(value);
+			// 	})
+			// 	.get();
 
-			if ($('#P-Skip').data('clicked')) {
-				all_child = {};
-			}
-
-
+			// if ($('#P-Skip').data('clicked')) {
+			// 	all_child = {};
+			// }
 
 			let ParentAccount = {
 				p_email: pEmail,
+				p_fname: pFirstName,
+				p_lname: pLastName,
 				p_pass: pPassword,
 				p_pass2: pPassword2,
 				p_role: 'parent',
-				childProfile: all_child,
+				c_name: cName,
+				c_gender: cGender,
+				c_interests: cInterests,
 				type: 'parent'
 			};
 			ParentDetail = JSON.stringify(ParentAccount);
-			console.log(ParentAccount);
+			// console.log(ParentAccount);
 			$.ajax({
 				url: 'registerParent',
 				type: 'POST',
@@ -227,6 +287,7 @@ $(document).ready(function () {
 	});
 
 	$('#B-Register-info').on('click', function () {
+
 		var b_Fname = $('#bus_Fname').val();
 		var b_Lname = $('#bus_Lname').val();
 		var b_Org = $('#bus_Orgname').val();
@@ -237,11 +298,103 @@ $(document).ready(function () {
 		var b_PW = $('#bus_PW').val();
 		var b_PWconfirm = $('#bus_PWconfirm').val();
 		var error_msg = $('#error').val();
-		$('#alertbox').click(function () {
-			$('#error').html('You Clicked on Click here Button');
-			$('#myModal').modal('show');
-		});
-
+		let re = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})');
+		let emre = new RegExp('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-_]+\\.[A-Za-z]{2,}')
+		let webre = new RegExp('[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)')
+		let phonere = new RegExp('[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.0-9]*')
+		var register = new window.XMLHttpRequest();
+		let data = { email: b_Email };
+		register.open('post', "/checkEmail", false);
+		register.setRequestHeader('Content-Type', 'application/json');
+		register.send(JSON.stringify(data));
+		let response = JSON.parse(register.response);
+		// console.log(response)
+		let hasErrors = false;
+		if (b_Fname.length < 1) {
+			let errorDiv = document.getElementById('v1error');
+			errorDiv.innerHTML = 'No first name was entered<br>'
+			hasErrors = true;
+		}
+		if (b_Lname.length < 1) {
+			let errorDiv = document.getElementById('v2error');
+			errorDiv.innerHTML = 'No last name was entered<br>'
+			hasErrors = true;
+		}
+		if (b_Org.length < 1) {
+			let errorDiv = document.getElementById('v3error');
+			errorDiv.innerHTML = 'No organization name was entered<br>'
+			hasErrors = true;
+		}
+		if (b_Address.length < 1) {
+			let errorDiv = document.getElementById('v4error');
+			errorDiv.innerHTML = 'No address was entered<br>'
+			hasErrors = true;
+		}
+		if (!phonere.test(b_Phone)) {
+			let errorDiv = document.getElementById('v5error');
+			errorDiv.innerHTML = 'Invalid phone number<br>'
+			hasErrors = true;
+		}
+		if (b_Phone.length < 1) {
+			let errorDiv = document.getElementById('v5error');
+			errorDiv.innerHTML = 'No phone number was entered<br>'
+			hasErrors = true;
+		}
+		if (response.emailExists) {
+			let errorDiv = document.getElementById('v6error');
+			errorDiv.innerHTML = 'Email is already in use<br>';
+			hasErrors = true;
+		}
+		// console.log(emre.test(email))
+		if (!emre.test(b_Email)) {
+			let errorDiv = document.getElementById('v6error');
+			errorDiv.innerHTML = 'Invalid email<br>'
+			hasErrors = true;
+		}
+		if (b_Email.length < 1) {
+			let errorDiv = document.getElementById('v6error');
+			errorDiv.innerHTML = 'No email was entered<br>'
+			hasErrors = true;
+		}
+		if (!webre.test(b_Website)) {
+			let errorDiv = document.getElementById('v7error');
+			errorDiv.innerHTML = 'Invalid website url<br>'
+			hasErrors = true;
+		}
+		if (b_Website.length < 1) {
+			let errorDiv = document.getElementById('v7error');
+			errorDiv.innerHTML = 'No website was entered<br>'
+			hasErrors = true;
+		}
+		// if (b_PW.length < 8) {
+		// 	let errorDiv = document.getElementById('v8error');
+		// 	errorDiv.innerHTML += 'Password must be at least 8 characters long<br>';
+		// 	hasErrors = true;
+		// }
+		if (b_PW.search(re) === -1) {
+			let errorDiv = document.getElementById('v8error');
+			errorDiv.innerHTML = 'Password must be at least 8 characters long, contain a uppercase letter, lowercase letter, a number and a special character(!@#\\$%\\^&\\*)<br>'
+			hasErrors = true;
+		}
+		if (b_PWconfirm !== b_PW) {
+			let errorDiv = document.getElementById('v9error');
+			errorDiv.innerHTML = 'Passwords do not match<br>'
+			hasErrors = true;
+		}
+		if (hasErrors) {
+			event.preventDefault();
+			return false
+		} else {
+			$('#Business1').modal('hide');
+			$('#Business2').modal('show');
+			$('#Vendor_Fname').text(b_Fname);
+			$('#Vendor_Lname').html(b_Lname);
+			$('#Vendor_Org').html(b_Org);
+			$('#Vendor_Address').html(b_Address);
+			$('#Vendor_Phone').html(b_Phone);
+			$('#Vendor_Email').html(b_Email);
+			$('#Vendor_Website').html(b_Website);
+		}
 		// if (message == 'Email already exists. Please choose another') {
 		// 	Swal.fire({
 		// 		text: 'This event is already in your wishilsit',
@@ -252,15 +405,6 @@ $(document).ready(function () {
 		// if (b_PW != b_PWconfirm) {
 		// 	alert('Passwords do not match!');
 		// } else {
-		$('#Business1').modal('hide');
-		$('#Business2').modal('show');
-		$('#Vendor_Fname').text(b_Fname);
-		$('#Vendor_Lname').html(b_Lname);
-		$('#Vendor_Org').html(b_Org);
-		$('#Vendor_Address').html(b_Address);
-		$('#Vendor_Phone').html(b_Phone);
-		$('#Vendor_Email').html(b_Email);
-		$('#Vendor_Website').html(b_Website);
 		// }
 	});
 

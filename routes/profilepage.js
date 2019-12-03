@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
         db.query(sql_select_wishlist, user_id, (err, result) => {
             if (result.length > 0) {
                 let sql =
-                    'SELECT DISTINCT child_nickname as nickname, interest\n' +
+                    'SELECT DISTINCT child_nickname as nickname \n' +
                     'FROM child \n' +
                     'WHERE parent_id =' + user_id;
                 db.query(sql, (err, result) => {
@@ -51,7 +51,7 @@ router.get('/:nickname', (req, res) => {
         let nickname = req.params.nickname
         let user_id = req.session.user.user_id;
         let sql_array = [user_id, nickname]
-        let sql_select_wishlist = 'select wishlist, interest from child where parent_id = ? AND child_nickname = ?';
+        let sql_select_wishlist = 'select wishlist from child where parent_id = ? AND child_nickname = ?';
         let data = [];
         let events = [];
         let event_sql =
