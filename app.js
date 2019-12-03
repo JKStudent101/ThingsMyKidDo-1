@@ -10,7 +10,7 @@ const webpush = require('web-push');
 const bcrypt = require('bcrypt-nodejs');
 const saltRounds = 10;
 const { body, check, validationResult } = require('express-validator');
-const cookieParser = require('cookie-parser');
+// const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const request = require('request');
 
@@ -29,7 +29,7 @@ app.use(express.static(__dirname + '/style'));
 app.use(express.static(__dirname + '/views'));
 app.use('/scripts', express.static('build'));
 app.use('/css', express.static('style'));
-app.use(cookieParser());
+// app.use(cookieParser());
 app.use(session({
     secret: 'love',
     resave: false,
@@ -60,9 +60,10 @@ app.get('/', (req, res) => {
 });
 
 app.get('/home', (req, res) => {
-    if (!req.cookies.i || !req.session.user) {
-        res.redirect('/logout')
-    }else{
+    if (!req.session.user) {
+        req.session.url = '/home';
+        res.redirect('/login')
+    } else {
         res.render('home.hbs', {
             user_type: req.session.user.user_type,
             vendor_id: req.session.user.user_id
@@ -71,25 +72,33 @@ app.get('/home', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-    let sql =
-		'SELECT DISTINCT t.name  \n' +
-		'FROM tags t \n' +
-		'ORDER BY t.name		';
-	db.query(sql, (err, result) => {
-		if (err) {
-			throw err;
-		} else {
-			var data = [];
-			for (var i = 0; i < result.length; i++) {
-				data.push(result[i]);
-				// console.log(i);
-			}
+    if (!req.session.user) {
+        let sql =
+            'SELECT DISTINCT t.name, t.tag_id \n' +
+            'FROM tags t \n' +
+            'ORDER BY t.name		';
+        db.query(sql, (err, result) => {
+            if (err) {
+                throw err;
+            } else {
+                var data = [];
+                for (var i = 0; i < result.length; i++) {
+                    data.push(result[i]);
+                    // console.log(i);
+                }
 
-			res.render('login.hbs', {
-				data:data
-			});
-		}
-	});
+                res.render('login.hbs', {
+                    data: data
+                });
+            }
+        });
+    } else if (req.session.user.user_type == 'admin') {
+        res.redirect('/admin')
+    } else if (req.session.user.user_type == 'vendor') {
+        res.redirect(`/vendor/${req.session.user.user_id}`)
+    } else {
+        res.redirect('/home')
+    }
 });
 
 app.post('/login-form', [
@@ -102,6 +111,7 @@ app.post('/login-form', [
         .not().isEmpty()
         .escape()
 ], (req, res) => {
+    // console.log(req.session.url)
     // console.log(req.body)
     let email = req.body.email;
     let password = req.body.password;
@@ -117,14 +127,13 @@ app.post('/login-form', [
             if (result.length === 0) {
                 res.send("User not found")
             } else if (bcrypt.compareSync(password, result[0].pass_hash)) {
-                let salt = bcrypt.genSaltSync(saltRounds);
-                res.cookie('i', bcrypt.hashSync(email, salt));
+                // let salt = bcrypt.genSaltSync(saltRounds);
+                // res.cookie('i', bcrypt.hashSync(email, salt));
                 req.session.user = result[0];
                 if (result[0].user_type === 'admin') { res.redirect("/admin") }
                 else if (result[0].user_type === 'vendor') { res.redirect(`/vendor/${result[0].user_id}`) }
-                else if (result[0].user_type === 'parent') { res.redirect("/home") }
+                else if (result[0].user_type === 'parent') { res.redirect("/event") }
                 else {
-                    res.cookie('i', true, { expires: new Date() });
                     res.send("Error: no user type")
                 }
             } else {
@@ -136,19 +145,27 @@ app.post('/login-form', [
 });
 
 app.post('/registerParent', (req, res) => {
+    // console.log(req.body)
 
     var salt = bcrypt.genSaltSync(saltRounds);
     var hash = bcrypt.hashSync(req.body.p_pass, salt);
 
-    // console.log(req.body)
     // res.render('not finished')
 
     let new_parent_user = {
-        'type': req.body.type,
-        'email': req.body.p_email,
-        'password': hash
+        type: req.body.type,
+        email: req.body.p_email,
+        password: hash,
+        fname: req.body.p_fname,
+        lname: req.body.p_lname,
+
     }
-    let childprofile = req.body.childProfile
+    let child = {
+        nickname: req.body.c_name,
+        gender: req.body.c_gender,
+        interests: req.body.c_interests
+    }
+    // let childprofile = req.body.childProfile
     // console.log(childprofile)
     // console.log(new_parent_user);
     sql_user = "INSERT INTO user(user_type, email, pass_hash) VALUES (?,?,?)";
@@ -160,69 +177,53 @@ app.post('/registerParent', (req, res) => {
             db.query(sql_select_user_parent_type, function (err, result) {
                 sql_user_parent_id = 'SELECT last_insert_id() as parent_id';
                 db.query(sql_user_parent_id, function (err, result) {
-                    let count = 1
-                    let parent_id = result[0].parent_id //54
-                    let child_user = {}; // child1:S
-                    console.log(parent_id)
-                    console.log(result)
-                    let index = new_parent_user.email.indexOf('@');
-                    let email = new_parent_user.email.substring(0, index);
+                    let parent_id = result[0].parent_id
+                    // console.log(parent_id)
+                    // console.log(result)
                     // console.log(email)
-                    let sql_parent_tabl_insert = 'INSERT INTO parent(user_id, first_name) VALUES (?, ?)';
-                    db.query(sql_parent_tabl_insert, [parent_id, new_parent_user.email], function (err, result) {
+                    let sql_parent_table_insert = 'INSERT INTO parent(user_id, first_name, last_name) VALUES (?, ?, ?)';
+                    db.query(sql_parent_table_insert, [parent_id, new_parent_user.fname, new_parent_user.lname], function (err, result) {
                         if (err) {
                             console.log(err)
                         } else {
-                            db.query('select user_id from parent', function (err, result) {
-                                // sql_parent_parent_id = 'SELECT last_insert_id() as user_parent_id';
-                                // console.log(parent_id)
-                                // db.query(sql_user_parent_id, function(err, result){
-                                if (err) {
-                                    console.log(err)
-                                } else {
-                                    // let child_id = result[0].user_parent_id //54
-                                    let child_nickname = []
-                                    for (let key in childprofile) {
-                                        let value = childprofile[key];
-
-                                        child_nickname.push(value[0])
-                                    }
-                                    let sql_child_table = 'INSERT INTO child(child_nickname ) VALUES (?)';
-                                    let sql_child_values = [parent_id, child_nickname[0]]// 54, child + 1
-
-                                    for (let i = 0; i < child_nickname.length; i++) {
-
-                                        let sql_child_table = 'INSERT INTO child(parent_id, child_nickname ) VALUES (?, ?)';
-                                        let sql_child_values = [parent_id, child_nickname[i]]// 54, child + 1
-
-                                        setTimeout(() => {
-                                            db.query(sql_child_table, sql_child_values, function (err, result) {
-
-                                                // console.log(parent_id)
-
+                            if (child.nickname.length > 0) {
+                                let sql_child_table = 'INSERT INTO child(parent_id, child_nickname, gender) VALUES (?, ?, ?)';
+                                db.query(sql_child_table, [parent_id, child.nickname, child.gender], function (err, result) {
+                                    if (err) {
+                                        console.log(err)
+                                    } else {
+                                        try{
+                                        child.interests.forEach(interest => {
+                                            sql = 'INSERT INTO child_tags (parent_id, child_nickname, tag_id) VALUES (?, ?, ?)'
+                                            db.query(sql, [parent_id, child.nickname, interest], (err, res) => {
+                                                if (err) {
+                                                    console.log(err)
+                                                }
                                             })
-                                        }, 1000);
-                                        
+                                        })
+                                    } catch (e) {
+                                        console.log(e)
+                                    }
 
                                     }
-                                    result = {
-                                        user_id: parent_id,
-                                        user_type: 'parent'
-                                    }
-                                    req.session.user = result;
-                                    res.redirect('/home')
-                                }
-                            })
+                                })
+                            }
+                            result = {
+                                user_id: parent_id,
+                                email: new_parent_user.email,
+                                user_type: 'parent'
+                            }
+                            req.session.user = result;
+                            res.json({ message: 'success' });
                         }
                     })
-
                 })
+
             })
+
 
         }
     })
-
-
 })
 
 app.post('/registerVendor', (req, res) => {
@@ -234,9 +235,9 @@ app.post('/registerVendor', (req, res) => {
     // db.query()
     let sql_insert_vendor_users = 'INSERT INTO user(user_type, email, pass_hash) VALUES (?, ?, ?)'
     let user_values = [new_vendor.type, new_vendor.email, new_vendor.password];
-
+    console.log(new_vendor.email);
     db.query(sql_insert_vendor_users, user_values, function (err, result) {
-        if (err) throw err;
+        if (err) console.log(err);
         let sql_select_user = 'SELECT type from user';
         db.query(sql_select_user, user_values.type, function (err, result) {
             let sql_user_id = "SELECT last_insert_id() as user_id";
@@ -265,8 +266,9 @@ app.post('/registerVendor', (req, res) => {
 
 
 app.get('/admin', (req, res) => {
-    if (!req.cookies.i || !req.session.user) {
-        res.redirect('/logout')
+    if (!req.session.user) {
+        req.session.url = '/admin';
+        res.redirect('/login')
     } else if (req.session.user.user_type != 'admin') {
         res.redirect('/logout')
     } else {
@@ -276,8 +278,9 @@ app.get('/admin', (req, res) => {
 
 app.get('/admin/event', (req, res) => {
     // console.log(req.cookies);
-    if (!req.cookies.i || !req.session.user) {
-        res.redirect('/logout')
+    if (!req.session.user) {
+        req.session.url = '/admin/event';
+        res.redirect('/login')
     } else if (req.session.user.user_type != 'admin') {
         res.redirect('/logout')
     } else {
@@ -303,8 +306,8 @@ app.get('/admin/event', (req, res) => {
 });
 
 app.post('/approve-event', (req, res) => {
-    if (!req.cookies.i || !req.session.user) {
-        res.redirect('/login')
+    if (!req.session.user) {
+        res.redirect('/logout')
     } else {
         // console.log('approving')
         let event_id = req.body.id
@@ -322,8 +325,9 @@ app.post('/approve-event', (req, res) => {
 });
 
 app.get('/admin/user', (req, res) => {
-    if (!req.cookies.i || !req.session.user) {
-        res.redirect('/logout')
+    if (!req.session.user) {
+        req.session.url = '/admin/user';
+        res.redirect('/login')
     } else if (req.session.user.user_type != 'admin') {
         res.redirect('/logout')
     } else {
@@ -359,13 +363,13 @@ app.get('/admin/user', (req, res) => {
 });
 
 app.post('/approve-user', (req, res) => {
-    if (!req.cookies.i || !req.session.user) {
-        res.redirect('/login')
+    if (!req.session.user) {
+        res.redirect('/logout')
     } else {
         // console.log('approving')
         let user_id = req.body.id
         let sql = "UPDATE vendor SET isApproved = 'Approved' WHERE user_id = ?";
-        db.query(sql, user_id , async (err, result) => {
+        db.query(sql, user_id, async (err, result) => {
             if (err) {
                 throw err;
             } else {
@@ -378,8 +382,9 @@ app.post('/approve-user', (req, res) => {
 });
 
 app.get('/vendor/:vendor_id', (req, res) => {
-    if (!req.cookies.i || !req.session.user) {
-        res.redirect('/logout')
+    if (!req.session.user) {
+        req.session.url = `/vendor/${req.params.vendor_id}`;
+        res.redirect('/login')
     } else if (req.params.vendor_id != req.session.user.user_id || req.session.user.user_type != 'vendor') {
         res.redirect('/logout')
     } else {
@@ -432,7 +437,7 @@ app.get('/vendor/:vendor_id', (req, res) => {
 
 
 app.get('/delete/:event_id', (req, res) => {
-    if (!req.cookies.i || !req.session.user) {
+    if (!req.session.user) {
         res.redirect('/logout')
     } else if ((req.session.user.user_type != 'vendor') && (req.session.user.user_type != 'admin')) {
         res.redirect('/logout')
@@ -463,8 +468,9 @@ app.get('/delete/:event_id', (req, res) => {
 });
 
 app.get('/edit/:event_id', (req, res) => {
-    if (!req.cookies.i || !req.session.user) {
-        res.redirect('/logout')
+    if (!req.session.user) {
+        req.session.url = `/edit/${req.params.event_id}`;
+        res.redirect('/login')
     } else if ((req.session.user.user_type != 'vendor') && (req.session.user.user_type != 'admin')) {
         res.redirect('/logout')
     } else {
@@ -483,7 +489,7 @@ app.get('/edit/:event_id', (req, res) => {
                 db.query(sql_query, req.params.event_id, (err, result) => {
                     if (err) {
                         throw err;
-                    } else if ((req.session.user.user_type=='vendor') &&(result[0].vendor_id != req.session.user.user_id)) {
+                    } else if ((req.session.user.user_type == 'vendor') && (result[0].vendor_id != req.session.user.user_id)) {
                         res.redirect('/logout')
                     } else {
                         // console.log(result[0].start_date.toISOString().split('T')[0]);
@@ -507,125 +513,123 @@ app.get('/edit/:event_id', (req, res) => {
 
 
 app.post('/edit/:event_id', (req, res) => {
-    try {
-        let address = req.body.address.trim();
-        let city = req.body.city.trim();
-        let province = req.body.province;
-        let format_address = address.replace(/ /g, "+");
-        let format_city = city.replace(/ /g, "+");
-        let search_string = "https://maps.googleapis.com/maps/api/geocode/json?address=" + format_address + ",+" + format_city + ",+" + province + "&key=AIzaSyAN6q6jOWczlbNgBPd_ljm857YUqpyIoVU";
-        let geocode = new Promise((resolve, reject) => {
-            request({
-                url: search_string,
-                json: true
-            }, (error, response, body) => {
-                if (error) {
-                    reject('Cannot connect to Google Maps');
-                } else if (body.status === 'ZERO_RESULTS') {
-                    reject('Cannot find requested address');
-                } else if (body.status === 'OK') {
-                    resolve({
-                        lat: body.results[0].geometry.location.lat,
-                        lng: body.results[0].geometry.location.lng
-                    });
-                }
-            })
-        });
-        geocode.then(geores => {
-            var lat = geores['lat'];
-            var lng = geores['lng'];
+    if (!req.session.user) {
+        res.redirect('/logout')
+    } else {
+        try {
+            let address = req.body.address.trim();
+            let city = req.body.city.trim();
+            let province = req.body.province;
+            let format_address = address.replace(/ /g, "+");
+            let format_city = city.replace(/ /g, "+");
+            let search_string = "https://maps.googleapis.com/maps/api/geocode/json?address=" + format_address + ",+" + format_city + ",+" + province + "&key=AIzaSyAN6q6jOWczlbNgBPd_ljm857YUqpyIoVU";
+            let geocode = new Promise((resolve, reject) => {
+                request({
+                    url: search_string,
+                    json: true
+                }, (error, response, body) => {
+                    if (error) {
+                        reject('Cannot connect to Google Maps');
+                    } else if (body.status === 'ZERO_RESULTS') {
+                        reject('Cannot find requested address');
+                    } else if (body.status === 'OK') {
+                        resolve({
+                            lat: body.results[0].geometry.location.lat,
+                            lng: body.results[0].geometry.location.lng
+                        });
+                    }
+                })
+            });
+            geocode.then(geores => {
+                var lat = geores['lat'];
+                var lng = geores['lng'];
 
-            let inputs = [
-                req.body.description,
-                req.body.eventname,
-                req.body.start_time,
-                req.body.end_time,
-                req.body.start_date,
-                req.body.end_date,
-                lng,
-                lat,
-                req.body.address,
-                req.body.city,
-                req.body.province,
-                req.body.link,
-                req.params.event_id
-            ];
-            // console.log(inputs);
-            var sql_update = 'update event set description=?, name=?, start_time=?, end_time=?, start_date=?, end_date=?, lng=?, lat=?, address=?, city=?, province=?, link=? where event_id=? ';
-            db.query(sql_update, inputs, (err, result) => {
-                if (err) {
-                    throw err;
-                } else {
-                    var sql_tag_id = 'select tag_id from tags where name = ?';
-                    db.query(sql_tag_id, req.body.tag, (err, result) => {
-                        if (err) {
-                            throw err;
-                        } else {
-                            var tag_id = result[0].tag_id;
-                            // console.log(req.body.tag);
-                            // console.log(tag_id);
-                            // console.log(req.params.event_id);
+                let inputs = [
+                    req.body.description,
+                    req.body.eventname,
+                    req.body.start_time,
+                    req.body.end_time,
+                    req.body.start_date,
+                    req.body.end_date,
+                    lng,
+                    lat,
+                    req.body.address,
+                    req.body.city,
+                    req.body.province,
+                    req.body.link,
+                    req.params.event_id
+                ];
+                // console.log(inputs);
+                var sql_update = 'update event set description=?, name=?, start_time=?, end_time=?, start_date=?, end_date=?, lng=?, lat=?, address=?, city=?, province=?, link=? where event_id=? ';
+                db.query(sql_update, inputs, (err, result) => {
+                    if (err) {
+                        throw err;
+                    } else {
+                        var sql_tag_id = 'select tag_id from tags where name = ?';
+                        db.query(sql_tag_id, req.body.tag, (err, result) => {
+                            if (err) {
+                                throw err;
+                            } else {
+                                var tag_id = result[0].tag_id;
+                                // console.log(req.body.tag);
+                                // console.log(tag_id);
+                                // console.log(req.params.event_id);
 
-                            var sql_update_event_tag = 'update event_tags set tag_id = ? where event_id =?';
-                            db.query(sql_update_event_tag, [tag_id, req.params.event_id], (err, result) => {
-                                if (err) {
-                                    throw err;
-                                } else {
-                                    if (req.session.user.user_type == 'vendor') {
-                                        res.redirect('/vendor/' + req.session.user.user_id);
-                                    } else if (req.session.user.user_type == 'admin') {
-                                        res.redirect('/admin/event');
+                                var sql_update_event_tag = 'update event_tags set tag_id = ? where event_id =?';
+                                db.query(sql_update_event_tag, [tag_id, req.params.event_id], (err, result) => {
+                                    if (err) {
+                                        throw err;
+                                    } else {
+                                        if (req.session.user.user_type == 'vendor') {
+                                            res.redirect('/vendor/' + req.session.user.user_id);
+                                        } else if (req.session.user.user_type == 'admin') {
+                                            res.redirect('/admin/event');
+                                        }
                                     }
-                                }
-                            })
-                        }
-                    });
-                }
-            })
-        }).catch((error) => {
-            var form = {
-                event_id: req.params.event_id,
-                event_name: req.body.eventname,
-                start_time: req.body.start_time,
-                end_time: req.body.end_time,
-                event_tag: req.body.tag,
-                link: req.body.link,
-                address: req.body.address,
-                city: req.body.city,
-                province: req.body.province,
-                description: req.body.description
-            };
+                                })
+                            }
+                        });
+                    }
+                })
+            }).catch((error) => {
+                var form = {
+                    event_id: req.params.event_id,
+                    event_name: req.body.eventname,
+                    start_time: req.body.start_time,
+                    end_time: req.body.end_time,
+                    event_tag: req.body.tag,
+                    link: req.body.link,
+                    address: req.body.address,
+                    city: req.body.city,
+                    province: req.body.province,
+                    description: req.body.description
+                };
 
-            var sql_tags = 'select name from tags';
+                var sql_tags = 'select name from tags';
 
-            db.query(sql_tags, (err, result) => {
-                if (err) {
-                    throw err;
-                } else {
-                    res.render('editevent.hbs', {
-                        tags: result,
-                        data: form,
-                        start_date: req.body.start_date,
-                        end_date: req.body.end_date,
-                        user_type: req.session.user.user_type,
-                        vendor_id: req.session.user.user_id,
-                        isError: 'true',
-                        error: "Please provide correct address."
-                    })
-                }
-            })
-        });
+                db.query(sql_tags, (err, result) => {
+                    if (err) {
+                        throw err;
+                    } else {
+                        res.render('editevent.hbs', {
+                            tags: result,
+                            data: form,
+                            start_date: req.body.start_date,
+                            end_date: req.body.end_date,
+                            user_type: req.session.user.user_type,
+                            vendor_id: req.session.user.user_id,
+                            isError: 'true',
+                            error: "Please provide correct address."
+                        })
+                    }
+                })
+            });
 
+        }
+        catch (err) {
+            console.log(err);
+        }
     }
-    catch (err) {
-        console.log(err);
-    }
-});
-
-
-
-app.get('/test', (req, res) => {
-    res.render('admin_event.hbs')
 });
 
 app.get('/index', (req, res) => {
@@ -661,12 +665,12 @@ const newEventNotify = async (event_id) => {
             "INNER JOIN user as u ON u.user_id = s.user_id " +
             "INNER JOIN parent as p ON p.user_id = u.user_id " +
             "INNER JOIN child as c ON c.parent_id = p.user_id " +
-            "INNER JOIN child_tags as ct ON ct.parent_id = c.parent_id " +
+            "INNER JOIN child_tags as ct ON ct.parent_id = c.parent_id AND ct.child_nickname = c.child_nickname" +
             "INNER JOIN tags as t ON t.tag_id = ct.tag_id " +
             "INNER JOIN event_tags as et ON et.tag_id = t.tag_id " +
             "INNER JOIN event as e ON e.event_id = et.event_id " +
             "WHERE et.event_id = ? " +
-            "GROUP BY s.user_id, s.endpoint;"
+            "GROUP BY s.user_id, c.child_nickname, s.endpoint;"
         db.query(sql, event_id, (err, result) => {
             if (err) {
                 console.log(err)
@@ -764,7 +768,7 @@ const newVendorNotify = async (vendor_id) => {
 app.post('/saveSubscription', async (req, res) => {
     if (!req.session.user) {
         // console.log('no req')
-        res.redirect('/login')
+        res.redirect('/logout')
     } else {
         // console.log('subscribing')
         const subscription = req.body;
@@ -795,8 +799,8 @@ const deleteFromDatabase = async (subscription, user_id) => {
 };
 
 app.post('/deleteSubscription', async (req, res) => {
-    if (!req.cookies.i || !req.session.user) {
-        res.redirect('/login')
+    if (!req.session.user) {
+        res.redirect('/logout')
     } else {
         const subscription = req.body;
         // console.log(subscription)
@@ -814,12 +818,44 @@ webpush.setVapidDetails('mailto:thingsmykidsdo.bcit@gmail.com', vapidKeys.public
 
 app.get('/logout', (req, res) => {
     req.session.destroy();
-    res.cookie('i', true, { expires: new Date() });
+    // res.cookie('i', true, { expires: new Date() });
     res.redirect('/login');
 });
 
+app.post('/checkLogin', (req, res) => {
+    let email = req.body.email;
+    let password = req.body.password;
+    let sql = 'SELECT u.pass_hash FROM user as u ' +
+        'WHERE email = ?';
+    db.query(sql, email, (err, result) => {
+        if (err) {
+            throw err;
+        } else {
+            if (result.length === 0) {
+                res.send(true)
+            } else if (bcrypt.compareSync(password, result[0].pass_hash)) {
+                res.send(false)
+            } else {
+                res.send(true)
+            }
+        }
+    });
+});
 
-
+app.post('/checkEmail', (req, res) => {
+    let email = req.body.email;
+    let sql = 'SELECT * FROM user ' +
+        'WHERE email = ?';
+    let check = {}
+    db.query(sql, email, (err, result) => {
+        if (err) {
+            throw err;
+        } else {
+            check.emailExists = result.length !== 0;
+            res.send(check)
+        }
+    });
+});
 
 server.listen(port, function (err) {
     if (err) {

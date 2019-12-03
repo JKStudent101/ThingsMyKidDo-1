@@ -6,153 +6,103 @@
     {{> bootstrap}}
 
     <link href="/css/menu.css" type="text/css" rel="stylesheet" />
-    <link href="/css/Profile.css" type="text/css" rel="stylesheet" />
+    <link href="/css/profile.css" type="text/css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
 </head>
 
 <body>
-{{#ifCond user_type "vendor"}}
+    {{#ifCond user_type "vendor"}}
     {{> menu_vendor}}
-{{else}}
-    {{#ifCond user_type "admin"}}
-        {{> menu_admin}}
     {{else}}
-        {{#ifCond user_type "parent"}}
-            {{> menu_parent}}
-        {{/ifCond}}
+    {{#ifCond user_type "admin"}}
+    {{> menu_admin}}
+    {{else}}
+    {{#ifCond user_type "parent"}}
+    {{> menu_parent}}
     {{/ifCond}}
-{{/ifCond}}
+    {{/ifCond}}
+    {{/ifCond}}
 
     <div class="container">
-        {{!-- <div class="dropdown" style="z-index: -1;">
-            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="true">
-                Select Profile
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                <li><a href="#">Profile 1</a></li>
-                <li><a href="#">Profile 2</a></li>
-                <li><a href="#">Profile 3</a></li>
-                <li role="separator" class="divider"></li>
-                <li>
-                    <a href="#">
-                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">Create
-                            a Profile</button>
-                    </a>
-                </li>
-            </ul>
-            <!-- Modal --> --}}
-        <div id="myModal" class="modal fade" role="dialog">
-            <div class="modal-dialog">
-
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Edit Profile</h4>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="col-xs-1">
+                    <img src="/src/Playlist_profile_image.png" id="profile-pic">
+                </div>
+                <div class="col-xs-3">
+                    <div class="card">
+                        {{#if nickname}}
+                        <div id="{{nickname}}" style="font-size: 30px;">{{nickname}}'s</div>
+                        <div style="font-size: 30px;">Playlist</div>
+                        {{/if}}
                     </div>
-                    <div class="modal-body">
-                        <p>Editing profile.</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-default" data-dismiss="modal">Submit</button>
+                </div>
+                <div class="col-xs-4"></div>
+                <div class="col-xs-2" style="text-align: right;">
+                    <button id="editbutton"></button>
+                </div>
+                <div class="col-xs-2" style="text-align: left;">
+                    <button id="switchbutton" onclick="window.location = '#popup1'"></button>
+                </div>
+                <div id="popup1" class="overlay">
+                    <div class="popup">
+                        <h2>Change to</h2>
+                        <a class="close" href="#">&times;</a>
+                        <div class="content">
+                           <select id="target" style="font-size:24px;">
+                                <option value="" disabled selected>Select your child</option>
+                                {{#each data}}
+                                <option value="{{nickname}}">{{nickname}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
                     </div>
                 </div>
 
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="container col-md-6">
-            <div class="container">
-                <div class="container col-md-6">
-                    <div class="box">
-                        <div class="inline-block">
-                        </div>
 
-                        <div class="card">
-                            <img src="/src/img.jpg" alt="John" style="width:100%">
-                                {{#if nickname}}
-                                <div id="{{nickname}}" style="font-size: 30px;">{{nickname}}
-                                     <p>Hobbies: {{interest}}</p>
-                                </div>
-                                {{/if}}
-                            {{!-- <div id="billy" class="inv" style="font-size: 30px;">Billy
-                                <p class="title">Age: 9</p>
-                            <p>Hobbies: Basketball, Volleyball</p>
-                            </div>
-                            <div id="johnny" class="inv" style="font-size: 30px;">Johnny
-                                <p class="title">Age: 7</p>
-                            <p>Hobbies: Volleyball, Church</p>
-                            </div> --}}
-                            
-                            
-                            {{!-- <div class="dropdown"> --}}
-                            {{!-- <p><button class="dropbtn">Change Profile</button> --}}
-                            {{!-- <div class="dropdown-content"> --}}
-                                <select id="target" style="font-size:24px;">
-                                    <option value="" disabled selected>Select your child</option>
-                                    {{#each data}}
-                                        <option value="{{nickname}}">{{nickname}}</option>
-                                    {{/each}}
-                                </select>
-                               {{!-- </div> --}}
-                            {{!-- </div> --}}
-                            {{!-- </p> --}}
-                        </div>
+        <div class="row">
+            <div class="tableholder">
+                <div class="col-xs-12">
+                    <div class="table-events">
+                        <table cellspacing="0" rules=rows>
+                            <tr>
+                                <th>Category</th>
+                                <th>Event Name</th>
+                                <th>Organization</th>
+                                <th>Start Date</th>
+                                <th width="230">Description</th>
+                                <th></th>
+                            </tr>
+                            {{#each events}}
+                            <tr>
 
-                        <div class="container">
-                                <ul class="list-inline">
-                                    <li>
-                                        <a href="#">
-                                            <button type="button" class="btn btn-default">Edit profile</button>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <button type="button" class="btn btn-default">Delete profile</button>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="container col-md-6">
-        <div class="table-events">
-            <table cellspacing="0" rules=rows>
-                <tr>
-                    <th>Category</th>
-                    <th>Event Name</th>
-                    <th>Organization</th>
-                    <th>Start Date</th>
-                    <th width="230">Description</th>
-                </tr>
-                {{#each events}}
-                    <tr>
-                        
-                        <td>
-                        <img src="/src/customIcons/{{category}}_icon.png" id="{{category}}img" style="width:50px;height:50px;border:0;" onerror="this.src='/src/testingIcon.jpg';">
-                        </td>
-                       
-                        
-                        <td>{{name}}</td>
-                        <td>{{vendorname}}
-                        </td>
-                        <td>{{start_date}}</td>
-                        <td>
-                            {{description}}
-                            <div>
-                               <form action="/savewishlist/delete" method="post">
-                                   <input class='invis' name='eventid' type='text' value={{event_id}}>
-                                   <input class='invis' name='nickname' type='text' value={{nickname}}>
-                                   <button type='submit' class=" invis btn btn-danger" id="submitbutton"></button> 
-                               </form>
-                            <button class="btn btn-danger" onclick="
+                                <td>
+                                    <img src="/src/customIcons/{{category}}_icon.png" id="{{category}}img"
+                                        style="width:50px;height:5  0px;border:0;"
+                                        onerror="this.src='/src/testingIcon.jpg';">
+                                </td>
+
+
+                                <td>{{name}}</td>
+                                <td>{{vendorname}}
+                                </td>
+                                <td>{{start_date}}</td>
+                                <td style="width: 25vw;">
+                                    {{description}}
+                                </td>
+                                <td>
+                                    <div>
+                                        <form action="/savewishlist/delete" method="post">
+                                            <input class='invis' name='eventid' type='text' value={{event_id}}>
+                                            <input class='invis' name='nickname' type='text' value={{nickname}}>
+                                            <button type='submit' class=" invis btn btn-danger"
+                                                id="submitbutton"></button>
+                                        </form>
+                                        <button class="btn btn-danger" onclick="
                             Swal.fire({
                                         title: 'Are you sure?',
                                         text: 'You will not be able to revert this!',
@@ -167,16 +117,27 @@
                                         }
                                         })
                             ">Delete from wishlist</button>
-                            </div>
-                        </td>
-                        
-                    </tr>
-                 {{/each}}
+                                    </div>
+                                </td>
 
-            </table>
+                            </tr>
+                            {{/each}}
+
+                        </table>
+                    </div>
+                </div>
+
             </div>
         </div>
-    </div>
+        <div class="row">
+            <div class="col-xs-12">
+                
+                <img id="worddiv" src="/src/Playlist_word.png" />
+                
+                
+            </div>
+        </div>
+
 
     </div>
 </body>

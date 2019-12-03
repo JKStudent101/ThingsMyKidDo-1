@@ -1,5 +1,5 @@
 #map {
-	height: 400px;
+	height: 50vh;
 }
 
 #content {
@@ -99,3 +99,24 @@ input:checked ~ label:after {
 	background-color: #54e0c7;
 	border-color: #54e0c7;
 }
+
+.tableholder {
+    overflow:hidden;
+    overflow-y: auto;
+    position: relative;
+    top: 2em;
+    border: 2px solid;
+    border-color: #d1cfcf;
+    box-shadow: 3px 3px 0 #d1cfcf;
+    height: 50vh;
+}
+
+hr {
+	display: block;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+	margin-left: auto;
+	margin-right: auto;
+	border-style: inset;
+	border-width: 1px;
+  }
