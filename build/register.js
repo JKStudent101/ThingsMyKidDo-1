@@ -31,32 +31,31 @@ $(document).ready(function () {
 		register.send(JSON.stringify(data));
 		let response = JSON.parse(register.response);
 		// console.log(response)
-		let errorDiv = document.getElementById('p1error');
-		errorDiv.innerHTML = '';
 		let hasErrors = false;
-		if (email.length < 1) {
-			errorDiv.innerHTML += 'No email was entered<br>'
-			hasErrors = true;
-		}
 		// console.log(emre.test(email))
 		if (!emre.test(email)) {
-			errorDiv.innerHTML += 'Invalid Email<br>'
+			let errorDiv = document.getElementById('p1error');
+			errorDiv.innerHTML = 'Invalid Email<br>'
 			hasErrors = true;
 		}
 		if (response.emailExists) {
-			errorDiv.innerHTML += 'Email is already in use<br>';
+			let errorDiv = document.getElementById('p1error');
+			errorDiv.innerHTML = 'Email is already in use<br>';
 			hasErrors = true;
 		}
-		if (password.length < 8) {
-			errorDiv.innerHTML += 'Password must be at least 8 characters long<br>';
+		if (email.length < 1) {
+			let errorDiv = document.getElementById('p1error');
+			errorDiv.innerHTML = 'No email was entered<br>'
 			hasErrors = true;
 		}
 		if (password.search(re) === -1) {
-			errorDiv.innerHTML += 'Password must contain a uppercase letter, lowercase letter, a number and a special character(!@#\\$%\\^&\\*)<br>'
+			let errorDiv = document.getElementById('p2error');
+			errorDiv.innerHTML = 'Password must be at least 8 characters long, must contain a uppercase letter, lowercase letter, a number and a special character(!@#\\$%\\^&\\*)<br>'
 			hasErrors = true;
 		}
 		if (confirm !== password) {
-			errorDiv.innerHTML += 'Passwords do not match<br>'
+			let errorDiv = document.getElementById('p3error');
+			errorDiv.innerHTML = 'Passwords do not match<br>'
 			hasErrors = true;
 		}
 		if (hasErrors) {
@@ -214,25 +213,6 @@ $(document).ready(function () {
 			let cInterests = []
 			let selected = document.querySelectorAll('#Kid-Interests :checked');
 			selected.forEach(item => cInterests.push(item.value));
-			// cInterests.forEach(item => console.log(item))
-			// var all_child = {};
-
-			// var value = $('[class^=Add_Kids')
-			// 	.find('input, select').not('input[type=button]').map(function (i, item) {
-
-			// 		var currentElement = $(this);
-			// 		var value = currentElement.val(); // if it is an input/select/textarea field
-			// 		var cls = this.className;
-			// 		var kidprops = this.id;
-			// 		all_child[cls] = all_child[cls] || [];
-
-			// 		all_child[cls].push(value);
-			// 	})
-			// 	.get();
-
-			// if ($('#P-Skip').data('clicked')) {
-			// 	all_child = {};
-			// }
 
 			let ParentAccount = {
 				p_email: pEmail,

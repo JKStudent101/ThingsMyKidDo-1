@@ -74,16 +74,20 @@
                             <button type="button" class="close P-clear" data-dismiss="modal">&times;</button>
                             <h4 class="modal-title">Create Account</h4>
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
                             <div class="tab">
                                 <p><input class="register" placeholder="Email address" name="email" id='p_email'></p>
+                                <div id="p1error"
+                                    style="color:red; text-align:center; margin-bottom:20px; font-size: 85%;"></div>
                                 <p><input class="register" placeholder="First Name (optional)" name="p_fName" id='p_fName'></p>
                                 <p><input class="register" placeholder="Last Name (optional)" name="p_lName" id='p_lName'></p>
                                 <p><input class="register" placeholder="Password" name="pw" id='p_password'
                                         type="password"></p>
+                                        <div id="p2error"
+                                    style="color:red; text-align:center; margin-bottom:20px; font-size: 85%;"></div>
                                 <p><input class="register" placeholder="Confirm Password" name="confirm_pw"
                                         id='p_confirm_pw' type="password"></p>
-                                <div id="p1error"
+                                <div id="p3error"
                                     style="color:red; text-align:center; margin-bottom:20px; font-size: 85%;"></div>
                             </div>
                         </div>
