@@ -69,7 +69,8 @@ router.get('/', (req, res) => {
 			'ON e.event_id = et.event_id \n' +
 			'INNER JOIN tags t\n' +
 			'ON et.tag_id = t.tag_id \n' +
-			'ORDER BY t.name		';
+			'WHERE e.isApproved = "Approved" \n' +
+			'ORDER BY t.name;';
 		db.query(sql, (err, result) => {
 			if (err) {
 				throw err;
@@ -129,13 +130,14 @@ router.get('/gettags', (req, res) => {
 		res.redirect('/logout')
 	} else {
 		let sql =
-			'SELECT DISTINCT t.name  \n' +
+			'SELECT DISTINCT t.name \n' +
 			'FROM event e \n' +
 			'INNER JOIN event_tags et \n' +
 			'ON e.event_id = et.event_id \n' +
 			'INNER JOIN tags t\n' +
 			'ON et.tag_id = t.tag_id \n' +
-			'ORDER BY t.name		';
+			'where e.isApproved = "Approved" \n' +
+			'ORDER BY t.name;';
 		db.query(sql, (err, result) => {
 			if (err) {
 				throw err;

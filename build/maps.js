@@ -213,9 +213,8 @@ function initMap() {
 		// get user input event or all event
 		let tagOption = $('#searchOption').val(); // hockey
 		let userInput = $('#SearchBar').val().toLowerCase(); // eventname
-
 		for (var i = 0; i < tags.length; i++) {
-			if ($('#' + tags[i] + '').prop('checked')) {
+			if (document.getElementById(tags[i]).checked) {
 				tagsisclicked.push(tags[i]);
 			}
 		}
@@ -242,6 +241,9 @@ function initMap() {
 
 
 		const getCustomMarkers = (tags) => {
+			if(tags.includes(" ")){
+				tags = tags.replace(" ", "_")
+			}
 			return '/src/customIcons/' + tags.toLowerCase() + '_pin.png';
 		};
 
@@ -253,13 +255,17 @@ function initMap() {
 						  infodetails : event object from data
 						  markers: adds properties to the markers for display
 				  */
-			infoTitleLink = '<a href="' + infodetail.link + ' " target="_blank"></a>';
-			iContent = `<p>${infodetail.name}</p>` + '<a href="' + infodetail.link + ' " target="_blank">' + infodetail.link + '</a>' + '<p>' + infodetail.description + '</p>';
+			var infoLink = infodetail.link;
+			if (!infoLink.includes("https://")) {
+				infoLink = "https://" + infoLink;
+			}
+			infoTitleLink = '<a href="' + infoLink + ' " target="_blank"></a>';
+			iContent = `<p>${infodetail.name}</p>` + '<a href="' + infoLink + ' " target="_blank">' + infodetail.link + '</a>' + '<p>' + infodetail.description + '</p>';
 			$('#events').append(
 				'<div id="details" >' +
 				`<h3 style="display: inline-block">` +
 				infodetail.name +
-				'</h3>' +
+				'</h3>' + '<br/>' + '<a href="' + infoLink + ' " target="_blank">' + infoLink + '</a>' +
 				`<input style="display: inline-block; float:right; margin-top:1em; margin-right:1em" type="button" class="btn btn-info " onclick="{
 					openpopupwindow('input${infodetail.event_id}')
 				}" value="Add to Wishlist"></input>` +
@@ -281,7 +287,7 @@ function initMap() {
 				'</span>' +
 				`<input class= "invis" value="submit" name="childname" id="input${infodetail.event_id}"></input>` +
 				'</form>' +
-				'</div>'+
+				'</div>' +
 				'<hr>'
 			);
 
@@ -405,10 +411,10 @@ function initMap() {
 			// console.log(props);
 
 			var icon = {
-                url: props.iconImage,
-                // size: new google.maps.Size(50, 50),
-                scaledSize: new google.maps.Size(50, 50)
-                // url: '/src/customIcons/arena_pin.png', // url
+				url: props.iconImage,
+				// size: new google.maps.Size(50, 50),
+				scaledSize: new google.maps.Size(50, 50)
+				// url: '/src/customIcons/arena_pin.png', // url
 
 			};
 
@@ -423,13 +429,13 @@ function initMap() {
 			gmarkers.push(marker);
 
 			var i = new Image();
-            i.src = icon.url;
-            i.onload = function () {
-                marker.setIcon(icon); //If icon found go ahead and show it
-            }
-            i.onerror = function () {
-                marker.setIcon(null); //This displays brick colored standard marker icon in case image is not found.
-            }
+			i.src = icon.url;
+			i.onload = function () {
+				marker.setIcon(icon); //If icon found go ahead and show it
+			}
+			i.onerror = function () {
+				marker.setIcon(null); //This displays brick colored standard marker icon in case image is not found.
+			}
 
 			// Check content
 			if (props.content) {
