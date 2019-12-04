@@ -684,7 +684,7 @@ const newEventNotify = async (event_id) => {
             "INNER JOIN user as u ON u.user_id = s.user_id " +
             "INNER JOIN parent as p ON p.user_id = u.user_id " +
             "INNER JOIN child as c ON c.parent_id = p.user_id " +
-            "INNER JOIN child_tags as ct ON ct.parent_id = c.parent_id AND ct.child_nickname = c.child_nickname" +
+            "INNER JOIN child_tags as ct ON ct.parent_id = c.parent_id AND ct.child_nickname = c.child_nickname " +
             "INNER JOIN tags as t ON t.tag_id = ct.tag_id " +
             "INNER JOIN event_tags as et ON et.tag_id = t.tag_id " +
             "INNER JOIN event as e ON e.event_id = et.event_id " +
