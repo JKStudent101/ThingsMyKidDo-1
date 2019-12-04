@@ -142,11 +142,17 @@ app.post('/login-form', [
                 // let salt = bcrypt.genSaltSync(saltRounds);
                 // res.cookie('i', bcrypt.hashSync(email, salt));
                 req.session.user = result[0];
-                if (result[0].user_type === 'admin') { res.redirect("/admin") }
-                else if (result[0].user_type === 'vendor') { res.redirect(`/vendor/${result[0].user_id}`) }
-                else if (result[0].user_type === 'parent') { res.redirect("/event") }
-                else {
-                    res.send("Error: no user type")
+                if (req.session.url) {
+                    let url = req.session.url
+                    delete req.session.url
+                    res.redirect(url);
+                } else {
+                    if (result[0].user_type === 'admin') { res.redirect("/admin") }
+                    else if (result[0].user_type === 'vendor') { res.redirect(`/vendor/${result[0].user_id}`) }
+                    else if (result[0].user_type === 'parent') { res.redirect("/event") }
+                    else {
+                        res.send("Error: no user type")
+                    }
                 }
             } else {
                 res.send("Incorrect password")
