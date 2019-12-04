@@ -522,12 +522,17 @@ $(document).ready(function () {
 			let permission = await Notification.requestPermission()
 			if (permission != 'denied') {
 				let register = await registerServiceWorker();
-				let applicationServerKey = urlB64ToUint8Array('BI01Zbibo97CgCD60S9MO6HhlAbcTtfGOIayxUKG3o5QJbfU3eVMT3v_T-i2r7rK6QH8Zbv1So2VrPsT4FTjaes');
+				let key = await fetch("/api/vapidPublicKey", {
+					method: "GET"
+				}).then(response => {
+					return response.clone().json();
+				});
+				let applicationServerKey = await urlB64ToUint8Array(key.key);
 				PushSubscription = await register.pushManager.subscribe({
 					userVisibleOnly: true,
 					applicationServerKey
 				});
-				let SERVER_URL = 'http://localhost:10000/saveSubscription'
+				let SERVER_URL = '/saveSubscription'
 				let response = await fetch(SERVER_URL, {
 					method: 'post',
 					headers: {

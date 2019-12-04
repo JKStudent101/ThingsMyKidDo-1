@@ -1,0 +1,13 @@
+{
+    "db": {
+        "host": "thingmykidsdo.ckcstihnhz8i.us-west-2.rds.amazonaws.com",
+        "user": "admin",
+        "password": "Password",
+        "database": "thingsKidsDoModified"
+    },
+    "vapid": {
+        "publicKey": "BI01Zbibo97CgCD60S9MO6HhlAbcTtfGOIayxUKG3o5QJbfU3eVMT3v_T-i2r7rK6QH8Zbv1So2VrPsT4FTjaes",
+        "privateKey": "MlG2jt47B8g9TXDao9AvxKslCn2zwi9Vhe6qDPByzDg"
+    },
+    "google": "AIzaSyAN6q6jOWczlbNgBPd_ljm857YUqpyIoVU"
+}
