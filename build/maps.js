@@ -213,9 +213,8 @@ function initMap() {
 		// get user input event or all event
 		let tagOption = $('#searchOption').val(); // hockey
 		let userInput = $('#SearchBar').val().toLowerCase(); // eventname
-
 		for (var i = 0; i < tags.length; i++) {
-			if ($('#' + tags[i] + '').prop('checked')) {
+			if (document.getElementById(tags[i]).checked) {
 				tagsisclicked.push(tags[i]);
 			}
 		}
@@ -242,6 +241,9 @@ function initMap() {
 
 
 		const getCustomMarkers = (tags) => {
+			if(tags.includes(" ")){
+				tags = tags.replace(" ", "_")
+			}
 			return '/src/customIcons/' + tags.toLowerCase() + '_pin.png';
 		};
 
