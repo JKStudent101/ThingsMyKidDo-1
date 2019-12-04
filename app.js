@@ -13,9 +13,21 @@ const { body, check, validationResult } = require('express-validator');
 // const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const request = require('request');
+const fs = require('fs');
+const credentials = JSON.parse(fs.readFileSync('config.json'))
 
 var db = require('./routes/database').init();
 module.exports.db = db;
+
+//set up notifications
+const vapidKeys = {
+    publicKey: credentials.vapid.publicKey,
+    privateKey: credentials.vapid.privateKey
+};
+webpush.setVapidDetails('mailto:thingsmykidsdo.bcit@gmail.com', vapidKeys.publicKey, vapidKeys.privateKey);
+
+//maps api key
+const googleKey = credentials.google;
 
 // import event routes
 const event = require('./routes/event');
@@ -130,11 +142,18 @@ app.post('/login-form', [
                 // let salt = bcrypt.genSaltSync(saltRounds);
                 // res.cookie('i', bcrypt.hashSync(email, salt));
                 req.session.user = result[0];
-                if (result[0].user_type === 'admin') { res.redirect("/admin") }
-                else if (result[0].user_type === 'vendor') { res.redirect(`/vendor/${result[0].user_id}`) }
-                else if (result[0].user_type === 'parent') { res.redirect("/event") }
-                else {
-                    res.send("Error: no user type")
+                // console.log(req.session.url)
+                if (req.session.url) {
+                    let url = req.session.url
+                    delete req.session.url
+                    res.redirect(url);
+                } else {
+                    if (result[0].user_type === 'admin') { res.redirect("/admin") }
+                    else if (result[0].user_type === 'vendor') { res.redirect(`/vendor/${result[0].user_id}`) }
+                    else if (result[0].user_type === 'parent') { res.redirect("/event") }
+                    else {
+                        res.send("Error: no user type")
+                    }
                 }
             } else {
                 res.send("Incorrect password")
@@ -192,18 +211,18 @@ app.post('/registerParent', (req, res) => {
                                     if (err) {
                                         console.log(err)
                                     } else {
-                                        try{
-                                        child.interests.forEach(interest => {
-                                            sql = 'INSERT INTO child_tags (parent_id, child_nickname, tag_id) VALUES (?, ?, ?)'
-                                            db.query(sql, [parent_id, child.nickname, interest], (err, res) => {
-                                                if (err) {
-                                                    console.log(err)
-                                                }
+                                        try {
+                                            child.interests.forEach(interest => {
+                                                sql = 'INSERT INTO child_tags (parent_id, child_nickname, tag_id) VALUES (?, ?, ?)'
+                                                db.query(sql, [parent_id, child.nickname, interest], (err, res) => {
+                                                    if (err) {
+                                                        console.log(err)
+                                                    }
+                                                })
                                             })
-                                        })
-                                    } catch (e) {
-                                        console.log(e)
-                                    }
+                                        } catch (e) {
+                                            console.log(e)
+                                        }
 
                                     }
                                 })
@@ -235,7 +254,7 @@ app.post('/registerVendor', (req, res) => {
     // db.query()
     let sql_insert_vendor_users = 'INSERT INTO user(user_type, email, pass_hash) VALUES (?, ?, ?)'
     let user_values = [new_vendor.type, new_vendor.email, new_vendor.password];
-    console.log(new_vendor.email);
+    // console.log(new_vendor.email);
     db.query(sql_insert_vendor_users, user_values, function (err, result) {
         if (err) console.log(err);
         let sql_select_user = 'SELECT type from user';
@@ -522,7 +541,7 @@ app.post('/edit/:event_id', (req, res) => {
             let province = req.body.province;
             let format_address = address.replace(/ /g, "+");
             let format_city = city.replace(/ /g, "+");
-            let search_string = "https://maps.googleapis.com/maps/api/geocode/json?address=" + format_address + ",+" + format_city + ",+" + province + "&key=AIzaSyAN6q6jOWczlbNgBPd_ljm857YUqpyIoVU";
+            let search_string = "https://maps.googleapis.com/maps/api/geocode/json?address=" + format_address + ",+" + format_city + ",+" + province + "&key=" + googleKey;
             let geocode = new Promise((resolve, reject) => {
                 request({
                     url: search_string,
@@ -809,12 +828,9 @@ app.post('/deleteSubscription', async (req, res) => {
     }
 });
 
-const vapidKeys = {
-    publicKey: 'BI01Zbibo97CgCD60S9MO6HhlAbcTtfGOIayxUKG3o5QJbfU3eVMT3v_T-i2r7rK6QH8Zbv1So2VrPsT4FTjaes',
-    privateKey: 'MlG2jt47B8g9TXDao9AvxKslCn2zwi9Vhe6qDPByzDg'
-};
-
-webpush.setVapidDetails('mailto:thingsmykidsdo.bcit@gmail.com', vapidKeys.publicKey, vapidKeys.privateKey);
+app.get('/api/vapidPublicKey', (req, res) => {
+    res.json({ key: vapidKeys.publicKey });
+});
 
 app.get('/logout', (req, res) => {
     req.session.destroy();

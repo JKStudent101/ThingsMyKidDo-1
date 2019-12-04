@@ -33,30 +33,32 @@ $(document).ready(function () {
 		// console.log(response)
 		let hasErrors = false;
 		// console.log(emre.test(email))
+		let errorDiv = document.getElementById('p1error');
 		if (!emre.test(email)) {
-			let errorDiv = document.getElementById('p1error');
 			errorDiv.innerHTML = 'Invalid Email<br>'
 			hasErrors = true;
-		}
-		if (response.emailExists) {
-			let errorDiv = document.getElementById('p1error');
+		} else if (response.emailExists) {
 			errorDiv.innerHTML = 'Email is already in use<br>';
 			hasErrors = true;
-		}
-		if (email.length < 1) {
-			let errorDiv = document.getElementById('p1error');
+		} else if (email.length < 1) {
 			errorDiv.innerHTML = 'No email was entered<br>'
 			hasErrors = true;
+		} else {
+			errorDiv.innerHTML = '';
 		}
+		errorDiv = document.getElementById('p2error');
 		if (password.search(re) === -1) {
-			let errorDiv = document.getElementById('p2error');
 			errorDiv.innerHTML = 'Password must be at least 8 characters long, must contain a uppercase letter, lowercase letter, a number and a special character(!@#\\$%\\^&\\*)<br>'
 			hasErrors = true;
+		} else {
+			errorDiv.innerHTML = '';
 		}
+		errorDiv = document.getElementById('p3error');
 		if (confirm !== password) {
-			let errorDiv = document.getElementById('p3error');
 			errorDiv.innerHTML = 'Passwords do not match<br>'
 			hasErrors = true;
+		} else {
+			errorDiv.innerHTML = '';
 		}
 		if (hasErrors) {
 			event.preventDefault();
@@ -278,10 +280,10 @@ $(document).ready(function () {
 		var b_PW = $('#bus_PW').val();
 		var b_PWconfirm = $('#bus_PWconfirm').val();
 		var error_msg = $('#error').val();
-		let re = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})');
+		let re = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])(?=.{8,})');
 		let emre = new RegExp('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-_]+\\.[A-Za-z]{2,}')
-		let webre = new RegExp('[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)')
-		let phonere = new RegExp('[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.0-9]*')
+		let webre = new RegExp('[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&\\/\\/=]*)')
+		let phonere = new RegExp('[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\.0-9]*')
 		var register = new window.XMLHttpRequest();
 		let data = { email: b_Email };
 		register.open('post', "/checkEmail", false);
@@ -290,76 +292,80 @@ $(document).ready(function () {
 		let response = JSON.parse(register.response);
 		// console.log(response)
 		let hasErrors = false;
+		let errorDiv = document.getElementById('v1error');
 		if (b_Fname.length < 1) {
-			let errorDiv = document.getElementById('v1error');
 			errorDiv.innerHTML = 'No first name was entered<br>'
 			hasErrors = true;
+		} else {
+			errorDiv.innerHTML = '';
 		}
+		errorDiv = document.getElementById('v2error');
 		if (b_Lname.length < 1) {
-			let errorDiv = document.getElementById('v2error');
 			errorDiv.innerHTML = 'No last name was entered<br>'
 			hasErrors = true;
+		} else {
+			errorDiv.innerHTML = '';
 		}
+		errorDiv = document.getElementById('v3error');
 		if (b_Org.length < 1) {
-			let errorDiv = document.getElementById('v3error');
 			errorDiv.innerHTML = 'No organization name was entered<br>'
 			hasErrors = true;
+		} else {
+			errorDiv.innerHTML = '';
 		}
+		errorDiv = document.getElementById('v4error');
 		if (b_Address.length < 1) {
-			let errorDiv = document.getElementById('v4error');
 			errorDiv.innerHTML = 'No address was entered<br>'
 			hasErrors = true;
+		} else {
+			errorDiv.innerHTML = '';
 		}
+		errorDiv = document.getElementById('v5error');
 		if (!phonere.test(b_Phone)) {
-			let errorDiv = document.getElementById('v5error');
 			errorDiv.innerHTML = 'Invalid phone number<br>'
 			hasErrors = true;
-		}
-		if (b_Phone.length < 1) {
-			let errorDiv = document.getElementById('v5error');
+		} else if (b_Phone.length < 1) {
 			errorDiv.innerHTML = 'No phone number was entered<br>'
 			hasErrors = true;
+		} else {
+			errorDiv.innerHTML = '';
 		}
-		if (response.emailExists) {
-			let errorDiv = document.getElementById('v6error');
-			errorDiv.innerHTML = 'Email is already in use<br>';
-			hasErrors = true;
-		}
-		// console.log(emre.test(email))
-		if (!emre.test(b_Email)) {
-			let errorDiv = document.getElementById('v6error');
-			errorDiv.innerHTML = 'Invalid email<br>'
-			hasErrors = true;
-		}
+		errorDiv = document.getElementById('v6error');
 		if (b_Email.length < 1) {
-			let errorDiv = document.getElementById('v6error');
 			errorDiv.innerHTML = 'No email was entered<br>'
 			hasErrors = true;
+		} else if (!emre.test(b_Email)) {
+			errorDiv.innerHTML = 'Invalid email<br>'
+			hasErrors = true;
+		} else if (response.emailExists) {
+			errorDiv.innerHTML = 'Email is already in use<br>';
+			hasErrors = true;
+		} else {
+			errorDiv.innerHTML = '';
 		}
+		errorDiv = document.getElementById('v7error');
 		if (!webre.test(b_Website)) {
-			let errorDiv = document.getElementById('v7error');
 			errorDiv.innerHTML = 'Invalid website url<br>'
 			hasErrors = true;
-		}
-		if (b_Website.length < 1) {
-			let errorDiv = document.getElementById('v7error');
+		} else if (b_Website.length < 1) {
 			errorDiv.innerHTML = 'No website was entered<br>'
 			hasErrors = true;
+		} else {
+			errorDiv.innerHTML = '';
 		}
-		// if (b_PW.length < 8) {
-		// 	let errorDiv = document.getElementById('v8error');
-		// 	errorDiv.innerHTML += 'Password must be at least 8 characters long<br>';
-		// 	hasErrors = true;
-		// }
+		errorDiv = document.getElementById('v8error');
 		if (b_PW.search(re) === -1) {
-			let errorDiv = document.getElementById('v8error');
 			errorDiv.innerHTML = 'Password must be at least 8 characters long, contain a uppercase letter, lowercase letter, a number and a special character(!@#\\$%\\^&\\*)<br>'
 			hasErrors = true;
+		} else {
+			errorDiv.innerHTML = '';
 		}
+		errorDiv = document.getElementById('v9error');
 		if (b_PWconfirm !== b_PW) {
-			let errorDiv = document.getElementById('v9error');
 			errorDiv.innerHTML = 'Passwords do not match<br>'
 			hasErrors = true;
+		} else {
+			errorDiv.innerHTML = '';
 		}
 		if (hasErrors) {
 			event.preventDefault();
@@ -522,12 +528,17 @@ $(document).ready(function () {
 			let permission = await Notification.requestPermission()
 			if (permission != 'denied') {
 				let register = await registerServiceWorker();
-				let applicationServerKey = urlB64ToUint8Array('BI01Zbibo97CgCD60S9MO6HhlAbcTtfGOIayxUKG3o5QJbfU3eVMT3v_T-i2r7rK6QH8Zbv1So2VrPsT4FTjaes');
+				let key = await fetch("/api/vapidPublicKey", {
+					method: "GET"
+				}).then(response => {
+					return response.clone().json();
+				});
+				let applicationServerKey = await urlB64ToUint8Array(key.key);
 				PushSubscription = await register.pushManager.subscribe({
 					userVisibleOnly: true,
 					applicationServerKey
 				});
-				let SERVER_URL = 'http://localhost:10000/saveSubscription'
+				let SERVER_URL = '/saveSubscription'
 				let response = await fetch(SERVER_URL, {
 					method: 'post',
 					headers: {
