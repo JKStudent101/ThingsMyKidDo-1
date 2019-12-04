@@ -4,7 +4,7 @@ const db = require('../app').db;
 
 router.get('/', (req, res) => {
     if (!req.session.user) {
-		req.session.url = '/profilepage';
+		req.session.url = '/profile';
 		res.redirect('/login')
 	} else {
         let user_id = req.session.user.user_id;
@@ -43,7 +43,7 @@ router.get('/', (req, res) => {
 
 router.get('/:nickname', (req, res) => {
     if (!req.session.user) {
-		req.session.url = `/profilepage/${req.params.nickname}`;
+		req.session.url = `/profile/${req.params.nickname}`;
 		res.redirect('/login')
 	} else if (req.session.user.user_type != 'parent') {
         res.redirect('/logout')

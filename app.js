@@ -142,6 +142,7 @@ app.post('/login-form', [
                 // let salt = bcrypt.genSaltSync(saltRounds);
                 // res.cookie('i', bcrypt.hashSync(email, salt));
                 req.session.user = result[0];
+                // console.log(req.session.url)
                 if (req.session.url) {
                     let url = req.session.url
                     delete req.session.url
@@ -253,7 +254,7 @@ app.post('/registerVendor', (req, res) => {
     // db.query()
     let sql_insert_vendor_users = 'INSERT INTO user(user_type, email, pass_hash) VALUES (?, ?, ?)'
     let user_values = [new_vendor.type, new_vendor.email, new_vendor.password];
-    console.log(new_vendor.email);
+    // console.log(new_vendor.email);
     db.query(sql_insert_vendor_users, user_values, function (err, result) {
         if (err) console.log(err);
         let sql_select_user = 'SELECT type from user';
