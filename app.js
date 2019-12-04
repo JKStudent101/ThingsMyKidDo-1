@@ -397,7 +397,7 @@ app.get('/vendor/:vendor_id', (req, res) => {
                 var vendor_name = result[0].name;
                 var isApproved = req.session.user.isApproved;
 
-                var sql_tags = 'select name from tags';
+                var sql_tags = 'select name from tags order by name asc';
                 db.query(sql_tags, (err, result) => {
                     if (err) {
                         throw err;
@@ -474,7 +474,7 @@ app.get('/edit/:event_id', (req, res) => {
     } else if ((req.session.user.user_type != 'vendor') && (req.session.user.user_type != 'admin')) {
         res.redirect('/logout')
     } else {
-        var sql_tags = 'select name from tags';
+        var sql_tags = 'select name from tags order by name asc';
         db.query(sql_tags, (err, result) => {
             if (err) {
                 throw err;
@@ -605,7 +605,7 @@ app.post('/edit/:event_id', (req, res) => {
                     description: req.body.description
                 };
 
-                var sql_tags = 'select name from tags';
+                var sql_tags = 'select name from tags order by name asc';
 
                 db.query(sql_tags, (err, result) => {
                     if (err) {

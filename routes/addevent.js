@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
     } else if (req.session.user.isApproved != 'Approved') {
         res.redirect('/logout')
     } else {
-        var sql_tags = 'select name from tags';
+        var sql_tags = 'select name from tags order by name asc';
         db.query(sql_tags, (err, result) => {
             if (err) {
                 throw err;
