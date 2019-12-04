@@ -27,9 +27,12 @@ async function openPushSubscription() {
         let permission = await Notification.requestPermission()
         if (permission != 'denied') {
             let register = await registerServiceWorker();
-            let applicationServerKey = urlB64ToUint8Array('BI01Zbibo97CgCD60S9MO6HhlAbcTtfGOIayxUKG3o5QJbfU3eVMT3v_T-i2r7rK6QH8Zbv1So2VrPsT4FTjaes');
-
-
+            let key = await fetch("/api/vapidPublicKey", {
+                method: "GET"
+            }).then(response => {
+                return response.clone().json();
+            });
+            let applicationServerKey = await urlB64ToUint8Array(key.key);
             let PushSubscription = await register.pushManager.getSubscription();
             // console.log(PushSubscription)
             if (PushSubscription === null) {
@@ -37,7 +40,7 @@ async function openPushSubscription() {
                     userVisibleOnly: true,
                     applicationServerKey
                 });
-                let SERVER_URL = 'http://localhost:10000/saveSubscription'
+                let SERVER_URL = '/saveSubscription'
                 let response = await fetch(SERVER_URL, {
                     method: 'post',
                     headers: {
@@ -45,7 +48,7 @@ async function openPushSubscription() {
                     },
                     body: JSON.stringify(PushSubscription),
                 })
-                response.json().then(res => console.log(res.message))
+                // response.json().then(res => console.log(res.message))
             }
         } else {
             getInstruction = confirm("Oops! \nIt looks like you blocked us from sending you notifications. \n" +
@@ -62,7 +65,7 @@ async function closePushSubscription() {
         let registration = await navigator.serviceWorker.ready;
         let subscription = await registration.pushManager.getSubscription();
         let successful = subscription.unsubscribe();
-        let SERVER_URL = 'http://localhost:10000/deleteSubscription'
+        let SERVER_URL = '/deleteSubscription'
         let response = await fetch(SERVER_URL, {
             method: 'post',
             headers: {
@@ -70,7 +73,7 @@ async function closePushSubscription() {
             },
             body: JSON.stringify(subscription),
         })
-        response.json().then(res => console.log(res.message))
+        // response.json().then(res => console.log(res.message))
         // console.log("Unsubscribed", successful);
     } catch (e) {
         // Unsubscription failed

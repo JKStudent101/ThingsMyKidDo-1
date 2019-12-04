@@ -7,8 +7,8 @@ var sendLogin = () => {
         email: email,
         password: upassword
     };
-    register.open('post',"/checklogin",false);
-    register.setRequestHeader('Content-Type','application/json');
+    register.open('post', "/checklogin", false);
+    register.setRequestHeader('Content-Type', 'application/json');
     register.send(JSON.stringify(data));
     let failed = JSON.parse(register.response);
     // console.log(passed)

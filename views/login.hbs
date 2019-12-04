@@ -2,6 +2,7 @@
 <html>
 
 <head>
+    {{> google_analytics}}
     <!-- Bootstrap CSS -->
     {{> bootstrap}}
 
@@ -74,11 +75,21 @@
                             <button type="button" class="close P-clear" data-dismiss="modal">&times;</button>
                             <h4 class="modal-title">Create Account</h4>
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
                             <div class="tab">
                                 <p><input class="register" placeholder="Email address" name="email" id='p_email'></p>
-                                <p><input class="register" placeholder="Password" name="pw" id='p_password' type="password"></p>
-                                <p><input class="register" placeholder="Comfirm Password"  name="confirm_pw" id='p_confirm_pw' type="password"></p>
+                                <div id="p1error"
+                                    style="color:red; text-align:center; margin-bottom:20px; font-size: 85%;"></div>
+                                <p><input class="register" placeholder="First Name (optional)" name="p_fName" id='p_fName'></p>
+                                <p><input class="register" placeholder="Last Name (optional)" name="p_lName" id='p_lName'></p>
+                                <p><input class="register" placeholder="Password" name="pw" id='p_password'
+                                        type="password"></p>
+                                        <div id="p2error"
+                                    style="color:red; text-align:center; margin-bottom:20px; font-size: 85%;"></div>
+                                <p><input class="register" placeholder="Confirm Password" name="confirm_pw"
+                                        id='p_confirm_pw' type="password"></p>
+                                <div id="p3error"
+                                    style="color:red; text-align:center; margin-bottom:20px; font-size: 85%;"></div>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -104,7 +115,6 @@
                                     <span>
                                         <form>
                                             <select class="guardian" id="Guardian">
-                                                <option value=""> </option>
                                                 <option value="Mom">Mom</option>
                                                 <option value="Dad">Dad</option>
                                                 <option value="Relative">Relative</option>
@@ -129,40 +139,41 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close P-clear" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Children Profiles (optional)</h4>
+                            <h4 class="modal-title">Child Profile (optional)</h4>
                             <p>If you wish to create your children's profiles after you have created your account, you
                                 can skip this step.</p>
-                            <button type="button" class="submit1" id="P-Skip">Skip</button>
+                            {{!-- <button type="button" class="submit1" id="P-Skip">Skip</button> --}}
                         </div>
                         <div class="modal-body container" style="max-height: calc(100vh - 200px); overflow-y: auto;">
                             <div class="tab" id="morekids">
                                 {{!-- {{>KidRegister}} --}}
-                                <p>click the "Create Kid profile" button to create a profile for your child.</p>
-                                <p>you can create a maximum of 5 profiles during registration.</p>
                                 <div class="allInputs1">
 
                                     <div class="Add_Kids1">
-                                        <p>Mykid1
-                                            <input class="register-kid1 register-kid" placeholder="Nickname" id="kidname1"
-                                                name="nickname1">
+                                        <p>My child
+                                            <input class="register-kid1 register-kid" placeholder="Nickname"
+                                                id="kidname1" name="nickname1">
                                             is a
                                             <span class="form-group">
                                                 <select id="gender1" class="register-kid1 register-Gender">
                                                     <option disabled selected>Select Gender</option>
                                                     <option>Boy</option>
                                                     <option>Girl</option>
+                                                    <option>Other</option>
                                                 </select>
-                                            </span> 
-                                            who is interested in
+                                                <br>
+                                            </span>
+                                            &nbsp; who is interested in
                                             <span>
-                                                <select id="Kid-Interests" class="multiple_select" multiple="multiple" style="height: 2em; width:10em">
-                                                {{#each data}}
-                                                    <option>{{name}}</option>
-                                                {{/each}}
+                                                <select id="Kid-Interests" class="multiple_select" multiple="multiple"
+                                                    style="height: 2em; width:10em">
+                                                    {{#each data}}
+                                                    <option value='{{tag_id}}'>{{name}}</option>
+                                                    {{/each}}
                                                 </select>
                                             </span>
                                         </p>
-                                        <button type="button" class="submit1" id="add">Create Kid Profile</button>
+                                        {{!-- <button type="button" class="submit1" id="add">Create Kid Profile</button> --}}
                                     </div>
 
                                 </div>
@@ -304,20 +315,39 @@
                             <div class="modal-body" id="B-1" style="max-height: calc(100vh - 200px); overflow-y: auto;">
                                 <div class="tab">
                                     <p><input class="register" id="bus_Fname" placeholder="First Name" name="fname"></p>
+                                    <div id="v1error"
+                                    style="color:red; text-align:center; margin-bottom:20px; font-size: 85%;"></div>
                                     <p><input class="register" id="bus_Lname" placeholder="Last name" name="lname"></p>
+                                    <div id="v2error"
+                                    style="color:red; text-align:center; margin-bottom:20px; font-size: 85%;"></div>
                                     <p><input class="register" id="bus_Orgname" placeholder="Organization name"
                                             name="org_name"></p>
+                                            <div id="v3error"
+                                    style="color:red; text-align:center; margin-bottom:20px; font-size: 85%;"></div>
                                     <p><input class="register" id="bus_Address" placeholder="Address" name="address">
                                     </p>
+                                    <div id="v4error"
+                                    style="color:red; text-align:center; margin-bottom:20px; font-size: 85%;"></div>
                                     <p><input class="register" id="bus_Phone" placeholder="Phone number" name="phone">
                                     </p>
+                                    <div id="v5error"
+                                    style="color:red; text-align:center; margin-bottom:20px; font-size: 85%;"></div>
                                     <p><input class="register" id="bus_Email" placeholder="Email address" name="email">
                                     </p>
+                                    <div id="v6error"
+                                    style="color:red; text-align:center; margin-bottom:20px; font-size: 85%;"></div>
                                     <p><input class="register" id="bus_Website" placeholder="Organization website"
                                             name="website"></p>
-                                    <p><input class="register" id="bus_PW" placeholder="Password" name="pw"  type="password"></p>
+                                            <div id="v7error"
+                                    style="color:red; text-align:center; margin-bottom:20px; font-size: 85%;"></div>
+                                    <p><input class="register" id="bus_PW" placeholder="Password" name="pw"
+                                            type="password"></p>
+                                            <div id="v8error"
+                                    style="color:red; text-align:center; margin-bottom:20px; font-size: 85%;"></div>
                                     <p><input class="register" id="bus_PWconfirm" placeholder="Confirm Password"
                                             name="confirm_pw" type="password"></p>
+                                            <div id="v9error"
+                                    style="color:red; text-align:center; margin-bottom:20px; font-size: 85%;"></div>
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -417,13 +447,10 @@
                             <h1>All done!</h1>
                             <p></p>
                             <p>An admin will now review your account for approval.</p>
-                            <p>Would you like to receive a notification when your account is approved?</p>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="submit1" id="B-Register-complete-no"
-                                data-dismiss="modal">No</button>
-                            <button type="button" class="submit1" id="B-Register-complete-yes" data-dismiss="modal"
-                                onclick="openPushSubscription()">Yes</button>
+                            <button type="button" class="submit1" id="B-Register-complete"
+                                data-dismiss="modal">Done</button>
                         </div>
                     </div>
                 </div>
