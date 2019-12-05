@@ -249,8 +249,8 @@ app.post('/registerVendor', (req, res) => {
     // console.log(req.body)
     var salt = bcrypt.genSaltSync(saltRounds);
     var hash = bcrypt.hashSync(req.body.Password1, salt);
-    var website = req.body.Website;
-    if (!website.includes("http://")) {
+    var website = req.body.Website.trim();
+    if (!website.startsWith("http")) {
         website = "http://" + website;
     }
     let new_vendor = { 'firstname': req.body.FirstName, 'lastname': req.body.LastName, 'org': req.body.Oraganization, 'phonenum': req.body.PhoneNumber, 'address': req.body.BusAddress, 'email': req.body.EmailAddress, 'website': website, 'password': hash, 'type': req.body.type }
@@ -543,8 +543,8 @@ app.post('/edit/:event_id', (req, res) => {
             let address = req.body.address.trim();
             let city = req.body.city.trim();
             let province = req.body.province;
-            let link = req.body.link;
-            if (!link.includes("http://")) {
+            let link = req.body.link.trim();
+            if (!link.startsWith("http")) {
                 link = "http://" + link;
             }
             let format_address = address.replace(/ /g, "+");

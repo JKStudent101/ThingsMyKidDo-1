@@ -55,8 +55,8 @@ router.post('/', (req, res) => {
             let start_date = req.body.start_date;
             let end_date = req.body.end_date;
             let tag = req.body.tag;
-            let link = req.body.link;
-            if (!link.includes("http://")) {
+            let link = req.body.link.trim();
+            if (!link.startsWith("http")) {
                 link = "http://" + link;
             }
             let geocode = new Promise((resolve, reject) => {
