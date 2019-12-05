@@ -1,44 +1,44 @@
 .logo {
-    position: relative;
-    height: 150px;
-    width: 200px;
-    margin-bottom: 20px;
-    bottom: 50px;
+  position: relative;
+  height: 150px;
+  width: 200px;
+  margin-bottom: 20px;
+  bottom: 50px;
 }
 
 * {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 .features {
-    margin: 20px;
+  margin: 20px;
 }
 
 ul {
-    list-style-type: none;
-    width: 500px;
+  list-style-type: none;
+  width: 500px;
 }
 
 h3 {
-    font: bold 20px/1.5 Helvetica, Verdana, sans-serif;
+  font: bold 20px/1.5 Helvetica, Verdana, sans-serif;
 }
 
 li img {
-    float: left;
-    margin: 0 15px 0 0;
+  float: left;
+  margin: 0 15px 0 0;
 }
 
 li p {
-    font: 200 12px/1.5 Georgia, Times New Roman, serif;
+  font: 200 12px/1.5 Georgia, Times New Roman, serif;
 }
 
 li {
-    padding: 10px;
-    overflow: auto;
+  padding: 10px;
+  overflow: auto;
 }
 
 li:hover {
-    background: #eee;
-    cursor: pointer;
+  background: #eee;
+  cursor: pointer;
 }
