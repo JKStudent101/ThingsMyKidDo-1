@@ -2,6 +2,7 @@
 <html>
 
 <head>
+    {{> google_analytics}}
     <!-- Bootstrap CSS -->
     {{> bootstrap}}
 
@@ -100,7 +101,7 @@
                                             <input class='invis' name='eventid' type='text' value={{event_id}}>
                                             <input class='invis' name='nickname' type='text' value={{nickname}}>
                                             <button type='submit' class=" invis btn btn-danger"
-                                                id="submitbutton"></button>
+                                                id="{{event_id}}"></button>
                                         </form>
                                         <button class="btn btn-danger" onclick="
                             Swal.fire({
@@ -113,7 +114,7 @@
                                         confirmButtonText: 'Yes, delete it!'
                                         }).then((result) => {
                                         if (result.value) {
-                                            document.getElementById('submitbutton').click();
+                                            document.getElementById('{{event_id}}').click();
                                         }
                                         })
                             ">Delete from wishlist</button>

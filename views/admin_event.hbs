@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        
+        {{> google_analytics}}
         {{> bootstrap}}        
         <link href="/css/menu.css" type="text/css" rel="stylesheet" />
         <link href="/css/admin.css" type="text/css" rel="stylesheet" />
@@ -36,9 +36,9 @@
                         {{#each data}}
                         <tr>
                             <td>{{event_id}} </td>
-                            <td><a target="_blank" href="http://{{website}}">{{vendor_name}}</a></td>
+                            <td><a target="_blank" href="{{website}}">{{vendor_name}}</a></td>
                             <td><a href="mailto:{{email}}">{{contact_name}}</a></td>
-                            <td><a target="_blank" href="http://{{event_link}}">{{event_name}}</a></td>
+                            <td><a target="_blank" href="{{event_link}}">{{event_name}}</a></td>
                             <td>{{description}}</td>
                             <td>{{start_date}}</td>
                             <td>{{end_date}}</td>
@@ -70,4 +70,5 @@
 </html>
    
 <script src="/scripts/admin.js"></script>
+
 
