@@ -241,7 +241,7 @@ function initMap() {
 
 
 		const getCustomMarkers = (tags) => {
-			if(tags.includes(" ")){
+			if (tags.includes(" ")) {
 				tags = tags.replace(" ", "_")
 			}
 			return '/src/customIcons/' + tags.toLowerCase() + '_pin.png';
@@ -257,7 +257,7 @@ function initMap() {
 				  */
 			var infoLink = infodetail.link;
 			if (!infoLink.includes("https://")) {
-				infoLink = "https://" + infoLink;
+				infoLink = infoLink.replace("http://" + infoLink);
 			}
 			infoTitleLink = '<a href="' + infoLink + ' " target="_blank"></a>';
 			iContent = `<p>${infodetail.name}</p>` + '<a href="' + infoLink + ' " target="_blank">' + infodetail.link + '</a>' + '<p>' + infodetail.description + '</p>';
