@@ -249,7 +249,11 @@ app.post('/registerVendor', (req, res) => {
     // console.log(req.body)
     var salt = bcrypt.genSaltSync(saltRounds);
     var hash = bcrypt.hashSync(req.body.Password1, salt);
-    let new_vendor = { 'firstname': req.body.FirstName, 'lastname': req.body.LastName, 'org': req.body.Oraganization, 'phonenum': req.body.PhoneNumber, 'address': req.body.BusAddress, 'email': req.body.EmailAddress, 'website': req.body.Website, 'password': hash, 'type': req.body.type }
+    var website = req.body.Website;
+    if (!website.includes("http://")) {
+        website = "http://" + website;
+    }
+    let new_vendor = { 'firstname': req.body.FirstName, 'lastname': req.body.LastName, 'org': req.body.Oraganization, 'phonenum': req.body.PhoneNumber, 'address': req.body.BusAddress, 'email': req.body.EmailAddress, 'website': website, 'password': hash, 'type': req.body.type }
     // console.log(new_vendor)
     // db.query()
     let sql_insert_vendor_users = 'INSERT INTO user(user_type, email, pass_hash) VALUES (?, ?, ?)'
@@ -539,6 +543,10 @@ app.post('/edit/:event_id', (req, res) => {
             let address = req.body.address.trim();
             let city = req.body.city.trim();
             let province = req.body.province;
+            let link = req.body.link;
+            if (!link.includes("http://")) {
+                link = "http://" + link;
+            }
             let format_address = address.replace(/ /g, "+");
             let format_city = city.replace(/ /g, "+");
             let search_string = "https://maps.googleapis.com/maps/api/geocode/json?address=" + format_address + ",+" + format_city + ",+" + province + "&key=" + googleKey;
@@ -575,7 +583,7 @@ app.post('/edit/:event_id', (req, res) => {
                     req.body.address,
                     req.body.city,
                     req.body.province,
-                    req.body.link,
+                    link,
                     req.params.event_id
                 ];
                 // console.log(inputs);
