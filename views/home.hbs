@@ -7,6 +7,34 @@
     <link href="/css/menu.css" type="text/css" rel="stylesheet" />
     <link href="/css/login.css" type="text/css" rel="stylesheet" />
     <link href="/css/home.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        body,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: "Lato", sans-serif;
+            text-decoration: none;
+        }
+
+        .w3-bar,
+        h1,
+        button {
+            font-family: "Montserrat", sans-serif
+        }
+
+        .fa-anchor,
+        .fa-coffee {
+            font-size: 200px
+        }
+    </style>
 
 </head>
 
@@ -23,52 +51,90 @@
     {{/ifCond}}
     {{/ifCond}}
 
-    <div class="container">
-        <div class="homeContainer">
-            <div class="playText"> <b>Let's Play! </div>
-            <div class="notification-container">
-                <span class="notification-text">Notify Me</span>
-                <label class="switch">
-                <input type="checkbox" id="notif-check">
-                <span class="slider round"></span>
-            </label>
+    <div class="w3-container w3-white w3-center w3-padding-64">
+        <h1 class="w3-margin w3-xlarge" style="color: gray !important; font-size: 52px !important;">LET'S PLAY
+        </h1>
+        <div id="icon_set_1" style="padding-top: 5%;">
+            <div id="icon_1" style="position: relative; display: inline-block;">
+                <a href="/event"><img src="css/src/home_icon1.jpg" width=200px height=auto></a>
             </div>
-            
-            <div class="play">
-                <a href="/event">
-                    <div class="search">Events</div>
-                </a>
-                <a href="/event"><img src="/src/searchIcon.png" alt="HTML tutorial"
-                        style="width:50px;height:50px;border:0;"></a>
-                <a href="/profile">
-                    <div class="profile">Profile</div>
-                </a>
-                <a href="/profile"><img src="/src/profileIcon.png" alt="HTML tutorial"
-                        style="width:50px;height:50px;border:0;"></a>
+            <div id="icon_2" style="position: relative; display: inline-block; padding-left: 5%;">
+                <a href="/profile"><img src="css/src/home_icon2.jpg" width=200px height=auto></a>
+            </div>
+            <div id="icon_3" style="position: relative; display: inline-block; padding-left: 5%;">
+                <a href="/event"><img src="css/src/home_icon3.jpg" width=200px height=auto></a>
+            </div>
+        </div>
+
+        <div id="icon_set_1" style="padding-top: 5%;">
+            <div id="icon_4" style="position: relative; display: inline-block;">
+                <img src="css/src/home_icon4.jpg" width=200px height=auto>
             </div>
 
-
-
-
-            <div class="addContainer">
-                <div class="ad">Advertisement</div>
-            </div>
-
-            <div class="blogContainer">
-                <div class="blog">Blog Posts</div>
-            </div>
-            {{!-- <div class="col-md-6">
-                <div class="ad">Blog Entries</div>
-            </div> --}}
-
-            <div class="terms">
-                <a href="www.google.ca">Terms and Conditions</a>
+            <div id="icon_5" style="position: relative; display: inline-block; padding-left: 5%;">
+                <img src="css/src/home_icon5.jpg" width=200px height=auto>
             </div>
 
         </div>
-
-
+        <div class="notification-container" style="padding-top:5%;">
+            <span class="notification-text" style="font-size: 42px;">Notify Me</span>
+            <label class="switch">
+                <input type="checkbox" id="notif-check">
+                <span class="slider round"></span>
+            </label>
+        </div>
     </div>
+
+
+    <div class="w3-container w3-light-gray w3-center w3-padding-64">
+        <h1 class="w3-margin w3-xlarge w3-left" style="color: gray !important; font-size: 36px !important;">GET INSPIRED
+        </h1>
+        <div id="blog_set" style="padding-top: 5%;">
+            <div id="blog_1" style="position: relative; display: inline-block;">
+                <img src="css/src/blog1.jpg" width=300px height=auto>
+            </div>
+            <div id="blog_2" style="position: relative; display: inline-block;">
+                <img src="css/src/blog2.jpg" width=300px height=auto>
+            </div>
+            <div id="blog_3" style="position: relative; display: inline-block;">
+                <img src="css/src/blog3.jpg" width=300px height=auto>
+            </div>
+            <div id="blog_4" style="position: relative; display: inline-block;">
+                <img src="css/src/blog4.jpg" width=300px height=auto>
+            </div>
+            <div id="blog_5" style="position: relative; display: inline-block; ">
+                <img src="css/src/blog5.jpg" width=300px height=auto>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="w3-container w3-white w3-center w3-padding-64">
+        <h1 class="w3-margin w3-xlarge w3-left" style="color: gray !important; font-size: 36px !important;">OUR SUPER
+            SPONSORS
+        </h1>
+        <div id="blog_set" style="padding-top: 5%;">
+            <div id="blog_1" style="position: relative; display: inline-block;">
+                <img src="css/src/sponsor1.jpg" width=500px height=auto>
+            </div>
+            <div id="blog_2" style="position: relative; display: inline-block;">
+                <img src="css/src/sponsor2.jpg" width=500px height=auto>
+            </div>
+            <div id="blog_3" style="position: relative; display: inline-block;">
+                <img src="css/src/sponsor3.jpg" width=500px height=auto>
+            </div>
+            <div id="blog_4" style="position: relative; display: inline-block;">
+                <img src="css/src/sponsor4.jpg" width=500px height=auto>
+            </div>
+            <div id="blog_5" style="position: relative; display: inline-block; ">
+                <img src="css/src/sponsor5.jpg" width=500px height=auto>
+            </div>
+            <div id="blog_6" style="position: relative; display: inline-block; ">
+                <img src="css/src/sponsor6.jpg" width=500px height=auto>
+            </div>
+        </div>
+    </div>
+
 
 </body>
 
