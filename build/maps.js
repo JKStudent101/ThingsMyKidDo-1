@@ -256,7 +256,7 @@ function initMap() {
 						  markers: adds properties to the markers for display
 				  */
 			var infoLink = infodetail.link;
-			if (!infoLink.includes("https://")) {
+			if (!infoLink.startsWith("https://")) {
 				infoLink = infoLink.replace("http://" + infoLink);
 			}
 			infoTitleLink = '<a href="' + infoLink + ' " target="_blank"></a>';
