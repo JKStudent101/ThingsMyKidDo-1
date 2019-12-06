@@ -48,7 +48,7 @@ $(document).ready(function () {
 		}
 		errorDiv = document.getElementById('p2error');
 		if (password.search(re) === -1) {
-			errorDiv.innerHTML = 'Password must be at least 8 characters long, must contain a uppercase letter, lowercase letter, a number and a special character(!@#\\$%\\^&\\*)<br>'
+			errorDiv.innerHTML = 'Password must be at least 8 characters long, must contain a uppercase letter, lowercase letter, a number and a special character(!@#$%^&*)<br>'
 			hasErrors = true;
 		} else {
 			errorDiv.innerHTML = '';
@@ -355,7 +355,7 @@ $(document).ready(function () {
 		}
 		errorDiv = document.getElementById('v8error');
 		if (b_PW.search(re) === -1) {
-			errorDiv.innerHTML = 'Password must be at least 8 characters long, contain a uppercase letter, lowercase letter, a number and a special character(!@#\\$%\\^&\\*)<br>'
+			errorDiv.innerHTML = 'Password must be at least 8 characters long, contain a uppercase letter, lowercase letter, a number and a special character(!@#$%^&*)<br>'
 			hasErrors = true;
 		} else {
 			errorDiv.innerHTML = '';
